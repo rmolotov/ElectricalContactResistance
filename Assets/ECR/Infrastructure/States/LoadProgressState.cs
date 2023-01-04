@@ -1,4 +1,5 @@
-﻿using ECR.Infrastructure.States.Interfaces;
+﻿using ECR.Infrastructure.SceneManagement;
+using ECR.Infrastructure.States.Interfaces;
 using UnityEngine;
 
 namespace ECR.Infrastructure.States
@@ -15,7 +16,7 @@ namespace ECR.Infrastructure.States
         public void Enter()
         {
             Debug.Log(typeof(LoadProgressState));
-            _stateMachine.Enter<LoadLevelState, string>("level name test");
+            _stateMachine.Enter<LoadLevelState, SceneName>(SceneName.Meta);
         }
 
         public void Exit()

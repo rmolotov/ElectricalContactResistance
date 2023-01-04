@@ -11,14 +11,6 @@ namespace ECR.Infrastructure.Installers
             Container.Bind<LoadProgressState>().AsSingle();
             Container.Bind<LoadLevelState>().AsSingle();
             Container.Bind<GameLoopState>().AsSingle();
-            
-            var stateMachine = new GameStateMachine();
-            
-            Container.Bind<GameStateMachine>()
-                .FromInstance(stateMachine)
-                .AsSingle();
-            
-            stateMachine.Enter<BootstrapState>();
         }
     }
 }

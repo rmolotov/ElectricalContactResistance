@@ -1,34 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
+using Zenject;
 
 namespace ECR.Infrastructure.States
 {
-    public class GameStateMachine
+    public class GameStateMachine : IInitializable
     {
         private readonly Dictionary<Type, IExitableState> _states;
         private IExitableState _currentState;
-        
-        public GameStateMachine()
+
+        public GameStateMachine(SceneLoader sceneLoader)
         {
             _states = new Dictionary<Type, IExitableState>
             {
                 [typeof(BootstrapState)]    = new BootstrapState(this),
                 [typeof(LoadProgressState)] = new LoadProgressState(this),
-                [typeof(LoadLevelState)]    = new LoadLevelState(this),
+                [typeof(LoadLevelState)]    = new LoadLevelState(this, sceneLoader),
                 [typeof(GameLoopState)]     = new GameLoopState(this),
             };
         }
 
+        public void Initialize() => 
+            Enter<BootstrapState>();
+
         public void Enter<TState>() where TState : class, IState =>
             ChangeState<TState>()
                 .Enter();
-        
+
         public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload> =>
             ChangeState<TState>()
                 .Enter(payload);
-        
-        
+
+
         private TState GetState<TState>() where TState : class, IExitableState => 
             _states[typeof(TState)] as TState;
 
