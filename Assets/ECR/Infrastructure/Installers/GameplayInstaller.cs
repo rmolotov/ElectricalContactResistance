@@ -7,8 +7,7 @@ namespace ECR.Infrastructure.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<IInputService>().To<InputService>()
-                .FromNew().AsSingle().NonLazy();
+            Container.Bind<IInputService>().To<InputService>().AsSingle().NonLazy();
         }
     }
 }
