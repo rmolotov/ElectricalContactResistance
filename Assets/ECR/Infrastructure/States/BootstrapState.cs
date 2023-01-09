@@ -14,6 +14,12 @@ namespace ECR.Infrastructure.States
 
         public void Enter()
         {
+            /*TODO:
+             register services
+             create factories
+             load persistent data
+             */
+            
             Debug.Log(typeof(BootstrapState));
             _stateMachine.Enter<LoadProgressState>();
         }

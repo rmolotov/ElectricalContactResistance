@@ -1,4 +1,3 @@
-using ECR.Services.Input;
 using Zenject;
 
 namespace ECR.Infrastructure.Installers
@@ -7,7 +6,7 @@ namespace ECR.Infrastructure.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<IInputService>().To<InputService>().AsSingle().NonLazy();
+
         }
     }
 }

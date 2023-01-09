@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using ECR.StaticData;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.RemoteConfig;
@@ -14,7 +16,10 @@ namespace ECR.Services.StaticData
         private const string ConfigEnvironmentId =
             "d7f17096-1635-42aa-b0d3-c7892f39d67c"; // development
             //"prod"; //production
-        
+
+        private Dictionary<EnemyType, EnemyStaticData> _enemies;
+        private HeroStaticData _heroStaticData;
+
         private struct UserAttributes
         {
         }
@@ -35,15 +40,13 @@ namespace ECR.Services.StaticData
             await RemoteConfigService.Instance.FetchConfigsAsync(new UserAttributes(), new AppAttributes());
         }
 
-        public void ForHero()
-        {
-            throw new NotImplementedException();
-        }
+        public HeroStaticData ForHero() =>
+            _heroStaticData;
 
-        public void ForEnemy()
-        {
-            throw new NotImplementedException();
-        }
+        public EnemyStaticData ForEnemy(EnemyType enemyType) => 
+            _enemies.TryGetValue(enemyType, out var staticData)
+                ? staticData
+                : null;
 
         public void ForLevel()
         {
@@ -58,8 +61,31 @@ namespace ECR.Services.StaticData
 
         private void OnRemoteConfigLoaded(ConfigResponse configResponse)
         {
-            //var hero = DeserializeObject<string>(RemoteConfigService.Instance.appConfig.GetJson("PlayerID"));
+            LoadHeroData();
+            LoadEnemiesData();
             
+            LogConfigsResponseResult(configResponse);
+        }
+
+        private void LoadHeroData()
+        {
+            _heroStaticData = DeserializeObject<HeroStaticData>(RemoteConfigService.Instance.appConfig.GetJson("Hero"));
+        }
+
+        private void LoadEnemiesData()
+        {
+            _enemies = new Dictionary<EnemyType, EnemyStaticData>();
+            foreach (var enemyType in (EnemyType[]) Enum.GetValues(typeof(EnemyType)))
+            {
+                var enemyStaticData = DeserializeObject<EnemyStaticData>(
+                    RemoteConfigService.Instance.appConfig.GetJson(enemyType.ToString())
+                );
+                _enemies.Add(enemyType, enemyStaticData);
+            }
+        }
+
+        private static void LogConfigsResponseResult(ConfigResponse configResponse)
+        {
             switch (configResponse.requestOrigin)
             {
                 case ConfigOrigin.Default:
@@ -75,6 +101,7 @@ namespace ECR.Services.StaticData
                     throw new ArgumentOutOfRangeException();
             }
         }
+
         private static async Task InitializeRemoteConfigAsync()
         {
             await UnityServices.InitializeAsync();

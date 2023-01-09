@@ -14,6 +14,10 @@ namespace ECR.Infrastructure.States
 
         public void Enter()
         {
+            /*TODO:
+             nothing?
+             */
+            
             Debug.Log(typeof(GameLoopState));
         }
 
