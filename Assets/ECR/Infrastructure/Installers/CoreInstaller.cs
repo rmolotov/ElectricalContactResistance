@@ -26,8 +26,8 @@ namespace ECR.Infrastructure.Installers
         
         private void BindFactories()
         {
-            //TODO: register player factory and enemy factory
             Container.Bind<IHeroFactory>().To<HeroFactory>().AsSingle();
+            Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
         }
     }
 }

@@ -29,6 +29,10 @@ MonoBehaviour:
     m_Address: HeroPrefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 9c0461668590bb146a19810b97cc58fa
+    m_Address: Transistor
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:
