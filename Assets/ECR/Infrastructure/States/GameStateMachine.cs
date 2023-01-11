@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
+using ECR.Services.StaticData;
 using Zenject;
 
 namespace ECR.Infrastructure.States
@@ -12,11 +13,11 @@ namespace ECR.Infrastructure.States
         private readonly Dictionary<Type, IExitableState> _states;
         private IExitableState _currentState;
 
-        public GameStateMachine(SceneLoader sceneLoader, IHeroFactory heroFactory)
+        public GameStateMachine(SceneLoader sceneLoader, IStaticDataService staticDataService, IHeroFactory heroFactory)
         {
             _states = new Dictionary<Type, IExitableState>
             {
-                [typeof(BootstrapState)]    = new BootstrapState(this),
+                [typeof(BootstrapState)]    = new BootstrapState(this, staticDataService),
                 [typeof(LoadProgressState)] = new LoadProgressState(this),
                 [typeof(LoadLevelState)]    = new LoadLevelState(this, sceneLoader, heroFactory),
                 [typeof(GameLoopState)]     = new GameLoopState(this),

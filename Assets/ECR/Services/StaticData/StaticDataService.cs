@@ -20,6 +20,8 @@ namespace ECR.Services.StaticData
         private Dictionary<EnemyType, EnemyStaticData> _enemies;
         private HeroStaticData _heroStaticData;
 
+        #region Attributes structs
+
         private struct UserAttributes
         {
         }
@@ -27,7 +29,11 @@ namespace ECR.Services.StaticData
         private struct AppAttributes
         {
         }
-        
+
+        #endregion
+
+        public Action Initialized { get; set; }
+
         public async void Initialize()
         {
             if (Utilities.CheckForInternetConnection())
@@ -35,8 +41,7 @@ namespace ECR.Services.StaticData
             
             RemoteConfigService.Instance.FetchCompleted += OnRemoteConfigLoaded;
             RemoteConfigService.Instance.SetEnvironmentID(ConfigEnvironmentId);
-
-            // load remote config
+            
             await RemoteConfigService.Instance.FetchConfigsAsync(new UserAttributes(), new AppAttributes());
         }
 
@@ -65,6 +70,8 @@ namespace ECR.Services.StaticData
             LoadEnemiesData();
             
             LogConfigsResponseResult(configResponse);
+            
+            Initialized?.Invoke();
         }
 
         private void LoadHeroData()
