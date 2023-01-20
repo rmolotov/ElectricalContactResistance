@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ECR.StaticData;
 using Unity.Services.Authentication;
@@ -16,8 +17,10 @@ namespace ECR.Services.StaticData
         private const string ConfigEnvironmentId =
             "d7f17096-1635-42aa-b0d3-c7892f39d67c"; // development
             //"prod"; //production
-
+        private const string StagesList = "StagesList";
+        
         private Dictionary<EnemyType, EnemyStaticData> _enemies;
+        private Dictionary<string, StageStaticData> _stages;
         private HeroStaticData _heroStaticData;
 
         #region Attributes structs
@@ -45,6 +48,14 @@ namespace ECR.Services.StaticData
             await RemoteConfigService.Instance.FetchConfigsAsync(new UserAttributes(), new AppAttributes());
         }
 
+        public StageStaticData ForStage(string stageKey) =>
+            _stages.TryGetValue(stageKey, out var stageData)
+                ? stageData
+                : null;
+
+        public List<StageStaticData> GetAllStages =>
+            _stages.Values.ToList();
+
         public HeroStaticData ForHero() =>
             _heroStaticData;
 
@@ -52,11 +63,6 @@ namespace ECR.Services.StaticData
             _enemies.TryGetValue(enemyType, out var staticData)
                 ? staticData
                 : null;
-
-        public void ForLevel()
-        {
-            throw new NotImplementedException();
-        }
 
         public void ForWindow()
         {
@@ -66,12 +72,21 @@ namespace ECR.Services.StaticData
 
         private void OnRemoteConfigLoaded(ConfigResponse configResponse)
         {
+            LoadStagesData();
             LoadHeroData();
             LoadEnemiesData();
             
             LogConfigsResponseResult(configResponse);
             
             Initialized?.Invoke();
+        }
+
+        private void LoadStagesData()
+        {
+            _stages = (DeserializeObject<List<StageStaticData>>(
+                    RemoteConfigService.Instance.appConfig.GetJson(StagesList)
+                ) ?? new List<StageStaticData>())
+                .ToDictionary(st => st.StageKey, st => st);
         }
 
         private void LoadHeroData()
