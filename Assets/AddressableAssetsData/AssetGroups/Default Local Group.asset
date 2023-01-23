@@ -53,6 +53,18 @@ MonoBehaviour:
     m_Address: stage4
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 9312ee94216d42d48bc6a34290d3f28c
+    m_Address: MainMenuPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: babb70b7d946a8647baa4c70b696ce7a
+    m_Address: StageCardPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e28971aee4ca13d4e8dcad56f54a288a
+    m_Address: UIRootPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:

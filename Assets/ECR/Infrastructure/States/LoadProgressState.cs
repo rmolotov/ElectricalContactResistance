@@ -1,5 +1,4 @@
-﻿using ECR.Infrastructure.SceneManagement;
-using ECR.Infrastructure.States.Interfaces;
+﻿using ECR.Infrastructure.States.Interfaces;
 using UnityEngine;
 
 namespace ECR.Infrastructure.States
@@ -21,7 +20,7 @@ namespace ECR.Infrastructure.States
              */
             
             Debug.Log(typeof(LoadProgressState));
-            _stateMachine.Enter<LoadLevelState, SceneName>(SceneName.Core);
+            _stateMachine.Enter<LoadMetaState>();
         }
 
         public void Exit()

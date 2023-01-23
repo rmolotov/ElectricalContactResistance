@@ -28,6 +28,7 @@ namespace ECR.Infrastructure.Installers
         {
             Container.Bind<IHeroFactory>().To<HeroFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
+            Container.Bind<IUIFactory>().To<UIFactory>().AsSingle();
         }
     }
 }

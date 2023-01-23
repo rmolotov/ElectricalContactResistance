@@ -13,14 +13,20 @@ namespace ECR.Infrastructure.States
         private readonly Dictionary<Type, IExitableState> _states;
         private IExitableState _currentState;
 
-        public GameStateMachine(SceneLoader sceneLoader, IStaticDataService staticDataService, IHeroFactory heroFactory)
+        public GameStateMachine(
+            SceneLoader sceneLoader,
+            IStaticDataService staticDataService,
+            IUIFactory uiFactory,
+            IHeroFactory heroFactory
+        )
         {
             _states = new Dictionary<Type, IExitableState>
             {
-                [typeof(BootstrapState)]    = new BootstrapState(this, staticDataService),
+                [typeof(BootstrapState)] = new BootstrapState(this, staticDataService),
                 [typeof(LoadProgressState)] = new LoadProgressState(this),
-                [typeof(LoadLevelState)]    = new LoadLevelState(this, sceneLoader, heroFactory),
-                [typeof(GameLoopState)]     = new GameLoopState(this),
+                [typeof(LoadMetaState)] = new LoadMetaState(this, uiFactory, sceneLoader),
+                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, heroFactory),
+                [typeof(GameLoopState)] = new GameLoopState(this),
             };
         }
 
