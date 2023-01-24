@@ -44,7 +44,9 @@ namespace ECR.Infrastructure.States
 
         private async Task InitMainMenu()
         {
-            await _uiFactory.CreateMainMenu();
+            await _uiFactory
+                .CreateMainMenu()
+                .ContinueWith(m => m.Result.Init(_stateMachine));
         }
 
         public void Exit()

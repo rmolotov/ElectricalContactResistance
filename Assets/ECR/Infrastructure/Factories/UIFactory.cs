@@ -67,13 +67,7 @@ namespace ECR.Infrastructure.Factories
             var card = Object.Instantiate(prefab, menu.stagesTogglesContainer.transform).GetComponent<StageCard>();
            
             card.OnSelect += menu.SelectStage;
-            card.Initialize(
-                stageStaticData.StageKey, 
-                stageStaticData.StageTitle, 
-                stageStaticData.StageDescription, 
-                sprite,
-                menu.stagesTogglesContainer
-            );
+            card.Initialize(stageStaticData, sprite, menu.stagesTogglesContainer);
             
             _container.InjectGameObject(card.gameObject);
 

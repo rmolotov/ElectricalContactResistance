@@ -2,15 +2,19 @@
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
+using ECR.StaticData;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace ECR.Infrastructure.States
 {
-    public class LoadLevelState : IPayloadedState<SceneName>
+    public class LoadLevelState : IPayloadedState<StageStaticData>
     {
         private readonly GameStateMachine _stateMachine;
         private readonly SceneLoader _sceneLoader;
         private readonly IHeroFactory _heroFactory;
+
+        [CanBeNull] private StageStaticData _pendingStageStaticData;
 
         public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, IHeroFactory heroFactory)
         {
@@ -19,8 +23,9 @@ namespace ECR.Infrastructure.States
             _heroFactory = heroFactory;
         }
 
-        public async void Enter(SceneName sceneName)
+        public async void Enter(StageStaticData stageStaticData)
         {
+            _pendingStageStaticData = stageStaticData;
             /*TODO:
              show curtain
              clean up factories, then
@@ -28,13 +33,13 @@ namespace ECR.Infrastructure.States
              clean up asset provider  
              */
             
-            Debug.Log(typeof(LoadLevelState) + $" for {sceneName}");
-            var sceneInstance = await _sceneLoader.Load(sceneName, OnLoaded);
+            Debug.Log(typeof(LoadLevelState) + $" for {stageStaticData.StageKey}");
+            var sceneInstance = await _sceneLoader.Load(SceneName.Core, OnLoaded);
         }
 
         public void Exit()
         {
-            
+            _pendingStageStaticData = null;
         }
 
         private async void OnLoaded(SceneName sceneName)
@@ -48,6 +53,20 @@ namespace ECR.Infrastructure.States
         {
             GameObject hero = await InitHero();
             SetupCamera(hero);
+            
+            SetupBoardTiles();
+            SetupEnemySpawners();
+        }
+
+        private void SetupBoardTiles()
+        {
+            // setup stage board tiles based on pendingStage 
+            // bake runtime navmesh?
+        }
+
+        private void SetupEnemySpawners()
+        {
+            // setup spawners based on pendingStage
         }
 
         private async Task InitUI()

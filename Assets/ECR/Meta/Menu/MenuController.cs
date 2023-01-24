@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using ECR.Infrastructure.States;
+using ECR.StaticData;
+using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ECR.Meta.Menu
@@ -7,9 +10,23 @@ namespace ECR.Meta.Menu
     {
         public ToggleGroup stagesTogglesContainer;
         
-        private string _selectedStage;
+        [SerializeField] private Button settingsButton;
+        [SerializeField] private Button shopButton;
+        [SerializeField] private Button startStageButton;
 
-        public void SelectStage(string stageKey) => 
-            _selectedStage = stageKey;
+
+        [CanBeNull] private StageStaticData _selectedStage;
+
+        public void Init(GameStateMachine stateMachine)
+        {
+            startStageButton.onClick.AddListener(() =>
+            {
+                //stateMachine.Enter<LoadLevelState, StageStaticData>(_selectedStage); 
+                print(_selectedStage?.StageTitle);
+            });
+        }
+        
+        public void SelectStage([CanBeNull] StageStaticData staticData) => 
+            _selectedStage = staticData;
     }
 }

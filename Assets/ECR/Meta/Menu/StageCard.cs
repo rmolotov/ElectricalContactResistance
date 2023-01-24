@@ -1,4 +1,5 @@
 ﻿using System;
+using ECR.StaticData;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,17 +13,20 @@ namespace ECR.Meta.Menu
         [SerializeField] private Toggle selectToggle;
         [SerializeField] private Image cardImage;
 
-        public event Action<string> OnSelect; 
+        public event Action<StageStaticData> OnSelect; 
 
-        public void Initialize(string stageKey, string title, string description, Sprite previewSprite, ToggleGroup toggleGroup)
+        public void Initialize(StageStaticData staticData, Sprite previewSprite, ToggleGroup toggleGroup)
         {
-            cardTitle.text = title;
-            cardDescription.text = description;
+            cardTitle.text = staticData.StageTitle;
+            cardDescription.text = staticData.StageDescription;
             cardImage.sprite = previewSprite;
             
             selectToggle.onValueChanged.AddListener(arg =>
                 {
-                    if (arg) OnSelect?.Invoke(stageKey);
+                    OnSelect?.Invoke(arg
+                        ? staticData 
+                        : null
+                    );
                 }
             );
             selectToggle.group = toggleGroup;
