@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RSG
-{
-    internal static class PromiseExtensions
-    {
+namespace RSG.Extensions
+{ 
+    public static class PromiseExtensions
+    { 
         internal class PromiseMono : MonoBehaviour { }
 
         private static MonoBehaviour _routineBehaviour;
