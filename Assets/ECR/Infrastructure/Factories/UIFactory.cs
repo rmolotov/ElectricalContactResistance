@@ -13,8 +13,8 @@ namespace ECR.Infrastructure.Factories
     public class UIFactory : IUIFactory
     {
         private const string UIRootPrefab = "UIRootPrefab";
-        private const string MenuPrefabKey = "MainMenuPrefab";
-        private const string ShopPrefabKey = "ShopPrefab";
+        private const string MenuPrefab = "MainMenuPrefab";
+        private const string ShopPrefab = "ShopPrefab";
         private const string StageCardPrefab = "StageCardPrefab";
 
         private readonly DiContainer _container;
@@ -41,9 +41,15 @@ namespace ECR.Infrastructure.Factories
             _assetProvider.Cleanup();
         }
 
+        public async Task CreateUIRoot()
+        {
+            var prefab = await _assetProvider.Load<GameObject>(key: UIRootPrefab);
+            _uiRoot = Object.Instantiate(prefab).GetComponent<Canvas>();
+        }
+
         public async Task<MenuController> CreateMainMenu()
         {
-            var prefab = await _assetProvider.Load<GameObject>(key: MenuPrefabKey);
+            var prefab = await _assetProvider.Load<GameObject>(key: MenuPrefab);
             var menu = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<MenuController>();
 
             foreach (var stageData in _staticDataService.GetAllStages)
@@ -54,11 +60,6 @@ namespace ECR.Infrastructure.Factories
             return menu;
         }
 
-        public async Task CreateUIRoot()
-        {
-            var prefab = await _assetProvider.Load<GameObject>(key: UIRootPrefab);
-            _uiRoot = Object.Instantiate(prefab).GetComponent<Canvas>();
-        }
 
         private async Task<StageCard> CreateStageCard(StageStaticData stageStaticData, MenuController menu)
         {
@@ -68,8 +69,6 @@ namespace ECR.Infrastructure.Factories
            
             card.OnSelect += menu.SelectStage;
             card.Initialize(stageStaticData, sprite, menu.stagesTogglesContainer);
-            
-            _container.InjectGameObject(card.gameObject);
 
             return card;
         }

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Gameplay
+  m_EditorClassIdentifier: 
+  m_GroupName: Gameplay
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 4fe7faee73a4d0b408e21178c2f7394b
+  m_SerializeEntries:
+  - m_GUID: 6d252996a8476564aaeef6781185981b
+    m_Address: HeroPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 9c0461668590bb146a19810b97cc58fa
+    m_Address: Transistor
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 2280a47eb68acbb4199a44eb543f13e5, type: 2}
+    - {fileID: 11400000, guid: 540bd9ed2904dc94b8b2339ca650e2fe, type: 2}
