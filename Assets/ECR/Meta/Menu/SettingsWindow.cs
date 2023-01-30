@@ -1,4 +1,4 @@
-﻿using ECR.StaticData;
+﻿using ECR.Data;
 using ECR.UI;
 using RSG;
 using Sirenix.OdinInspector;
@@ -15,6 +15,8 @@ namespace ECR.Meta.Menu
         [SerializeField] private Toggle hapticToggle;
         [SerializeField] private Toggle debugMonitorToggle;
 
+        private PlayerSettingsData _userSettings;
+
         protected override void Construct()
         {
             // _soundService, _hapticService, _graphyManager, progressService
@@ -24,44 +26,48 @@ namespace ECR.Meta.Menu
 
         public override Promise<bool> InitAndShow<T>(T data, string titleText = "")
         {
-            var userData = data as PlayerSettingsStaticData;
+            _userSettings = data as PlayerSettingsData;
             
-            SetupControls(userData);
+            SetupControls();
             
             return base.InitAndShow(data, titleText);
         }
-        
 
-        private void SetupControls(PlayerSettingsStaticData data)
+
+        private void SetupControls()
         {
             musicSlider.onValueChanged.AddListener(SetMusicVolume);
             sfxSlider.onValueChanged.AddListener(SetSfxVolume);
             hapticToggle.onValueChanged.AddListener(EnableHaptic);
             debugMonitorToggle.onValueChanged.AddListener(EnableDebugMonitor);
 
-            musicSlider.value = data.MusicVolume / 100f;
-            sfxSlider.value = data.SfxVolume / 100f;
-            hapticToggle.isOn = data.HapticEnabled;
-            debugMonitorToggle.isOn = data.DebugEnabled;
+            musicSlider.value       = _userSettings.MusicVolume;
+            sfxSlider.value         = _userSettings.SfxVolume;
+            hapticToggle.isOn       = _userSettings.HapticEnabled;
+            debugMonitorToggle.isOn = _userSettings.DebugEnabled;
         }
 
         private void EnableDebugMonitor(bool value)
         {
+            _userSettings.DebugEnabled = value;
             // _graphyManager.gameObject.SetActive(value);
         }
 
         private void EnableHaptic(bool value)
         {
+            _userSettings.HapticEnabled = value;
             // _hapticService.enabled = value
         }
 
         private void SetMusicVolume(float value)
         {
+            _userSettings.MusicVolume = (byte) value;
             // _soundService.SetMusicVolume(value);
         }
 
         private void SetSfxVolume(float value)
         {
+            _userSettings.SfxVolume = (byte) value;
             // _soundService.SetSfxVolume(value);
         }
     }

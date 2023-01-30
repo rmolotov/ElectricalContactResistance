@@ -1,4 +1,8 @@
-﻿using ECR.Infrastructure.States.Interfaces;
+﻿using System.Collections.Generic;
+using ECR.Data;
+using ECR.Infrastructure.States.Interfaces;
+using ECR.Services.PersistentData;
+using ECR.Services.SaveLoad;
 using UnityEngine;
 
 namespace ECR.Infrastructure.States
@@ -6,10 +10,17 @@ namespace ECR.Infrastructure.States
     public class LoadProgressState : IState
     {
         private readonly GameStateMachine _stateMachine;
+        private readonly IPersistentDataService _progressService;
+        private readonly ISaveLoadService _saveLoadProgressService;
 
-        public LoadProgressState(GameStateMachine gameStateMachine)
+        public LoadProgressState(
+            GameStateMachine gameStateMachine, 
+            IPersistentDataService progressService,
+            ISaveLoadService saveLoadProgressService)
         {
             _stateMachine = gameStateMachine;
+            _progressService = progressService;
+            _saveLoadProgressService = saveLoadProgressService;
         }
 
         public void Enter()
@@ -20,6 +31,9 @@ namespace ECR.Infrastructure.States
              */
             
             Debug.Log(typeof(LoadProgressState));
+            
+            LoadProgressOrInitNew();
+            
             _stateMachine.Enter<LoadMetaState>();
         }
 
@@ -27,5 +41,31 @@ namespace ECR.Infrastructure.States
         {
             
         }
+        
+        private async void LoadProgressOrInitNew()
+        {
+            _progressService.Settings = 
+                await _saveLoadProgressService.LoadSettings() 
+                ?? NewSettings();
+            
+            _progressService.Progress = 
+                await _saveLoadProgressService.LoadProgress() 
+                ?? NewProgress();
+        }
+        
+        private PlayerProgressData NewProgress() =>
+            new()
+            {
+                CompletedStages = new HashSet<string>()
+            };
+
+        private PlayerSettingsData NewSettings() =>
+            new()
+            {
+                MusicVolume = 100,
+                SfxVolume = 100,
+                DebugEnabled = false,
+                HapticEnabled = true
+            };
     }
 }

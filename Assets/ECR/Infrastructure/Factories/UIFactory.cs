@@ -57,6 +57,7 @@ namespace ECR.Infrastructure.Factories
                 await CreateStageCard(stageData, menu);
             }
             
+            _container.Inject(menu);
             return menu;
         }
 

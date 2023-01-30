@@ -1,6 +1,9 @@
-﻿namespace ECR.StaticData
+﻿using System;
+
+namespace ECR.Data
 {
-    public record PlayerSettingsStaticData
+    [Serializable]
+    public class PlayerSettingsData
     {
         public byte MusicVolume { get; set; }
         public byte SfxVolume { get; set; }

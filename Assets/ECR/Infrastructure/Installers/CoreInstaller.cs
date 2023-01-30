@@ -4,6 +4,8 @@ using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States;
 using ECR.Services.Input;
+using ECR.Services.PersistentData;
+using ECR.Services.SaveLoad;
 using ECR.Services.StaticData;
 using Zenject;
 
@@ -14,16 +16,22 @@ namespace ECR.Infrastructure.Installers
         public override void InstallBindings()
         {
             Container.Bind<IAssetProvider>().To<AddressableProvider>().AsSingle();
-            Container.Bind<IInputService>().To<InputService>().AsSingle().NonLazy();
-            
             Container.Bind<SceneLoader>().AsSingle();
-
-            Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<GameStateMachine>().AsSingle(); //GameStateMachine entry point is Initialize()
             
+            BindServices();
             BindFactories();
+            
+            Container.BindInterfacesAndSelfTo<GameStateMachine>().AsSingle(); //GameStateMachine entry point is Initialize()
         }
-        
+
+        private void BindServices()
+        {
+            Container.Bind<IInputService>().To<InputService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle(); // remote, initializable
+            Container.BindInterfacesAndSelfTo<PersistentDataService>().AsSingle(); // possible remote, initializable
+            Container.Bind<ISaveLoadService>().To<SaveLoadLocalService>().AsSingle().NonLazy();
+        }
+
         private void BindFactories()
         {
             Container.Bind<IHeroFactory>().To<HeroFactory>().AsSingle();
