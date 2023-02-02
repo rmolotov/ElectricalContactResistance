@@ -46,7 +46,7 @@ namespace ECR.Infrastructure.States
         {
             await _uiFactory
                 .CreateMainMenu()
-                .ContinueWith(m => m.Result.Init(_stateMachine));
+                .ContinueWith(m => m.Result.Initialize(), TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public void Exit()

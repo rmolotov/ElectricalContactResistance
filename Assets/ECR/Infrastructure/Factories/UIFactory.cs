@@ -14,7 +14,7 @@ namespace ECR.Infrastructure.Factories
     {
         private const string UIRootPrefab = "UIRootPrefab";
         private const string MenuPrefab = "MainMenuPrefab";
-        private const string ShopPrefab = "ShopPrefab";
+        private const string ShopPrefab = "ShopWindowPrefab";
         private const string StageCardPrefab = "StageCardPrefab";
 
         private readonly DiContainer _container;
@@ -61,6 +61,12 @@ namespace ECR.Infrastructure.Factories
             return menu;
         }
 
+        public async Task<ShopWindow> CreateShop()
+        {
+            var prefab = await _assetProvider.Load<GameObject>(key: ShopPrefab);
+            var shop = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<ShopWindow>();
+            return shop;
+        }
 
         private async Task<StageCard> CreateStageCard(StageStaticData stageStaticData, MenuController menu)
         {

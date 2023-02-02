@@ -29,6 +29,10 @@ MonoBehaviour:
     m_Address: MainMenuPrefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 7164ebe3314347142acf9652eca1b1ed
+    m_Address: ShopWindowPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:

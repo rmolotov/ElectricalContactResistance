@@ -1,4 +1,6 @@
-﻿using ECR.Infrastructure.States;
+﻿using System.Threading.Tasks;
+using ECR.Infrastructure.Factories.Interfaces;
+using ECR.Infrastructure.States;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.StaticData;
@@ -17,43 +19,62 @@ namespace ECR.Meta.Menu
         public ToggleGroup stagesTogglesContainer;
         [SerializeField] private Button startStageButton;
 
-        [BoxGroup("Windows")][HorizontalGroup("Windows/Horizontal", 0.5f, LabelWidth = 120)]
-        
-        [VerticalGroup("Windows/Horizontal/Left")] [LabelText("Settings")]
-        [SerializeField] private ButtonForPromised settingsButton;
-        [VerticalGroup("Windows/Horizontal/Right")] [HideLabel]
-        [SerializeField] private WindowBase settingsWindow;
-        
-        [VerticalGroup("Windows/Horizontal/Left")] [LabelText("Shop")]
-        [SerializeField] private ButtonForPromised shopButton;
-        [VerticalGroup("Windows/Horizontal/Right")] [HideLabel]
-        [SerializeField] private WindowBase shopWindow;
+        [BoxGroup("Windows")]
+        [HorizontalGroup("Windows/Horizontal", 0.5f, LabelWidth = 120)]
+        [VerticalGroup("Windows/Horizontal/Left")]
+        [LabelText("Settings")]
+        [SerializeField]
+        private ButtonForPromised settingsButton;
+
+        [VerticalGroup("Windows/Horizontal/Right")] [HideLabel] [SerializeField]
+        private WindowBase settingsWindow;
+
+        [VerticalGroup("Windows/Horizontal/Left")] [LabelText("Shop")] [SerializeField]
+        private ButtonForPromised shopButton;
 
 
+        private GameStateMachine _stateMachine;
+        private IUIFactory _uiFactory;
         private IPersistentDataService _persistentDataService;
         private ISaveLoadService _saveLoadService;
+
         [CanBeNull] private StageStaticData _selectedStage;
+        private ShopWindow _shopWindow;
 
         [Inject]
-        private void Construct(IPersistentDataService persistentDataService, ISaveLoadService saveLoadService)
+        private void Construct(
+            GameStateMachine stateMachine,
+            IUIFactory uiFactory,
+            IPersistentDataService persistentDataService,
+            ISaveLoadService saveLoadService)
         {
+            _stateMachine = stateMachine;
+            _uiFactory = uiFactory;
             _persistentDataService = persistentDataService;
             _saveLoadService = saveLoadService;
         }
 
-        public void Init(GameStateMachine stateMachine)
+        public async void Initialize()
         {
-            startStageButton.onClick.AddListener(() =>
-            {
-                //stateMachine.Enter<LoadLevelState, StageStaticData>(_selectedStage); 
-                print(_selectedStage?.StageTitle);
-            });
-
+            await CreateShop();
             SetupButtons();
         }
 
+        public void SelectStage([CanBeNull] StageStaticData staticData) =>
+            _selectedStage = staticData;
+
+        
+        private async Task CreateShop() => 
+            _shopWindow = await _uiFactory.CreateShop();
+
         private void SetupButtons()
         {
+            startStageButton.onClick.AddListener(() =>
+            {
+                //_stateMachine.Enter<LoadLevelState, StageStaticData>(_selectedStage); 
+                print(_selectedStage?.StageTitle);
+            });
+
             settingsButton.onClick.AddListener(() =>
                 settingsWindow
                     .InitAndShow(_persistentDataService.Settings)
@@ -63,15 +84,12 @@ namespace ECR.Meta.Menu
                         if (ok) _saveLoadService.SaveSettings(); // if ok==false -> _sls.RestoreSavedSettings?
                     })
             );
-            
-            shopButton.onClick.AddListener(() =>  
-                shopWindow
+
+            shopButton.onClick.AddListener(() =>
+                _shopWindow
                     .InitAndShow("shop items data")
                     .Then(_ => shopButton.OnPromisedResolve())
             );
         }
-
-        public void SelectStage([CanBeNull] StageStaticData staticData) => 
-            _selectedStage = staticData;
     }
 }

@@ -9,5 +9,6 @@ namespace ECR.Infrastructure.Factories.Interfaces
         void CleanUp();
         Task CreateUIRoot();
         Task<MenuController> CreateMainMenu();
+        Task<ShopWindow> CreateShop();
     }
 }
