@@ -10,36 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Meta
+  m_Name: Inventory and Shop
   m_EditorClassIdentifier: 
-  m_GroupName: Meta
+  m_GroupName: Inventory and Shop
   m_Data:
     m_SerializedData: []
-  m_GUID: 9f9b9a5fa2cd55d4b85cc2119a6a6f43
+  m_GUID: d0d2b2464cd392a499db6ebdadc1a6df
   m_SerializeEntries:
-  - m_GUID: e28971aee4ca13d4e8dcad56f54a288a
-    m_Address: UIRootPrefab
+  - m_GUID: ebd14e8c8ee3eb3448776ce8c4a0ba2b
+    m_Address: PowerfulRelays
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: babb70b7d946a8647baa4c70b696ce7a
-    m_Address: StageCardPrefab
+  - m_GUID: 0a8e27bb352d36340bd072e9d310bf9c
+    m_Address: SideEffects
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 9312ee94216d42d48bc6a34290d3f28c
-    m_Address: MainMenuPrefab
+  - m_GUID: 389f6e7e63ea261468b353e86862969a
+    m_Address: VibrationDampingPad
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 7164ebe3314347142acf9652eca1b1ed
-    m_Address: ShopWindowPrefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 463fb682ef68a33438e50767aa192809
-    m_Address: ShopItemCardPrefab
+  - m_GUID: 320caf0d8140b994bbea2fe3a29e9311
+    m_Address: ExtendedCapacity
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 5f8a57d8bcaa1da4bbae51a9099e3352, type: 2}
-    - {fileID: 11400000, guid: f9149aa9ddcebbb45ac537716a24dc65, type: 2}
+    - {fileID: 11400000, guid: a8b76c17377aea946b8d6fb8d7a29a4d, type: 2}
+    - {fileID: 11400000, guid: 71556d10b66e0ea48a55de6506caa0ac, type: 2}
