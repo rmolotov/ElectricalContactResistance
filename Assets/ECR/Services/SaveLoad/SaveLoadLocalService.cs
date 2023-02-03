@@ -9,16 +9,18 @@ namespace ECR.Services.SaveLoad
     public class SaveLoadLocalService : ISaveLoadService
     {
         private const string ProgressKey = "Progress";
+        private const string EconomyKey = "Economy";
         private const string SettingsKey = "Settings";
-        
+
         private readonly IPersistentDataService _persistentDataService;
+
 
         public SaveLoadLocalService(IPersistentDataService persistentDataService)
         {
             _persistentDataService = persistentDataService;
             // factories?
         }
-        
+
         public void SaveProgress()
         {
             var progress = SerializeObject(_persistentDataService.Progress);
@@ -29,6 +31,18 @@ namespace ECR.Services.SaveLoad
         {
             var progress = DeserializeObject<PlayerProgressData>(PlayerPrefs.GetString(ProgressKey));
             return Task.FromResult(progress);
+        }
+
+        public void SaveEconomy()
+        {
+            var economy = SerializeObject(_persistentDataService.Economy);
+            PlayerPrefs.SetString(EconomyKey, economy);
+        }
+
+        public Task<PlayerEconomyData> LoadEconomy()
+        {
+            var economy = DeserializeObject<PlayerEconomyData>(PlayerPrefs.GetString(EconomyKey));
+            return Task.FromResult(economy);
         }
 
         public void SaveSettings()

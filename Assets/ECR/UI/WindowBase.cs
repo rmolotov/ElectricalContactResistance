@@ -1,5 +1,4 @@
-﻿using System;
-using DG.Tweening;
+﻿using DG.Tweening;
 using JetBrains.Annotations;
 using RSG;
 using RSG.Extensions;
@@ -13,6 +12,8 @@ namespace ECR.UI
     [RequireComponent(typeof(CanvasGroup))]
     public abstract class WindowBase : MonoBehaviour
     {
+        private const string ClickEffectKey = "SFX_buttonClick";
+        
         [Title("Appearance settings")]
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] [CanBeNull] private RectTransform windowPanel;
@@ -27,9 +28,10 @@ namespace ECR.UI
         protected Promise<bool> Promise;
 
         [Inject]
-        protected virtual void Construct()
+        private void Construct()
         {
-
+            // haptic service
+            // sound service
         }
 
         private void Awake() => 
@@ -62,12 +64,12 @@ namespace ECR.UI
 
         protected void PlaySoundEffect()
         {
-
+            // _soundService.Play(clickEffectKey)
         }
 
         protected void PlayHapticEffect()
         {
-
+            // _hapticService.Play(clickEffectKey)
         }
 
         private void SetVisible(bool value)

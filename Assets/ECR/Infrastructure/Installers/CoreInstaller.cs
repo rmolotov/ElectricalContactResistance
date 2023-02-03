@@ -3,6 +3,7 @@ using ECR.Infrastructure.Factories;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States;
+using ECR.Services.Economy;
 using ECR.Services.Input;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
@@ -29,7 +30,8 @@ namespace ECR.Infrastructure.Installers
             Container.Bind<IInputService>().To<InputService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle(); // remote, initializable
             Container.BindInterfacesAndSelfTo<PersistentDataService>().AsSingle(); // possible remote, initializable
-            Container.Bind<ISaveLoadService>().To<SaveLoadLocalService>().AsSingle().NonLazy();
+            Container.Bind<ISaveLoadService>().To<SaveLoadLocalService>().AsSingle().NonLazy(); // possible remote, initializable
+            Container.Bind<IEconomyService>().To<EconomyLocalService>().AsSingle().NonLazy(); // possible remote, initializable
         }
 
         private void BindFactories()

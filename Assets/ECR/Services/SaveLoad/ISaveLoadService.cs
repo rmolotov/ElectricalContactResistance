@@ -7,6 +7,8 @@ namespace ECR.Services.SaveLoad
     {
         void SaveProgress();
         Task<PlayerProgressData> LoadProgress();
+        void SaveEconomy();
+        Task<PlayerEconomyData> LoadEconomy();
         void SaveSettings();
         Task<PlayerSettingsData> LoadSettings();
     }

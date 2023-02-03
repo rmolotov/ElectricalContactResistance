@@ -4,6 +4,7 @@ using RSG;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace ECR.Meta.Menu
 {
@@ -17,11 +18,11 @@ namespace ECR.Meta.Menu
 
         private PlayerSettingsData _userSettings;
 
-        protected override void Construct()
+        [Inject]
+        private void Construct()
         {
-            // _soundService, _hapticService, _graphyManager, progressService
-            print("settings window constructed");
-            base.Construct();
+            // {_soundService, _hapticService} = from windowBase
+            // _graphyManager
         }
 
         public override Promise<bool> InitAndShow<T>(T data, string titleText = "")

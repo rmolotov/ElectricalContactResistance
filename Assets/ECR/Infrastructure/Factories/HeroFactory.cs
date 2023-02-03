@@ -43,7 +43,7 @@ namespace ECR.Infrastructure.Factories
             _container.InjectGameObject(hero);
 
             var health = hero.GetComponent<HeroHealth>();
-            health.MaxHP = config.Capacity;
+            health.MaxHP = config.Voltage;
             health.CurrentHP = health.MaxHP;
 
             var attack = hero.GetComponent<HeroAttack>();

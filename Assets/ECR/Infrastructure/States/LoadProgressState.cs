@@ -51,8 +51,19 @@ namespace ECR.Infrastructure.States
             _progressService.Progress = 
                 await _saveLoadProgressService.LoadProgress() 
                 ?? NewProgress();
+            
+            _progressService.Economy = 
+                await _saveLoadProgressService.LoadEconomy() 
+                ?? NewEconomy();
         }
-        
+
+        private PlayerEconomyData NewEconomy() =>
+            new()
+            {
+                PlayerCurrency = 100,
+                InventoryItems = new Dictionary<string, int>()
+            };
+
         private PlayerProgressData NewProgress() =>
             new()
             {

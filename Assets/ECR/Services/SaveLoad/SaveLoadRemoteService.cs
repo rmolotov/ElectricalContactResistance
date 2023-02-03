@@ -15,6 +15,16 @@ namespace ECR.Services.SaveLoad
             throw new System.NotImplementedException();
         }
 
+        public void SaveEconomy()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<PlayerEconomyData> LoadEconomy()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void SaveSettings()
         {
             //CloudSaveService.Instance.Data.ForceSaveAsync(_dataService.SettingsData);

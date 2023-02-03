@@ -2,6 +2,7 @@
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Meta.Menu;
+using ECR.Services.Economy;
 using ECR.Services.StaticData;
 using ECR.StaticData;
 using UnityEngine;
@@ -16,18 +17,27 @@ namespace ECR.Infrastructure.Factories
         private const string MenuPrefab = "MainMenuPrefab";
         private const string ShopPrefab = "ShopWindowPrefab";
         private const string StageCardPrefab = "StageCardPrefab";
+        private const string ShopItemCardPrefab = "ShopItemCardPrefab";
 
         private readonly DiContainer _container;
         private readonly IAssetProvider _assetProvider;
         private readonly IStaticDataService _staticDataService;
+        private readonly IEconomyService _economyService;
 
         private Canvas _uiRoot;
 
-        public UIFactory(DiContainer container, IAssetProvider assetProvider, IStaticDataService staticDataService)
+
+        public UIFactory(
+            DiContainer container, 
+            IAssetProvider assetProvider, 
+            IStaticDataService staticDataService, 
+            IEconomyService economyService
+        )
         {
             _container = container;
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
+            _economyService = economyService;
         }
 
         public async Task WarmUp()
@@ -65,6 +75,13 @@ namespace ECR.Infrastructure.Factories
         {
             var prefab = await _assetProvider.Load<GameObject>(key: ShopPrefab);
             var shop = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<ShopWindow>();
+            
+            foreach (var itemData in _staticDataService.GetAllItems)
+            {
+                await CreateShopItemCard(itemData, shop.itemsCardsContainer);
+            }
+            
+            _container.Inject(shop);
             return shop;
         }
 
@@ -76,6 +93,24 @@ namespace ECR.Infrastructure.Factories
            
             card.OnSelect += menu.SelectStage;
             card.Initialize(stageStaticData, sprite, menu.stagesTogglesContainer);
+
+            return card;
+        }
+
+        private async Task<ShopItemCard> CreateShopItemCard(InventoryItemStaticData shopItemStaticData, RectTransform container)
+        {
+            var prefab = await _assetProvider.Load<GameObject>(key: ShopItemCardPrefab);
+            var sprite = await _assetProvider.Load<Sprite>(key: shopItemStaticData.ItemId);
+            var card = Object.Instantiate(prefab, container).GetComponent<ShopItemCard>();
+            var obtainedCount = _economyService.IsItemObtainedAndCount(shopItemStaticData.ItemId).Item2;
+            
+            card.OnBuyClick += arg =>
+            {
+                _economyService.BuyItem(arg);
+                var updatedCount = _economyService.IsItemObtainedAndCount(arg).Item2;
+                card.UpdateObtainedCount(updatedCount);
+            };
+            card.Initialize(shopItemStaticData, sprite, obtainedCount);
 
             return card;
         }

@@ -6,5 +6,6 @@ namespace ECR.Services.PersistentData
     {
         PlayerSettingsData Settings { get; set; }
         PlayerProgressData Progress { get; set; }
+        PlayerEconomyData Economy { get; set; }
     }
 }

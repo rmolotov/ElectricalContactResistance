@@ -18,10 +18,13 @@ namespace ECR.Services.StaticData
             "d7f17096-1635-42aa-b0d3-c7892f39d67c"; // development
             //"prod"; //production
         private const string StagesList = "StagesList";
-        
+        private const string ItemsList = "ItemsList";
+
         private Dictionary<EnemyType, EnemyStaticData> _enemies;
         private Dictionary<string, StageStaticData> _stages;
+        private Dictionary<string, InventoryItemStaticData> _items;
         private HeroStaticData _heroStaticData;
+
 
         #region Attributes structs
 
@@ -36,6 +39,7 @@ namespace ECR.Services.StaticData
         #endregion
 
         public Action Initialized { get; set; }
+
 
         public async void Initialize()
         {
@@ -56,6 +60,14 @@ namespace ECR.Services.StaticData
         public List<StageStaticData> GetAllStages =>
             _stages.Values.ToList();
 
+        public InventoryItemStaticData ForInventoryItem(string itemKey) =>
+            _items.TryGetValue(itemKey, out var itemData)
+                ? itemData
+                : null;
+
+        public List<InventoryItemStaticData> GetAllItems => 
+            _items.Values.ToList();
+
         public HeroStaticData ForHero() =>
             _heroStaticData;
 
@@ -73,6 +85,7 @@ namespace ECR.Services.StaticData
         private void OnRemoteConfigLoaded(ConfigResponse configResponse)
         {
             LoadStagesData();
+            LoadItemsData();
             LoadHeroData();
             LoadEnemiesData();
             
@@ -81,13 +94,21 @@ namespace ECR.Services.StaticData
             Initialized?.Invoke();
         }
 
-        private void LoadStagesData()
-        {
+        /*
+         * Used in case of EconomyLocalService; when Remote SD provided by UGS Economy
+         * Mark methods and props [Obsolete] if needed
+         */
+        private void LoadStagesData() =>
             _stages = (DeserializeObject<List<StageStaticData>>(
                     RemoteConfigService.Instance.appConfig.GetJson(StagesList)
                 ) ?? new List<StageStaticData>())
                 .ToDictionary(st => st.StageKey, st => st);
-        }
+
+        private void LoadItemsData() =>
+            _items = (DeserializeObject<List<InventoryItemStaticData>>(
+                    RemoteConfigService.Instance.appConfig.GetJson(ItemsList)
+                ) ?? new List<InventoryItemStaticData>())
+                .ToDictionary(it => it.ItemId, it => it);
 
         private void LoadHeroData()
         {
