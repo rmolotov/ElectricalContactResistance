@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ECR.UI
+namespace ECR.UI.Windows
 {
     public class TwoButtonWindow : OneButtonWindow
     {

@@ -2,6 +2,7 @@
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Meta.Menu;
+using ECR.Meta.Shop;
 using ECR.Services.Economy;
 using ECR.Services.StaticData;
 using ECR.StaticData;

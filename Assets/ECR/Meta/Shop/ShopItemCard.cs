@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ECR.Meta.Menu
+namespace ECR.Meta.Shop
 {
     public class ShopItemCard: MonoBehaviour
     {

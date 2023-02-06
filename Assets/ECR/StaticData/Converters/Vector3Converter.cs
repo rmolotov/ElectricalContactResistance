@@ -23,7 +23,6 @@ namespace ECR.StaticData.Converters
             
             Debug.LogError($"JSON Extensions: Failed to create Vector3: parsedResult is NULL");
             return null;
-
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => 

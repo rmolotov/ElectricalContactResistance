@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace ECR.UI
+namespace ECR.UI.Windows
 {
     [RequireComponent(typeof(CanvasGroup))]
     public abstract class WindowBase : MonoBehaviour

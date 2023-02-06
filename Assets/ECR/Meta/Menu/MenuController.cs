@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.States;
+using ECR.Meta.Shop;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.StaticData;
 using ECR.UI;
 using ECR.UI.CustomComponents;
+using ECR.UI.Windows;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -21,16 +23,15 @@ namespace ECR.Meta.Menu
 
         [BoxGroup("Windows")]
         [HorizontalGroup("Windows/Horizontal", 0.5f, LabelWidth = 120)]
+        
         [VerticalGroup("Windows/Horizontal/Left")]
-        [LabelText("Settings")]
-        [SerializeField]
-        private ButtonForPromised settingsButton;
+        [LabelText("Settings")] [SerializeField] private ButtonForPromised settingsButton;
 
-        [VerticalGroup("Windows/Horizontal/Right")] [HideLabel] [SerializeField]
-        private WindowBase settingsWindow;
+        [VerticalGroup("Windows/Horizontal/Right")]
+        [HideLabel] [SerializeField] private WindowBase settingsWindow;
 
-        [VerticalGroup("Windows/Horizontal/Left")] [LabelText("Shop")] [SerializeField]
-        private ButtonForPromised shopButton;
+        [VerticalGroup("Windows/Horizontal/Left")] 
+        [LabelText("Shop")] [SerializeField] private ButtonForPromised shopButton;
 
 
         private GameStateMachine _stateMachine;
@@ -60,10 +61,15 @@ namespace ECR.Meta.Menu
             SetupButtons();
         }
 
-        public void SelectStage([CanBeNull] StageStaticData staticData) =>
+        public void SelectStage([CanBeNull] StageStaticData staticData)
+        {
+            // start button blinks when selected stage changed to another one
+            // is it bug or feature? mb implement reaction by Rx w throttle?
             _selectedStage = staticData;
+            startStageButton.interactable = _selectedStage != null;
+        }
 
-        
+
         private async Task CreateShop() => 
             _shopWindow = await _uiFactory.CreateShop();
 
@@ -71,8 +77,7 @@ namespace ECR.Meta.Menu
         {
             startStageButton.onClick.AddListener(() =>
             {
-                //_stateMachine.Enter<LoadLevelState, StageStaticData>(_selectedStage); 
-                print(_selectedStage?.StageTitle);
+                _stateMachine.Enter<LoadLevelState, StageStaticData>(_selectedStage);
             });
 
             settingsButton.onClick.AddListener(() =>

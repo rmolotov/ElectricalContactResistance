@@ -29,7 +29,7 @@ namespace ECR.Infrastructure.AssetManagement
 
         public async Task<SceneInstance> LoadScene(SceneName sceneName)
         {
-            var operationHandle = Addressables.LoadSceneAsync(sceneName.ToString());
+            var operationHandle = Addressables.LoadSceneAsync(sceneName.ToSceneString());
             return await operationHandle.Task;
         }
 

@@ -12,7 +12,7 @@ using Zenject;
 
 namespace ECR.Infrastructure.Installers
 {
-    public class CoreInstaller : MonoInstaller
+    public class InfrastructureInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

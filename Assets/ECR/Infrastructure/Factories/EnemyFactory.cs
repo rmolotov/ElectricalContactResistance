@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using ECR.Gameplay.Enemy;
-using ECR.Gameplay.Hero;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Services.StaticData;

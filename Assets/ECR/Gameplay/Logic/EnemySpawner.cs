@@ -1,5 +1,4 @@
-﻿using System;
-using ECR.Infrastructure.Factories.Interfaces;
+﻿using ECR.Infrastructure.Factories.Interfaces;
 using ECR.StaticData;
 using Sirenix.OdinInspector;
 using UnityEngine;

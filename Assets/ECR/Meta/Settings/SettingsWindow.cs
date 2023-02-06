@@ -1,12 +1,13 @@
 ﻿using ECR.Data;
 using ECR.UI;
+using ECR.UI.Windows;
 using RSG;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace ECR.Meta.Menu
+namespace ECR.Meta.Settings
 {
     public class SettingsWindow : OneButtonWindow
     {

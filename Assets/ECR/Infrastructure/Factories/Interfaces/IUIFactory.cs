@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using ECR.Meta.Menu;
+using ECR.Meta.Shop;
 
 namespace ECR.Infrastructure.Factories.Interfaces
 {

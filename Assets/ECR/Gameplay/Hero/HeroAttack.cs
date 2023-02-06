@@ -23,7 +23,6 @@ namespace ECR.Gameplay.Hero
             if (_inputService.Fire)
             {
                 //_animator.PlayAttack();
-                Debug.Log($"HERO ATTACK: I = {AttackDamage}, R = {Shield}");
             }
         }
 

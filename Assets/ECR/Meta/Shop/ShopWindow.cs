@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using ECR.Services.Economy;
 using ECR.UI;
+using ECR.UI.Windows;
 using RSG;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -8,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace ECR.Meta.Menu
+namespace ECR.Meta.Shop
 {
     public class ShopWindow : OneButtonWindow
     {
