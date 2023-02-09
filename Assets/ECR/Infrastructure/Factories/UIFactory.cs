@@ -15,6 +15,7 @@ namespace ECR.Infrastructure.Factories
     public class UIFactory : IUIFactory
     {
         private const string UIRootPrefab = "UIRootPrefab";
+        private const string HudPrefab = "HudPrefab";
         private const string MenuPrefab = "MainMenuPrefab";
         private const string ShopPrefab = "ShopWindowPrefab";
         private const string StageCardPrefab = "StageCardPrefab";
@@ -56,6 +57,14 @@ namespace ECR.Infrastructure.Factories
         {
             var prefab = await _assetProvider.Load<GameObject>(key: UIRootPrefab);
             _uiRoot = Object.Instantiate(prefab).GetComponent<Canvas>();
+        }
+
+        public async Task<GameObject> CreateHud()
+        {
+            var prefab = await _assetProvider.Load<GameObject>(key: HudPrefab);
+            var hud = Object.Instantiate(prefab, _uiRoot.transform);
+
+            return hud;
         }
 
         public async Task<MenuController> CreateMainMenu()

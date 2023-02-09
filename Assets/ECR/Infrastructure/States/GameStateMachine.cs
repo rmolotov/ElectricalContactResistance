@@ -29,7 +29,7 @@ namespace ECR.Infrastructure.States
                 [typeof(BootstrapState)] = new BootstrapState(this, staticDataService),
                 [typeof(LoadProgressState)] = new LoadProgressState(this, persistentDataService, saveLoadService),
                 [typeof(LoadMetaState)] = new LoadMetaState(this, uiFactory, sceneLoader),
-                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, heroFactory),
+                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, uiFactory, heroFactory),
                 [typeof(GameLoopState)] = new GameLoopState(this),
             };
         }

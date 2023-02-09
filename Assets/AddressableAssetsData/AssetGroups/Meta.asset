@@ -26,7 +26,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 9312ee94216d42d48bc6a34290d3f28c
-    m_Address: MainMenuPrefab
+    m_Address: HudPrefab
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 7164ebe3314347142acf9652eca1b1ed
@@ -35,6 +35,10 @@ MonoBehaviour:
     m_SerializedLabels: []
   - m_GUID: 463fb682ef68a33438e50767aa192809
     m_Address: ShopItemCardPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 88e147f63688be14780dde30215e9d4e
+    m_Address: MainMenuPrefab
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

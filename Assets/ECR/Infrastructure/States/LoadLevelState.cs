@@ -12,14 +12,21 @@ namespace ECR.Infrastructure.States
     {
         private readonly GameStateMachine _stateMachine;
         private readonly SceneLoader _sceneLoader;
+        private readonly IUIFactory _uiFactory;
         private readonly IHeroFactory _heroFactory;
 
         [CanBeNull] private StageStaticData _pendingStageStaticData;
 
-        public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, IHeroFactory heroFactory)
+        public LoadLevelState(
+            GameStateMachine gameStateMachine,
+            SceneLoader sceneLoader,
+            IUIFactory uiFactory,
+            IHeroFactory heroFactory
+        )
         {
             _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
+            _uiFactory = uiFactory;
             _heroFactory = heroFactory;
         }
 
@@ -44,9 +51,15 @@ namespace ECR.Infrastructure.States
 
         private async void OnLoaded(SceneName sceneName)
         {
+            await InitUIRoot();
             await InitGameWold();
             await InitUI();
             _stateMachine.Enter<GameLoopState>();
+        }
+        
+        private async Task InitUIRoot()
+        {
+            await _uiFactory.CreateUIRoot();
         }
 
         private async Task InitGameWold()
@@ -71,8 +84,7 @@ namespace ECR.Infrastructure.States
 
         private async Task InitUI()
         {
-            // init ui
-            await Task.CompletedTask;
+            await _uiFactory.CreateHud();
         }
 
         private void SetupCamera(GameObject hero)
