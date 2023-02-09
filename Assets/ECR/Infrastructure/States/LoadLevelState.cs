@@ -84,7 +84,9 @@ namespace ECR.Infrastructure.States
 
         private async Task InitUI()
         {
-            await _uiFactory.CreateHud();
+            await _uiFactory
+                .CreateHud()
+                .ContinueWith(m => m.Result.Initialize(), TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void SetupCamera(GameObject hero)
