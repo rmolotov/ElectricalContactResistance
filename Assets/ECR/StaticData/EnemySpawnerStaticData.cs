@@ -8,7 +8,7 @@ namespace ECR.StaticData
     [Serializable]
     public record EnemySpawnerStaticData
     {
-        public EnemyStaticData EnemyStaticData { get; set; }
+        public EnemyType EnemyType { get; set; }
         
         [JsonConverter(typeof(Vector3Converter))]
         public Vector3 Position { get; set; }

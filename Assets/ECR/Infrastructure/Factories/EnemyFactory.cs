@@ -33,10 +33,11 @@ namespace ECR.Infrastructure.Factories
             _assetProvider.Cleanup();
         }
         
-        public async Task<GameObject> Create(EnemyType enemyType, string configKey, Transform parent)
+        public async Task<GameObject> Create(EnemyType enemyType, Transform parent)
         {
             // TODO: use configKey instead prefab data
             var config = _staticDataService.ForEnemy(enemyType);
+            
             var prefab = await _assetProvider.Load<GameObject>(key: config.EnemyType.ToString());
             var enemy = Object.Instantiate(prefab, parent.position, parent.rotation, parent);
 

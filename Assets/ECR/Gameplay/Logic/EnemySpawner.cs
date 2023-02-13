@@ -8,8 +8,8 @@ namespace ECR.Gameplay.Logic
 {
     public class EnemySpawner : MonoBehaviour
     {
-        [SerializeField] [EnumToggleButtons]
-        private EnemyType enemyType;
+        [EnumToggleButtons]
+        [SerializeField] private EnemyType enemyType;
 
         private IEnemyFactory _enemyFactory;
 
@@ -23,7 +23,7 @@ namespace ECR.Gameplay.Logic
         private async void Spawn()
         {
             //todo: use config arg instead of enemy type
-            var enemy = await _enemyFactory.Create(enemyType, enemyType.ToString(), transform);
+            var enemy = await _enemyFactory.Create(enemyType, transform);
         }
     }
 }

@@ -8,6 +8,6 @@ namespace ECR.Infrastructure.Factories.Interfaces
     {
         Task WarmUp();
         void CleanUp();
-        Task<GameObject> Create(EnemyType enemyType, string configKey, Transform parent);
+        Task<GameObject> Create(EnemyType enemyType, Transform parent);
     }
 }

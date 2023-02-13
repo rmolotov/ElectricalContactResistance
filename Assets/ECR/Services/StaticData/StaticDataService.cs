@@ -19,6 +19,7 @@ namespace ECR.Services.StaticData
             //"prod"; //production
         private const string StagesList = "StagesList";
         private const string ItemsList = "ItemsList";
+        private const string EnemiesList = "EnemiesList";
 
         private Dictionary<EnemyType, EnemyStaticData> _enemies;
         private Dictionary<string, StageStaticData> _stages;
@@ -115,17 +116,11 @@ namespace ECR.Services.StaticData
             _heroStaticData = DeserializeObject<HeroStaticData>(RemoteConfigService.Instance.appConfig.GetJson("Hero"));
         }
 
-        private void LoadEnemiesData()
-        {
-            _enemies = new Dictionary<EnemyType, EnemyStaticData>();
-            foreach (var enemyType in (EnemyType[]) Enum.GetValues(typeof(EnemyType)))
-            {
-                var enemyStaticData = DeserializeObject<EnemyStaticData>(
-                    RemoteConfigService.Instance.appConfig.GetJson(enemyType.ToString())
-                );
-                _enemies.Add(enemyType, enemyStaticData);
-            }
-        }
+        private void LoadEnemiesData() =>
+            _enemies = (DeserializeObject<List<EnemyStaticData>>(
+                    RemoteConfigService.Instance.appConfig.GetJson(EnemiesList)
+                ) ?? new List<EnemyStaticData>())
+                .ToDictionary(e => e.EnemyType, e => e);
 
         private static void LogConfigsResponseResult(ConfigResponse configResponse)
         {

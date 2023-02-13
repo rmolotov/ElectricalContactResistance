@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Transistor
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: ec90585858bf362468baa93c34b15fa0
+    m_Address: Diode
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:
