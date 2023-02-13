@@ -1,4 +1,5 @@
 using System;
+using ECR.StaticData.Board;
 using ECR.StaticData.Converters;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -16,5 +17,7 @@ namespace ECR.StaticData
         public Vector3 PlayerSpawnPoint { get; set; }
 
         public EnemySpawnerStaticData[] EnemySpawners { get; set; }
+        
+        public BoardTileStaticData[] BoardTiles { get; set; }
     }
 }
