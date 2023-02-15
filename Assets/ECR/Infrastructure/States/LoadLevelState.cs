@@ -3,7 +3,6 @@ using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
 using ECR.StaticData;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace ECR.Infrastructure.States
@@ -14,20 +13,21 @@ namespace ECR.Infrastructure.States
         private readonly SceneLoader _sceneLoader;
         private readonly IUIFactory _uiFactory;
         private readonly IHeroFactory _heroFactory;
+        private readonly ISpawnersFactory _spawnersFactory;
 
-        [CanBeNull] private StageStaticData _pendingStageStaticData;
+        private StageStaticData _pendingStageStaticData;
 
-        public LoadLevelState(
-            GameStateMachine gameStateMachine,
+        public LoadLevelState(GameStateMachine gameStateMachine,
             SceneLoader sceneLoader,
             IUIFactory uiFactory,
-            IHeroFactory heroFactory
-        )
+            IHeroFactory heroFactory,
+            ISpawnersFactory spawnersFactory)
         {
             _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
             _uiFactory = uiFactory;
             _heroFactory = heroFactory;
+            _spawnersFactory = spawnersFactory;
         }
 
         public async void Enter(StageStaticData stageStaticData)
@@ -35,11 +35,15 @@ namespace ECR.Infrastructure.States
             _pendingStageStaticData = stageStaticData;
             /*TODO:
              show curtain
-             clean up factories, then
-             warm up factories
-             clean up asset provider  
+             clean-up/warm-up enemyFactory?
              */
             
+            _heroFactory.CleanUp();
+            _spawnersFactory.CleanUp();
+
+            await _heroFactory.WarmUp();
+            await _spawnersFactory.WarmUp();
+
             Debug.Log(typeof(LoadLevelState) + $" for {stageStaticData.StageKey}");
             var sceneInstance = await _sceneLoader.Load(SceneName.Core, OnLoaded);
         }
@@ -79,7 +83,10 @@ namespace ECR.Infrastructure.States
 
         private void SetupEnemySpawners()
         {
-            // setup spawners based on pendingStage
+            foreach (var spawnerStaticData in _pendingStageStaticData.EnemySpawners)
+            {
+                _spawnersFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
+            }
         }
 
         private async Task InitUI()

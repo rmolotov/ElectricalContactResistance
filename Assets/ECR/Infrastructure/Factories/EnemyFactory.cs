@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ECR.Gameplay.Enemy;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
@@ -6,6 +7,7 @@ using ECR.Services.StaticData;
 using ECR.StaticData;
 using UnityEngine;
 using Zenject;
+using Object = UnityEngine.Object;
 
 namespace ECR.Infrastructure.Factories
 {
@@ -24,8 +26,8 @@ namespace ECR.Infrastructure.Factories
         
         public async Task WarmUp()
         {
-            //todo: asset provider: load loot and spawner
-            await Task.CompletedTask;
+            foreach (var enemyType in (EnemyType[]) Enum.GetValues(typeof(EnemyType)))
+                await _assetProvider.Load<GameObject>(key: enemyType.ToString());
         }
 
         public void CleanUp()

@@ -23,16 +23,11 @@ namespace ECR.Infrastructure.Factories
             _staticDataService = staticDataService;
         }
 
-        public async Task WarmUp()
-        {
-            //todo: asset provider: load loot and spawner
-            await Task.CompletedTask;
-        }
+        public async Task WarmUp() => 
+            await _assetProvider.Load<GameObject>(key: HeroPrefabId);
 
-        public void CleanUp()
-        {
+        public void CleanUp() => 
             _assetProvider.Cleanup();
-        }
 
         public async Task<GameObject> Create(Vector3 at)
         {

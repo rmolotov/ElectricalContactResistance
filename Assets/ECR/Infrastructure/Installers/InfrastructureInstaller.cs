@@ -37,6 +37,7 @@ namespace ECR.Infrastructure.Installers
         private void BindFactories()
         {
             Container.Bind<IHeroFactory>().To<HeroFactory>().AsSingle();
+            Container.Bind<ISpawnersFactory>().To<SpawnersFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IUIFactory>().To<UIFactory>().AsSingle();
         }

@@ -44,6 +44,9 @@ namespace ECR.Infrastructure.AssetManagement
         
         public void Cleanup()
         {
+            if (_handles.Count == 0)
+                return;
+             
             foreach (List<AsyncOperationHandle> resourceHandles in _handles.Values)
                 foreach (AsyncOperationHandle handle in resourceHandles)
                     Addressables.Release(handle);

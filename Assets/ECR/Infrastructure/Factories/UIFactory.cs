@@ -45,8 +45,10 @@ namespace ECR.Infrastructure.Factories
 
         public async Task WarmUp()
         {
-            //todo: asset provider: load loot and spawner
-            await Task.CompletedTask;
+            await _assetProvider.Load<GameObject>(key: UIRootPrefab);
+            await _assetProvider.Load<GameObject>(key: HudPrefab);
+            await _assetProvider.Load<GameObject>(key: MenuPrefab);
+            await _assetProvider.Load<GameObject>(key: ShopPrefab);
         }
 
         public void CleanUp()
