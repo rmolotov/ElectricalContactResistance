@@ -1,6 +1,5 @@
 ﻿using ECR.Infrastructure.Factories.Interfaces;
 using ECR.StaticData;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -8,8 +7,7 @@ namespace ECR.Gameplay.Logic
 {
     public class EnemySpawner : MonoBehaviour
     {
-        [EnumToggleButtons]
-        [SerializeField] private EnemyType enemyType;
+        private EnemyStaticData _enemyStaticData;
 
         private IEnemyFactory _enemyFactory;
 
@@ -17,13 +15,17 @@ namespace ECR.Gameplay.Logic
         private void Construct(IEnemyFactory enemyFactory) =>
             _enemyFactory = enemyFactory;
 
-        private void Start() => 
+        public void Initialize(EnemyStaticData enemyStaticData)
+        {
+            _enemyStaticData = enemyStaticData;
             Spawn();
+        }
+
 
         private async void Spawn()
         {
             //todo: use config arg instead of enemy type
-            var enemy = await _enemyFactory.Create(enemyType, transform);
+            var enemy = await _enemyFactory.Create(_enemyStaticData.EnemyType, transform);
         }
     }
 }

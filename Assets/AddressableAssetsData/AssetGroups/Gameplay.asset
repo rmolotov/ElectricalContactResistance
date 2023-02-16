@@ -29,6 +29,10 @@ MonoBehaviour:
     m_Address: Diode
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 380780775b20e3f4698124d5466d17b8
+    m_Address: EnemySpawnerPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:

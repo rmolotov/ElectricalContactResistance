@@ -14,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ECR/Scenes/Core.unity
     guid: ac1dd478c5fb6784faac5b82bb9cb51e
+  - enabled: 0
+    path: Assets/ECR/Gameplay/Board/Editor/StageEditor.unity
+    guid: 98183eec424bb644aa02d891714b363c
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: c3be7b3662663d04db209a55d63359b5, type: 2}
