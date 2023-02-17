@@ -11,15 +11,11 @@ namespace ECR.Meta.Hud
         private GameStateMachine _stateMachine;
 
         [Inject]
-        private void Construct(GameStateMachine stateMachine)
-        {
+        private void Construct(GameStateMachine stateMachine) => 
             _stateMachine = stateMachine;
-        }
 
-        public async void Initialize()
-        {
+        public void Initialize() => 
             SetupButtons();
-        }
 
         private void SetupButtons()
         {

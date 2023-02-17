@@ -16,7 +16,31 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 8dc3c89e35b4a8a46b418a329403ede4
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 7715e3b8925afb2479126729f1f4db4a
+    m_Address: Stage_CurrentMirror
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8df0b2e870afdca4a8fafe3a7022a3b0
+    m_Address: Stage_DiodeBridge
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ad612cec553b1384ebd201ffee801efb
+    m_Address: Stage_Assembly1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 543ea21e447fb8c43976780934b109fa
+    m_Address: Stage_Switch
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 1c9a29ec92899b0458e29745d5b75611
+    m_Address: Stage_ResonantCircuit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8cb8d948be23d9e4b97c25f984b5a8d9
+    m_Address: Stage_ValentinesDay
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:

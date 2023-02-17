@@ -99,11 +99,17 @@ namespace ECR.Services.StaticData
          * Used in case of EconomyLocalService; when Remote SD provided by UGS Economy
          * Mark methods and props [Obsolete] if needed
          */
-        private void LoadStagesData() =>
-            _stages = (DeserializeObject<List<StageStaticData>>(
-                    RemoteConfigService.Instance.appConfig.GetJson(StagesList)
-                ) ?? new List<StageStaticData>())
-                .ToDictionary(st => st.StageKey, st => st);
+        private void LoadStagesData()
+        {
+            _stages = new Dictionary<string, StageStaticData>();
+            
+            var list = DeserializeObject<List<string>>(
+                RemoteConfigService.Instance.appConfig.GetJson(StagesList));
+
+            foreach (var stageKey in list)
+                _stages[stageKey] = DeserializeObject<StageStaticData>(
+                    RemoteConfigService.Instance.appConfig.GetJson(stageKey));
+        }
 
         private void LoadItemsData() =>
             _items = (DeserializeObject<List<InventoryItemStaticData>>(

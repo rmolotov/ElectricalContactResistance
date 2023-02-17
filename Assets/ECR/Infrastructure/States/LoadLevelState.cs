@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ECR.Gameplay.Board;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
@@ -77,7 +78,9 @@ namespace ECR.Infrastructure.States
 
         private void SetupBoardTiles()
         {
-            // setup stage board tiles based on pendingStage 
+            // setup stage board tiles based on pendingStage
+#warning GameObjectFind found! spawn tilemap by factory, then InitBoard
+            GameObject.FindObjectOfType<Board>().InitBoard(_pendingStageStaticData.BoardTiles);
             // bake runtime navmesh?
         }
 

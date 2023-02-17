@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ECR.StaticData;
 using ECR.StaticData.Board;
@@ -21,10 +20,12 @@ namespace ECR.Gameplay.Board.Editor
         private const string EnemySpawnMarkerPrefabPath = "Assets/ECR/Gameplay/Logic/EnemySpawnerMarker.prefab";
 
         private Tilemap _tilemap;
+        private Transform _playerSpawner;
+        
         private string _output;
         private Vector2 _scroll;
 
-        #region Editor window lifecicle
+        #region Editor window lifecycle
 
         [MenuItem("Tools/ECR/Board editor")]
         private static void ShowWindow() =>
@@ -34,12 +35,24 @@ namespace ECR.Gameplay.Board.Editor
         {
             base.OnEnable();
             EditorSceneManager.activeSceneChangedInEditMode += ResetWindow;
+            ResetWindow();
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
             EditorSceneManager.activeSceneChangedInEditMode -= ResetWindow;
+            ResetWindow();
+        }
+
+        private void OnInspectorUpdate()
+        {
+            if (SceneManager.GetActiveScene().name is not "StageEditor")
+                return;
+            
+            playerSpawnPoint = _playerSpawner.position;
+            enemySpawners.ForEach(sp => sp.position = sp.gameObject.transform.position);
+            Repaint();
         }
 
         #endregion
@@ -51,22 +64,40 @@ namespace ECR.Gameplay.Board.Editor
             EditorSceneManager.OpenScene(EditorScenePath);
 
 
-        [ShowIfGroup("Stage properties", Condition = EditorSceneNameCondition)] [SerializeField]
-        private string stageKey, stageTitle;
-
-        [ShowIfGroup("Stage properties", Condition = EditorSceneNameCondition)] [MultiLineProperty] [SerializeField]
-        private string stageDescription;
+        [ShowIfGroup("Stage properties", Condition = EditorSceneNameCondition)]
+        [PropertyOrder(-2)]
+        [SerializeField] private string stageKey, stageTitle;
 
 
-        [ShowIfGroup("Player spawn", Condition = EditorSceneNameCondition)] [SerializeField]
-        private Vector3 playerSpawnPoint;
+        [ShowIfGroup("Stage properties", Condition = EditorSceneNameCondition)]
+        [TextArea(5, 5)]
+        [SerializeField] private string stageDescription;
+
+
+        [ShowIfGroup("Player spawn", Condition = EditorSceneNameCondition)]
+        [BoxGroup("Player spawn/Player spawn point")]
+        [HorizontalGroup("Player spawn/Player spawn point/Box", Width = 42)]
+        [PropertyOrder(-1)]
+        [Button(SdfIconType.ArrowsMove, "", Expanded = false)]
+        public void SelectPlayerSpawner() => 
+            Selection.SetActiveObjectWithContext(_playerSpawner, null);
+
+
+        [ShowIfGroup("Player spawn", Condition = EditorSceneNameCondition)]
+        [BoxGroup("Player spawn/Player spawn point")]
+        [HorizontalGroup("Player spawn/Player spawn point/Box")]
+        [HideLabel] [ReadOnly]
+        [SerializeField] private Vector3 playerSpawnPoint;
+
 
         [PropertySpace]
+        
+        
         [ShowIfGroup("Enemy spawners", Condition = EditorSceneNameCondition)]
-        [TableList(AlwaysExpanded = true, NumberOfItemsPerPage = 5, ShowPaging = true)]
+        [TableList(AlwaysExpanded = true, NumberOfItemsPerPage = 5, ShowPaging = true, DefaultMinColumnWidth = 20)]
         [OnCollectionChanged("OnRemoveMarker", "OnAddMarker")]
-        [SerializeField]
-        private List<EnemySpawnerEditorStruct> enemySpawners;
+        [SerializeField] private List<EnemySpawnerEditor> enemySpawners = new();
+
 
         [ShowIf(EditorSceneNameCondition + " && !UnityEngine.Application.isPlaying")]
         [Button("Generate stage JSON", ButtonSizes.Large), GUIColor(0, 1, 0)]
@@ -76,11 +107,11 @@ namespace ECR.Gameplay.Board.Editor
             GenerateOutput(staticData);
         }
 
+
         [ShowIf(EditorSceneNameCondition + " && !string.IsNullOrEmpty(_output)")]
-        [TextArea(10, 10)]
-        [HideLabel]
-        [Header("Generated stage static data")]
-        public string JsonOutput;
+        [Header("Generated stage static data")] 
+        [HideLabel] [TextArea(10, 10)]
+        [SerializeField] private string jsonOutput;
 
 
         private StageStaticData GenerateStageStaticData()
@@ -92,33 +123,42 @@ namespace ECR.Gameplay.Board.Editor
             staticData.StageTitle = stageTitle;
             staticData.StageDescription = stageDescription;
 
-            staticData.PlayerSpawnPoint = playerSpawnPoint;
+            staticData.PlayerSpawnPoint = _playerSpawner.position;
             staticData.BoardTiles = board;
 
-            staticData.EnemySpawners = enemySpawners.Select(x => new EnemySpawnerStaticData
-            {
-                EnemyType = x.enemyType,
-                Position = x.gameObject.transform.position
-            }).ToArray();
+            staticData.EnemySpawners = enemySpawners
+                .Select(x => new EnemySpawnerStaticData
+                {
+                    EnemyType = x.enemyType,
+                    Position = x.gameObject.transform.position
+                })
+                .ToArray();
 
             return staticData;
         }
 
-        private void ResetWindow(Scene previous, Scene current)
-        {
-            stageKey = stageTitle = stageDescription = string.Empty;
-            _tilemap = null;
-            _output = string.Empty;
-            enemySpawners.Clear();
+        private void ResetWindow(Scene previous, Scene current) => 
+            ResetWindow();
 
-            JsonOutput = _output;
+        private void ResetWindow()
+        {
+            if (SceneManager.GetActiveScene().name is not "StageEditor")
+                return;
+            
+            _tilemap = FindObjectOfType<Tilemap>();
+            _playerSpawner = GameObject.FindGameObjectWithTag("Player").transform;
+            enemySpawners.ForEach(sp => DestroyImmediate(sp.gameObject));
+            enemySpawners.Clear();
+            
+            stageKey = stageTitle = stageDescription = string.Empty;
+            _output = string.Empty;
+            jsonOutput = _output;
+
             Repaint();
         }
 
         private BoardTileStaticData[] SaveBoard()
         {
-            _tilemap = FindObjectOfType<Tilemap>();
-
             var result = new List<BoardTileStaticData>();
 
             foreach (var pos in _tilemap.cellBounds.allPositionsWithin)
@@ -130,7 +170,7 @@ namespace ECR.Gameplay.Board.Editor
                 {
                     Position = new Vector2Int(pos.x, pos.y),
                     Tile = tile.tileType,
-                    TileRotation = (BoardTileRotation) (int) tile.transform.rotation.z
+                    TileRotation = (BoardTileRotation) (int) _tilemap.GetTransformMatrix(pos).rotation.eulerAngles.z
                 };
                 result.Add(staticData);
             }
@@ -141,8 +181,11 @@ namespace ECR.Gameplay.Board.Editor
         private void GenerateOutput<T>(T obj)
         {
             _output = JsonConvert.SerializeObject(obj, Formatting.Indented);
-            JsonOutput = _output;
+            jsonOutput = _output;
         }
+
+        private void UpdatePlayerSpawner() =>
+            playerSpawnPoint = _playerSpawner.position;
 
         #region SpawnerListHelpers
 
@@ -151,7 +194,7 @@ namespace ECR.Gameplay.Board.Editor
             if (info.ChangeType is not CollectionChangeType.Add)
                 return;
 
-            var data = (EnemySpawnerEditorStruct) info.Value;
+            var data = (EnemySpawnerEditor) info.Value;
             
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(EnemySpawnMarkerPrefabPath);
             var marker = Instantiate(prefab);
@@ -164,30 +207,9 @@ namespace ECR.Gameplay.Board.Editor
             if (info.ChangeType is not CollectionChangeType.RemoveIndex)
                 return;
 
-            var marker = ((List<EnemySpawnerEditorStruct>) value)[info.Index].gameObject;
-            DestroyImmediate(marker);
-        }        
+            DestroyImmediate(((List<EnemySpawnerEditor>) value)[info.Index].gameObject);
+        }
 
         #endregion
-    }
-
-    [Serializable]
-    public class EnemySpawnerEditorStruct
-    {
-        [HideInTables]
-        public GameObject gameObject;
-        
-        [EnumToggleButtons] [OnValueChanged("ChangeType")]
-        public EnemyType enemyType = EnemyType.Capacitor;
-
-        [ResponsiveButtonGroup("Select")] [Button(SdfIconType.ArrowsMove, "", Expanded = false)] [PropertyOrder(-1)]
-        public void Select() => 
-            Selection.SetActiveObjectWithContext(gameObject, null);
-
-        private void ChangeType()
-        {
-            gameObject.name = $"Spawner : {enemyType}";
-            EditorWindow.GetWindow<SceneView>().Repaint();
-        }
     }
 }
