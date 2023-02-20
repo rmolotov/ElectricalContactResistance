@@ -14,7 +14,7 @@ namespace ECR.Infrastructure.States
         private readonly SceneLoader _sceneLoader;
         private readonly IUIFactory _uiFactory;
         private readonly IHeroFactory _heroFactory;
-        private readonly ISpawnersFactory _spawnersFactory;
+        private readonly IStageFactory _stageFactory;
 
         private StageStaticData _pendingStageStaticData;
 
@@ -22,13 +22,13 @@ namespace ECR.Infrastructure.States
             SceneLoader sceneLoader,
             IUIFactory uiFactory,
             IHeroFactory heroFactory,
-            ISpawnersFactory spawnersFactory)
+            IStageFactory stageFactory)
         {
             _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
             _uiFactory = uiFactory;
             _heroFactory = heroFactory;
-            _spawnersFactory = spawnersFactory;
+            _stageFactory = stageFactory;
         }
 
         public async void Enter(StageStaticData stageStaticData)
@@ -40,10 +40,10 @@ namespace ECR.Infrastructure.States
              */
             
             _heroFactory.CleanUp();
-            _spawnersFactory.CleanUp();
+            _stageFactory.CleanUp();
 
             await _heroFactory.WarmUp();
-            await _spawnersFactory.WarmUp();
+            await _stageFactory.WarmUp();
 
             Debug.Log(typeof(LoadLevelState) + $" for {stageStaticData.StageKey}");
             var sceneInstance = await _sceneLoader.Load(SceneName.Core, OnLoaded);
@@ -74,22 +74,16 @@ namespace ECR.Infrastructure.States
             
             SetupBoardTiles();
             SetupEnemySpawners();
-        }
-
-        private void SetupBoardTiles()
-        {
-            // setup stage board tiles based on pendingStage
-#warning GameObjectFind found! spawn tilemap by factory, then InitBoard
-            GameObject.FindObjectOfType<Board>().InitBoard(_pendingStageStaticData.BoardTiles);
             // bake runtime navmesh?
         }
+
+        private void SetupBoardTiles() => 
+            _stageFactory.CreateBoard(_pendingStageStaticData.BoardTiles);
 
         private void SetupEnemySpawners()
         {
             foreach (var spawnerStaticData in _pendingStageStaticData.EnemySpawners)
-            {
-                _spawnersFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
-            }
+                _stageFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
         }
 
         private async Task InitUI()

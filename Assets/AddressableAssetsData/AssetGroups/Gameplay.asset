@@ -45,6 +45,10 @@ MonoBehaviour:
     m_Address: Resistor
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 023a312029f0d544abe06b57cad764f2
+    m_Address: BoardPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:

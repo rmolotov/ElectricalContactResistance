@@ -22,7 +22,7 @@ namespace ECR.Infrastructure.States
             ISaveLoadService saveLoadService,
             IUIFactory uiFactory,
             IHeroFactory heroFactory,
-            ISpawnersFactory spawnersFactory
+            IStageFactory stageFactory
         )
         {
             _states = new Dictionary<Type, IExitableState>
@@ -30,7 +30,7 @@ namespace ECR.Infrastructure.States
                 [typeof(BootstrapState)] = new BootstrapState(this, staticDataService),
                 [typeof(LoadProgressState)] = new LoadProgressState(this, persistentDataService, saveLoadService),
                 [typeof(LoadMetaState)] = new LoadMetaState(this, uiFactory, sceneLoader),
-                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, uiFactory, heroFactory, spawnersFactory),
+                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, uiFactory, heroFactory, stageFactory),
                 [typeof(GameLoopState)] = new GameLoopState(this),
             };
         }

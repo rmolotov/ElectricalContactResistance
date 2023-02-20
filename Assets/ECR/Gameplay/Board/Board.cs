@@ -14,7 +14,7 @@ namespace ECR.Gameplay.Board
         // TODO: get Tiles (BoardTile) from config and addressables?
         private Dictionary<BoardTileType, BoardTile> _boardTiles;
         
-        public void InitBoard(IEnumerable<BoardTileStaticData> data)
+        public void Initialize(IEnumerable<BoardTileStaticData> data)
         {
             _boardTiles ??= tileAssets.ToDictionary(t => t.tileType, t => t);
 
