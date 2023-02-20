@@ -33,6 +33,18 @@ MonoBehaviour:
     m_Address: EnemySpawnerPrefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: fbe2e91531655ed4291f4c8e1953f069
+    m_Address: Capacitor
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 97e7882609475544f9a313bf73bd9556
+    m_Address: Relay
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5b66fa13133c3bf4ba6e38da0003898b
+    m_Address: Resistor
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5fbb0188a431c92419abbe7e9caa7e3c, type: 2}
   m_SchemaSet:

@@ -105,6 +105,6 @@ namespace ECR.Infrastructure.States
         }
 
         private async Task<GameObject> InitHero() => 
-            await _heroFactory.Create(Vector3.zero);
+            await _heroFactory.Create(_pendingStageStaticData.PlayerSpawnPoint);
     }
 }
