@@ -38,9 +38,6 @@ namespace ECR.Infrastructure.States
              show curtain
              clean-up/warm-up enemyFactory?
              */
-            
-            _heroFactory.CleanUp();
-            _stageFactory.CleanUp();
 
             await _heroFactory.WarmUp();
             await _stageFactory.WarmUp();
@@ -51,6 +48,8 @@ namespace ECR.Infrastructure.States
 
         public void Exit()
         {
+            _heroFactory.CleanUp();
+            _stageFactory.CleanUp();
             _pendingStageStaticData = null;
         }
 
@@ -69,21 +68,21 @@ namespace ECR.Infrastructure.States
 
         private async Task InitGameWold()
         {
+            await SetupBoardTiles();
+            await SetupEnemySpawners();
+            
             GameObject hero = await InitHero();
             SetupCamera(hero);
-            
-            SetupBoardTiles();
-            SetupEnemySpawners();
             // bake runtime navmesh?
         }
 
-        private void SetupBoardTiles() => 
-            _stageFactory.CreateBoard(_pendingStageStaticData.BoardTiles);
+        private async Task SetupBoardTiles() => 
+            await _stageFactory.CreateBoard(_pendingStageStaticData.BoardTiles);
 
-        private void SetupEnemySpawners()
+        private async Task SetupEnemySpawners()
         {
             foreach (var spawnerStaticData in _pendingStageStaticData.EnemySpawners)
-                _stageFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
+                await _stageFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
         }
 
         private async Task InitUI()

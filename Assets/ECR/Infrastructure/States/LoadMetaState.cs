@@ -27,6 +27,8 @@ namespace ECR.Infrastructure.States
              warm up factories
              clean up asset provider  
              */
+            await _uiFactory.WarmUp();
+            
             Debug.Log(typeof(LoadMetaState));
             var sceneInstance = await _sceneLoader.Load(SceneName.Meta, OnLoaded);
         }
@@ -52,6 +54,7 @@ namespace ECR.Infrastructure.States
         public void Exit()
         {
             // clear assets and destroy menu controller?
+            _uiFactory.CleanUp();
         }
     }
 }

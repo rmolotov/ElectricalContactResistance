@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ECR.Infrastructure.SceneManagement;
 using UnityEngine.AddressableAssets;
@@ -22,9 +22,7 @@ namespace ECR.Infrastructure.AssetManagement
       
             var handle = Addressables.LoadAssetAsync<T>(key);
 
-            return await RunWithCacheOnComplete(
-                Addressables.LoadAssetAsync<T>(key), 
-                cacheKey: key);
+            return await RunWithCacheOnComplete(handle: handle, cacheKey: key);
         }
 
         public async Task<SceneInstance> LoadScene(SceneName sceneName)
@@ -35,7 +33,7 @@ namespace ECR.Infrastructure.AssetManagement
 
         public void Release(string key)
         {
-            foreach (var handle in _handles[key]) 
+            foreach (var handle in _handles[key])
                 Addressables.Release(handle);
 
             _completedCache.Remove(key);

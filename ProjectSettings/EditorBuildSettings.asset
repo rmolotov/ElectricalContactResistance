@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/ECR/Scenes/Bootstrap.unity
     guid: bbd73d24046275f4fb3f50b55fc4f8b0
-  - enabled: 1
+  - enabled: 0
     path: Assets/ECR/Scenes/Meta.unity
     guid: eacf11945af60d44ab9730722ec11dcf
-  - enabled: 1
+  - enabled: 0
     path: Assets/ECR/Scenes/Core.unity
     guid: ac1dd478c5fb6784faac5b82bb9cb51e
   - enabled: 0
