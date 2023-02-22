@@ -23,14 +23,16 @@ namespace ECR.Infrastructure.States
         {
             /* TODO:
              show curtain
-             clean up factories, then
-             warm up factories
-             clean up asset provider  
              */
             await _uiFactory.WarmUp();
             
             Debug.Log(typeof(LoadMetaState));
             var sceneInstance = await _sceneLoader.Load(SceneName.Meta, OnLoaded);
+        }
+
+        public void Exit()
+        {
+            _uiFactory.CleanUp();
         }
 
         private async void OnLoaded(SceneName sceneName)
@@ -49,12 +51,6 @@ namespace ECR.Infrastructure.States
             await _uiFactory
                 .CreateMainMenu()
                 .ContinueWith(m => m.Result.Initialize(), TaskScheduler.FromCurrentSynchronizationContext());
-        }
-
-        public void Exit()
-        {
-            // clear assets and destroy menu controller?
-            _uiFactory.CleanUp();
         }
     }
 }

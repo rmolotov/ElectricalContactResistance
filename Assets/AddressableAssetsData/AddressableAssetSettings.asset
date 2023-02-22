@@ -17,7 +17,7 @@ MonoBehaviour:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -34,12 +34,12 @@ MonoBehaviour:
   m_MonoScriptBundleNaming: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: 8eff1cddfd2dcd6458d0a119bd1dc733
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: 34362442dad43bb4d999390fec46aae7
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
-  m_overridePlayerVersion: 
+  m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
   - {fileID: 11400000, guid: 9dc3f8991ed25834e824b8de5332c8ad, type: 2}
   - {fileID: 11400000, guid: f732f294f26b1604db79dd98bacc0f58, type: 2}
@@ -68,6 +68,20 @@ MonoBehaviour:
         m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: 34362442dad43bb4d999390fec46aae7
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+    - m_InheritedParent: 
+      m_Id: c4d4c0fb780f32a4aa215d47f639a49a
+      m_ProfileName: Bitbucket
+      m_Values:
+      - m_Id: 6abf348a9931d624aba318890e261d48
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 5af10d93c26fb9b4396bea45add26b87
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 53679282db4a8ec42abdb59c98dee25f
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 8eff1cddfd2dcd6458d0a119bd1dc733
+        m_Value: ServerData/[BuildTarget]/[UnityEditor.PlayerSettings.bundleVersion]
+      - m_Id: 34362442dad43bb4d999390fec46aae7
+        m_Value: https://electricalcontactresistance.bitbucket.io/Addressables/[BuildTarget]/[UnityEditor.PlayerSettings.bundleVersion]
     m_ProfileEntryNames:
     - m_Id: 6abf348a9931d624aba318890e261d48
       m_Name: BuildTarget
@@ -101,7 +115,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 79cb2d42b7d4aec47a66fb89f0ec30f4, type: 2}
   - {fileID: 11400000, guid: ae260ddb24159d54d894d63a36dfce59, type: 2}
   - {fileID: 11400000, guid: 655535172d942b54abb16a29b262781a, type: 2}
-  m_ActiveProfileId: 2ce946d33fbce084393252f7fe79a421
+  m_ActiveProfileId: c4d4c0fb780f32a4aa215d47f639a49a
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}

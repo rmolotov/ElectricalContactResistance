@@ -47,13 +47,17 @@ namespace ECR.Infrastructure.Factories
         {
             await _assetProvider.Load<GameObject>(key: UIRootPrefab);
             await _assetProvider.Load<GameObject>(key: HudPrefab);
+            
             await _assetProvider.Load<GameObject>(key: MenuPrefab);
             await _assetProvider.Load<GameObject>(key: ShopPrefab);
         }
 
         public void CleanUp()
         {
-            _assetProvider.Cleanup();
+            _assetProvider.Release(key: MenuPrefab);
+            _assetProvider.Release(key: ShopPrefab);
+            _assetProvider.Release(key: StageCardPrefab);
+            _assetProvider.Release(key: ShopItemCardPrefab);
         }
 
         public async Task CreateUIRoot()

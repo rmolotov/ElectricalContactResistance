@@ -44,7 +44,8 @@ namespace ECR.Services.StaticData
 
         public async void Initialize()
         {
-            if (Utilities.CheckForInternetConnection())
+            var connection = Application.internetReachability;
+            if (connection != NetworkReachability.NotReachable)
                 await InitializeRemoteConfigAsync();
             
             RemoteConfigService.Instance.FetchCompleted += OnRemoteConfigLoaded;

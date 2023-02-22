@@ -38,6 +38,9 @@ namespace ECR.Infrastructure.States
              show curtain
              clean-up/warm-up enemyFactory?
              */
+            
+            _heroFactory.CleanUp();
+            _stageFactory.CleanUp();
 
             await _heroFactory.WarmUp();
             await _stageFactory.WarmUp();
@@ -48,8 +51,7 @@ namespace ECR.Infrastructure.States
 
         public void Exit()
         {
-            _heroFactory.CleanUp();
-            _stageFactory.CleanUp();
+
             _pendingStageStaticData = null;
         }
 
