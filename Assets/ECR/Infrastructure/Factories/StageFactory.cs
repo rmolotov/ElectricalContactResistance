@@ -14,7 +14,7 @@ namespace ECR.Infrastructure.Factories
     public class StageFactory : IStageFactory
     {
         private const string EnemySpawnerPrefabId = "EnemySpawnerPrefab";
-        private const string BoardPrefab = "BoardPrefab";
+        private const string BoardPrefabId        = "BoardPrefab";
 
         private readonly DiContainer _container;
         private readonly IAssetProvider _assetProvider;
@@ -28,15 +28,20 @@ namespace ECR.Infrastructure.Factories
             _staticDataService = staticDataService;
         }
 
-        public async Task WarmUp() => 
+        public async Task WarmUp()
+        {
             await _assetProvider.Load<GameObject>(key: EnemySpawnerPrefabId);
+        }
 
-        public void CleanUp() => 
-            _assetProvider.Cleanup();
+        public void CleanUp()
+        {
+            _assetProvider.Release(key: EnemySpawnerPrefabId);
+            _assetProvider.Release(key: BoardPrefabId);
+        }
 
         public async Task<Board> CreateBoard(BoardTileStaticData[] tilesData)
         {
-            var prefab = await _assetProvider.Load<GameObject>(key: BoardPrefab);
+            var prefab = await _assetProvider.Load<GameObject>(key: BoardPrefabId);
             var board = Object.Instantiate(prefab).GetComponent<Board>();
             
             _container.Inject(board);

@@ -5,7 +5,6 @@ using ECR.Meta.Shop;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.StaticData;
-using ECR.UI;
 using ECR.UI.CustomComponents;
 using ECR.UI.Windows;
 using JetBrains.Annotations;
@@ -86,7 +85,7 @@ namespace ECR.Meta.Menu
                     .Then(ok =>
                     {
                         settingsButton.OnPromisedResolve();
-                        if (ok) _saveLoadService.SaveSettings(); // if ok==false -> _sls.RestoreSavedSettings?
+                        if (ok) _saveLoadService.SaveSettings(); // TODO: else -> _sls.RestoreSavedSettings?
                     })
             );
 

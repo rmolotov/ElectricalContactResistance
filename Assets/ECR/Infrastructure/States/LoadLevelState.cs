@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using ECR.Gameplay.Board;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
@@ -34,14 +33,12 @@ namespace ECR.Infrastructure.States
         public async void Enter(StageStaticData stageStaticData)
         {
             _pendingStageStaticData = stageStaticData;
-            /*TODO:
+            
+            /* TODO:
              show curtain
-             clean-up/warm-up enemyFactory?
+             warm-up enemyFactory?
              */
             
-            _heroFactory.CleanUp();
-            _stageFactory.CleanUp();
-
             await _heroFactory.WarmUp();
             await _stageFactory.WarmUp();
 
@@ -51,7 +48,8 @@ namespace ECR.Infrastructure.States
 
         public void Exit()
         {
-
+            _heroFactory.CleanUp();
+            _stageFactory.CleanUp();
             _pendingStageStaticData = null;
         }
 
@@ -75,7 +73,8 @@ namespace ECR.Infrastructure.States
             
             GameObject hero = await InitHero();
             SetupCamera(hero);
-            // bake runtime navmesh?
+            
+            // TODO: bake runtime navmesh?
         }
 
         private async Task SetupBoardTiles() => 

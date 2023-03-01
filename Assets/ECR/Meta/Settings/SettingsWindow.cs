@@ -1,5 +1,4 @@
 ﻿using ECR.Data;
-using ECR.UI;
 using ECR.UI.Windows;
 using RSG;
 using Sirenix.OdinInspector;
@@ -22,6 +21,7 @@ namespace ECR.Meta.Settings
         [Inject]
         private void Construct()
         {
+            // TODO:
             // {_soundService, _hapticService} = from windowBase
             // _graphyManager
         }

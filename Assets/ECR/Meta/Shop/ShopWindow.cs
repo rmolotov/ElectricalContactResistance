@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
 using ECR.Services.Economy;
-using ECR.UI;
 using ECR.UI.Windows;
 using RSG;
 using Sirenix.OdinInspector;

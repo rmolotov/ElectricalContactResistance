@@ -33,6 +33,9 @@ namespace ECR.Infrastructure.AssetManagement
 
         public void Release(string key)
         {
+            if (!_handles.ContainsKey(key))
+                return;
+            
             foreach (var handle in _handles[key])
                 Addressables.Release(handle);
 

@@ -18,7 +18,6 @@ namespace ECR.Services.SaveLoad
         public SaveLoadLocalService(IPersistentDataService persistentDataService)
         {
             _persistentDataService = persistentDataService;
-            // factories?
         }
 
         public void SaveProgress()

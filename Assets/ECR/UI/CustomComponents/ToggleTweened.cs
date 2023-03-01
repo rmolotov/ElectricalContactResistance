@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace ECR.UI.CustomComponents
 {
+    [AddComponentMenu("UI/Toggle Tweened")]
     [RequireComponent(typeof(Toggle))]
     public class ToggleTweened : MonoBehaviour
     {

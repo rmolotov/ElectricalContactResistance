@@ -6,10 +6,12 @@ namespace ECR.Infrastructure.Installers
 {
     public class GameplayInstaller : MonoInstaller
     {
-        [SerializeField] private EnemySpawner[] enemySpawners;
+        // obsolete
+        // [SerializeField] private EnemySpawner[] enemySpawners;
         
         public override void InstallBindings()
         {
+            // obsolete
             // foreach (var spawner in enemySpawners) Container.QueueForInject(spawner);
         }
     }

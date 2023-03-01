@@ -17,15 +17,16 @@ namespace ECR.Services.StaticData
         private const string ConfigEnvironmentId =
             "d7f17096-1635-42aa-b0d3-c7892f39d67c"; // development
             //"prod"; //production
-        private const string StagesList = "StagesList";
-        private const string ItemsList = "ItemsList";
-        private const string EnemiesList = "EnemiesList";
-
+            
+        private const string StagesList    = "StagesList";
+        private const string ItemsList     = "ItemsList";
+        private const string EnemiesList   = "EnemiesList";
+        private const string HeroConfigKey = "Hero";
+        
         private Dictionary<EnemyType, EnemyStaticData> _enemies;
         private Dictionary<string, StageStaticData> _stages;
         private Dictionary<string, InventoryItemStaticData> _items;
         private HeroStaticData _heroStaticData;
-
 
         #region Attributes structs
 
@@ -96,7 +97,7 @@ namespace ECR.Services.StaticData
             Initialized?.Invoke();
         }
 
-        /*
+        /* TODO:
          * Used in case of EconomyLocalService; when Remote SD provided by UGS Economy
          * Mark methods and props [Obsolete] if needed
          */
@@ -118,10 +119,8 @@ namespace ECR.Services.StaticData
                 ) ?? new List<InventoryItemStaticData>())
                 .ToDictionary(it => it.ItemId, it => it);
 
-        private void LoadHeroData()
-        {
-            _heroStaticData = DeserializeObject<HeroStaticData>(RemoteConfigService.Instance.appConfig.GetJson("Hero"));
-        }
+        private void LoadHeroData() => 
+            _heroStaticData = DeserializeObject<HeroStaticData>(RemoteConfigService.Instance.appConfig.GetJson(HeroConfigKey));
 
         private void LoadEnemiesData() =>
             _enemies = (DeserializeObject<List<EnemyStaticData>>(

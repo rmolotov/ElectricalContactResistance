@@ -27,7 +27,7 @@ namespace ECR.Infrastructure.Factories
             await _assetProvider.Load<GameObject>(key: HeroPrefabId);
 
         public void CleanUp() => 
-            _assetProvider.Cleanup();
+            _assetProvider.Release(key: HeroPrefabId);
 
         public async Task<GameObject> Create(Vector3 at)
         {

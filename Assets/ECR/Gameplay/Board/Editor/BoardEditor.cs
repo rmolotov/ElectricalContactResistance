@@ -17,7 +17,7 @@ namespace ECR.Gameplay.Board.Editor
     {
         private const string EditorSceneNameCondition = "@SceneManager.GetActiveScene().name == \"StageEditor\"";
         private const string EditorScenePath = "Assets/ECR/Gameplay/Board/Editor/StageEditor.unity";
-        private const string EnemySpawnMarkerPrefabPath = "Assets/ECR/Gameplay/Logic/EnemySpawnerMarker.prefab";
+        private const string EnemySpawnMarkerPrefabPath = "Assets/ECR/Gameplay/Board/Editor/EnemySpawnerMarker.prefab";
 
         private Tilemap _tilemap;
         private Transform _playerSpawner;

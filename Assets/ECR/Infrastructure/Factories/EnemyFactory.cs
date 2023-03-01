@@ -32,7 +32,8 @@ namespace ECR.Infrastructure.Factories
 
         public void CleanUp()
         {
-            _assetProvider.Cleanup();
+            foreach (var enemyType in (EnemyType[]) Enum.GetValues(typeof(EnemyType)))
+                _assetProvider.Release(key: enemyType.ToString());
         }
         
         public async Task<GameObject> Create(EnemyType enemyType, Transform parent)

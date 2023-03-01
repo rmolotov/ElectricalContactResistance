@@ -15,12 +15,12 @@ namespace ECR.Infrastructure.Factories
 {
     public class UIFactory : IUIFactory
     {
-        private const string UIRootPrefab = "UIRootPrefab";
-        private const string HudPrefab = "HudPrefab";
-        private const string MenuPrefab = "MainMenuPrefab";
-        private const string ShopPrefab = "ShopWindowPrefab";
-        private const string StageCardPrefab = "StageCardPrefab";
-        private const string ShopItemCardPrefab = "ShopItemCardPrefab";
+        private const string UIRootPrefabId       = "UIRootPrefab";
+        private const string HudPrefabId          = "HudPrefab";
+        private const string MenuPrefabId         = "MainMenuPrefab";
+        private const string ShopPrefabId         = "ShopWindowPrefab";
+        private const string StageCardPrefabId    = "StageCardPrefab";
+        private const string ShopItemCardPrefabId = "ShopItemCardPrefab";
 
         private readonly DiContainer _container;
         private readonly IAssetProvider _assetProvider;
@@ -45,30 +45,30 @@ namespace ECR.Infrastructure.Factories
 
         public async Task WarmUp()
         {
-            await _assetProvider.Load<GameObject>(key: UIRootPrefab);
-            await _assetProvider.Load<GameObject>(key: HudPrefab);
+            await _assetProvider.Load<GameObject>(key: UIRootPrefabId);
+            await _assetProvider.Load<GameObject>(key: HudPrefabId);
             
-            await _assetProvider.Load<GameObject>(key: MenuPrefab);
-            await _assetProvider.Load<GameObject>(key: ShopPrefab);
+            await _assetProvider.Load<GameObject>(key: MenuPrefabId);
+            await _assetProvider.Load<GameObject>(key: ShopPrefabId);
         }
 
         public void CleanUp()
         {
-            _assetProvider.Release(key: MenuPrefab);
-            _assetProvider.Release(key: ShopPrefab);
-            _assetProvider.Release(key: StageCardPrefab);
-            _assetProvider.Release(key: ShopItemCardPrefab);
+            _assetProvider.Release(key: MenuPrefabId);
+            _assetProvider.Release(key: ShopPrefabId);
+            _assetProvider.Release(key: StageCardPrefabId);
+            _assetProvider.Release(key: ShopItemCardPrefabId);
         }
 
         public async Task CreateUIRoot()
         {
-            var prefab = await _assetProvider.Load<GameObject>(key: UIRootPrefab);
+            var prefab = await _assetProvider.Load<GameObject>(key: UIRootPrefabId);
             _uiRoot = Object.Instantiate(prefab).GetComponent<Canvas>();
         }
 
         public async Task<HudController> CreateHud()
         {
-            var prefab = await _assetProvider.Load<GameObject>(key: HudPrefab);
+            var prefab = await _assetProvider.Load<GameObject>(key: HudPrefabId);
             var hud = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<HudController>();
 
             _container.Inject(hud);
@@ -77,7 +77,7 @@ namespace ECR.Infrastructure.Factories
 
         public async Task<MenuController> CreateMainMenu()
         {
-            var prefab = await _assetProvider.Load<GameObject>(key: MenuPrefab);
+            var prefab = await _assetProvider.Load<GameObject>(key: MenuPrefabId);
             var menu = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<MenuController>();
 
             foreach (var stageData in _staticDataService.GetAllStages)
@@ -91,7 +91,7 @@ namespace ECR.Infrastructure.Factories
 
         public async Task<ShopWindow> CreateShop()
         {
-            var prefab = await _assetProvider.Load<GameObject>(key: ShopPrefab);
+            var prefab = await _assetProvider.Load<GameObject>(key: ShopPrefabId);
             var shop = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<ShopWindow>();
             
             foreach (var itemData in _staticDataService.GetAllItems)
@@ -105,7 +105,7 @@ namespace ECR.Infrastructure.Factories
 
         private async Task<StageCard> CreateStageCard(StageStaticData stageStaticData, MenuController menu)
         {
-            var prefab = await _assetProvider.Load<GameObject>(key: StageCardPrefab);
+            var prefab = await _assetProvider.Load<GameObject>(key: StageCardPrefabId);
             var sprite = await _assetProvider.Load<Sprite>(key: stageStaticData.StageKey);
             var card = Object.Instantiate(prefab, menu.stagesTogglesContainer.transform).GetComponent<StageCard>();
            
@@ -117,7 +117,7 @@ namespace ECR.Infrastructure.Factories
 
         private async Task<ShopItemCard> CreateShopItemCard(InventoryItemStaticData shopItemStaticData, RectTransform container)
         {
-            var prefab = await _assetProvider.Load<GameObject>(key: ShopItemCardPrefab);
+            var prefab = await _assetProvider.Load<GameObject>(key: ShopItemCardPrefabId);
             var sprite = await _assetProvider.Load<Sprite>(key: shopItemStaticData.ItemId);
             var card = Object.Instantiate(prefab, container).GetComponent<ShopItemCard>();
             var obtainedCount = _economyService.IsItemObtainedAndCount(shopItemStaticData.ItemId).Item2;

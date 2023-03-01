@@ -6,7 +6,7 @@ namespace ECR.Data
     [Serializable]
     public class PlayerEconomyData
     {
-        public int PlayerCurrency;
-        public Dictionary<string, int> InventoryItems;
+        public int PlayerCurrency { get; set; }
+        public Dictionary<string, int> InventoryItems { get; set; }
     }
 }

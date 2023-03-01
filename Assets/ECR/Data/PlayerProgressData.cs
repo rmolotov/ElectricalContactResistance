@@ -6,6 +6,6 @@ namespace ECR.Data
     [Serializable]
     public class PlayerProgressData
     {
-        public HashSet<string> CompletedStages;
+        public HashSet<string> CompletedStages { get; set; }
     }
 }

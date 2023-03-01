@@ -954,5 +954,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7778ace3fab164f4fa587962badc0190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpawners:
-  - {fileID: 0}
+  enemySpawners: []
