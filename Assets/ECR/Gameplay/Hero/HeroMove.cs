@@ -9,6 +9,7 @@ namespace ECR.Gameplay.Hero
         private IInputService _inputService;
         
         [SerializeField] private CharacterController characterController;
+        [SerializeField] private HeroAnimator animator;
         [SerializeField] private float movementSpeed;
         
         private Camera _camera;
@@ -17,10 +18,13 @@ namespace ECR.Gameplay.Hero
         private void Construct(IInputService inputService) => 
             _inputService = inputService;
 
-        private void Start() =>
+        private void Start() => 
             _camera = Camera.main;
 
-        private void Update()
+        private void Update() => 
+            Move();
+
+        private void Move()
         {
             var movementVector = Vector3.zero;
 
@@ -36,6 +40,7 @@ namespace ECR.Gameplay.Hero
             movementVector += Physics.gravity;
 
             characterController.Move(movementVector * (movementSpeed * Time.deltaTime));
+            animator.PlayMove(characterController.velocity.magnitude);
         }
     }
 }

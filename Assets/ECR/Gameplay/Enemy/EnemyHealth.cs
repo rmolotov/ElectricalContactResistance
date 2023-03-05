@@ -4,6 +4,8 @@ namespace ECR.Gameplay.Enemy
 {
     public class EnemyHealth : MonoBehaviour
     {
+        [SerializeField] private EnemyAnimator animator;
+        
         //TODO: refactor props and logic
         public int CurrentHP { get; set; }
         public int MaxHP { get; set; }
@@ -14,6 +16,7 @@ namespace ECR.Gameplay.Enemy
                 return;
             
             CurrentHP -= damage;
+            animator.PlayHit();
             
             if (CurrentHP < 0)
                 CurrentHP = 0;

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using static UnityEngine.InputSystem.InputAction;
 
 namespace ECR.Services.Input
@@ -11,7 +12,7 @@ namespace ECR.Services.Input
 
         public Vector2 AimAxis { get; private set; }
 
-        public bool Fire { get; private set; }
+        public UnityAction AttackPressed { get; set; }
 
         public InputService()
         {
@@ -31,22 +32,22 @@ namespace ECR.Services.Input
         {
             if (value)
             {
-                _controls.Player.Move.performed += Move;
-                _controls.Player.Look.performed += Look;
-                _controls.Player.Fire.performed += Attack;
-                _controls.Player.Move.canceled  += Move;
+                _controls.Player.Move.performed += OnMove;
+                _controls.Player.Look.performed += OnLook;
+                _controls.Player.Fire.performed += OnAttack;
+                _controls.Player.Move.canceled  += OnMove;
             }
             else
             {
-                _controls.Player.Move.performed -= Move;
-                _controls.Player.Look.performed -= Look;
-                _controls.Player.Fire.performed -= Attack;
-                _controls.Player.Move.canceled  -= Move;
+                _controls.Player.Move.performed -= OnMove;
+                _controls.Player.Look.performed -= OnLook;
+                _controls.Player.Fire.performed -= OnAttack;
+                _controls.Player.Move.canceled  -= OnMove;
             }
         }
 
-        private void Move(CallbackContext ctx) => MoveAxis = ctx.ReadValue<Vector2>();
-        private void Look(CallbackContext ctx) => AimAxis = ctx.ReadValue<Vector2>();
-        private void Attack(CallbackContext ctx) => Fire = true;
+        private void OnMove(CallbackContext ctx) => MoveAxis = ctx.ReadValue<Vector2>();
+        private void OnLook(CallbackContext ctx) => AimAxis = ctx.ReadValue<Vector2>();
+        private void OnAttack(CallbackContext ctx) => AttackPressed?.Invoke();
     }
 }

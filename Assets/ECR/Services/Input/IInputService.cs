@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace ECR.Services.Input
 {
@@ -6,6 +7,6 @@ namespace ECR.Services.Input
     {
         Vector2 MoveAxis { get; }
         Vector2 AimAxis { get; }
-        bool Fire { get; }
+        UnityAction AttackPressed { get; set; }
     }
 }
