@@ -48,7 +48,6 @@ namespace ECR.Infrastructure.States
 
         public void Exit()
         {
-            _heroFactory.CleanUp();
             _stageFactory.CleanUp();
             _pendingStageStaticData = null;
         }
@@ -69,11 +68,11 @@ namespace ECR.Infrastructure.States
         private async Task InitGameWold()
         {
             await SetupBoardTiles();
-            await SetupEnemySpawners();
-            
+
             GameObject hero = await InitHero();
             SetupCamera(hero);
-            
+
+            await SetupEnemySpawners();
             // TODO: bake runtime navmesh?
         }
 

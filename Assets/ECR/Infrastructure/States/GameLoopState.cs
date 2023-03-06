@@ -8,10 +8,12 @@ namespace ECR.Infrastructure.States
     {
         private readonly GameStateMachine _stateMachine;
         private readonly IEnemyFactory _enemyFactory;
+        private readonly IHeroFactory _heroFactory;
 
-        public GameLoopState(GameStateMachine gameStateMachine, IEnemyFactory enemyFactory)
+        public GameLoopState(GameStateMachine gameStateMachine, IHeroFactory heroFactory, IEnemyFactory enemyFactory)
         {
             _stateMachine = gameStateMachine;
+            _heroFactory = heroFactory;
             _enemyFactory = enemyFactory;
         }
 
@@ -26,6 +28,7 @@ namespace ECR.Infrastructure.States
         {
             // release enemies' assets there instead on exit from LLS coz they can respawn by timer
             _enemyFactory.CleanUp();
+            _heroFactory.CleanUp();
         }
     }
 }

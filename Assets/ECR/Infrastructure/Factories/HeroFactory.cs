@@ -3,6 +3,7 @@ using ECR.Gameplay.Hero;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Services.StaticData;
+using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
@@ -15,6 +16,8 @@ namespace ECR.Infrastructure.Factories
         private readonly DiContainer _container;
         private readonly IAssetProvider _assetProvider;
         private readonly IStaticDataService _staticDataService;
+        
+        [CanBeNull] public GameObject Hero { get; protected set; }
 
         public HeroFactory(DiContainer container, IAssetProvider assetProvider, IStaticDataService staticDataService)
         {
@@ -23,11 +26,16 @@ namespace ECR.Infrastructure.Factories
             _staticDataService = staticDataService;
         }
 
-        public async Task WarmUp() => 
+        public async Task WarmUp()
+        {
             await _assetProvider.Load<GameObject>(key: HeroPrefabId);
+        }
 
-        public void CleanUp() => 
+        public void CleanUp()
+        {
+            Hero = null;
             _assetProvider.Release(key: HeroPrefabId);
+        }
 
         public async Task<GameObject> Create(Vector3 at)
         {
@@ -44,8 +52,8 @@ namespace ECR.Infrastructure.Factories
             var attack = hero.GetComponent<HeroAttack>();
             attack.AttackDamage = config.Current;
             attack.Shield = config.Resistance;
-            
-            return hero;
+
+            return Hero = hero;
         }
     }
 }

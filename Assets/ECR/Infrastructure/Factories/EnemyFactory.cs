@@ -16,12 +16,15 @@ namespace ECR.Infrastructure.Factories
         private readonly DiContainer _container;
         private readonly IAssetProvider _assetProvider;
         private readonly IStaticDataService _staticDataService;
+        private readonly IHeroFactory _heroFactory;
 
-        public EnemyFactory(DiContainer container, IAssetProvider assetProvider, IStaticDataService staticDataService)
+        public EnemyFactory(DiContainer container, IAssetProvider assetProvider, IStaticDataService staticDataService,
+            IHeroFactory heroFactory)
         {
             _container = container;
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
+            _heroFactory = heroFactory;
         }
         
         public async Task WarmUp()
