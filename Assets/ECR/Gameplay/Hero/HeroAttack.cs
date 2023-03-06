@@ -7,29 +7,43 @@ namespace ECR.Gameplay.Hero
 {
     public class HeroAttack : MonoBehaviour
     {
-        private IInputService _inputService;
-
         [SerializeField] private HeroAnimator animator;
+        [SerializeField] private ParticleSystem attackVFX;
 
         // TODO: redactor fields and logic
         public int Shield;
-        public int AttackDamage;
+        
+        [ShowInInspector]
+        public int AttackDamage
+        {
+            get => _attackDamage;
+            set
+            {
+                _attackDamage = value;
+                var emission = attackVFX.emission;
+                emission.rateOverTimeMultiplier = AttackDamage;
+            }
+        }
+
+        private IInputService _inputService;
+        private int _attackDamage;
 
         [Inject]
         private void Construct(IInputService inputService) 
             => _inputService = inputService;
 
-        private void Start() => 
+        private void Start() =>
             _inputService.AttackPressed += OnAttack;
 
-        private void OnDisable() => 
+        private void OnDestroy() =>
             _inputService.AttackPressed -= OnAttack;
 
         [Button("Attack"), GUIColor(0,0,1)]
         private void OnAttack()
         {
             animator.PlayAttack();
-            
+            attackVFX.Play();
+
             // PhysicsDebug.DrawDebug(StartPoint() + transform.forward, _stats.DamageRadius, 1.0f);
             // for (int i = 0; i < Hit(); ++i)
             // {

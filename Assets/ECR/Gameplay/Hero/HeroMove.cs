@@ -6,14 +6,13 @@ namespace ECR.Gameplay.Hero
 {
     public class HeroMove : MonoBehaviour
     {
-        private IInputService _inputService;
-        
         [SerializeField] private CharacterController characterController;
         [SerializeField] private HeroAnimator animator;
         [SerializeField] private float movementSpeed;
         
+        private IInputService _inputService;
         private Camera _camera;
-
+        
         [Inject]
         private void Construct(IInputService inputService) => 
             _inputService = inputService;
