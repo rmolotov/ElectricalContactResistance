@@ -1,4 +1,5 @@
 ﻿using Sirenix.OdinInspector;
+using UniRx;
 using UnityEngine;
 
 namespace ECR.Gameplay.Enemy
@@ -9,7 +10,7 @@ namespace ECR.Gameplay.Enemy
 
         // TODO: redactor fields and logic
         public int Shield;
-        public int AttackDamage;
+        public IntReactiveProperty AttackDamage = new();
         
         [Button("Attack"), GUIColor(0,0,1)]
         private void OnAttack()

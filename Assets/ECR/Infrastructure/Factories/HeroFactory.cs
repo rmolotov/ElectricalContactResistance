@@ -47,10 +47,10 @@ namespace ECR.Infrastructure.Factories
 
             var health = hero.GetComponent<HeroHealth>();
             health.MaxHP = config.Voltage;
-            health.CurrentHP = health.MaxHP;
+            health.CurrentHP.Value = health.MaxHP;
 
             var attack = hero.GetComponent<HeroAttack>();
-            attack.AttackDamage = config.Current;
+            attack.AttackDamage.Value = config.Current;
             attack.Shield = config.Resistance;
 
             return Hero = hero;

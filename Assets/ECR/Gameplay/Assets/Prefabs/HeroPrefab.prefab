@@ -157,7 +157,8 @@ MonoBehaviour:
   animator: {fileID: 1767819922634269467}
   attackVFX: {fileID: 1619215454692982079}
   Shield: 0
-  AttackDamage: 0
+  AttackDamage:
+    value: 0
 --- !u!114 &1726714383706265147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,6 +187,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3843850487957798532}
+--- !u!114 &5657418669499498605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423771281822608471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0de9e582f44f496fa963d056ae3086f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathVFX: {fileID: 5149782964948277050, guid: 33da3c02f5b288644be14215772594b2, type: 3}
+  animator: {fileID: 1767819922634269467}
+  health: {fileID: 9148116678009486272}
 --- !u!114 &9148116678009486272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a0da608fb50491a9e33b1305372a005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroAnimator: {fileID: 1767819922634269467}
+  animator: {fileID: 1767819922634269467}
 --- !u!4 &1768103497737189101 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6997179106129114624, guid: 527f60cbc20a6ab4d86a2f3e42a8f933, type: 3}

@@ -51,10 +51,10 @@ namespace ECR.Infrastructure.Factories
 
             var health = enemy.GetComponent<EnemyHealth>();
             health.MaxHP = config.Capacity;
-            health.CurrentHP = health.MaxHP;
+            health.CurrentHP.Value = health.MaxHP;
 
             var attack = enemy.GetComponent<EnemyAttack>();
-            attack.AttackDamage = config.Current;
+            attack.AttackDamage.Value = config.Current;
             attack.Shield = config.Resistance;
             
             return enemy;

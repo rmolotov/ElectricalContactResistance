@@ -35,7 +35,8 @@ Project structure contains three sections:
 
 and 3rd-party **libraries** and **plugins** such as:
 * **Zenject**
-* **RSG Promises** 
+* **RSG Promises**
+* **UniRx** for reactive logic in gameplay and and UI-interactions 
 * **DOTween** used for procedural animations in UI 
 * **TextMeshPro**
 * Debug tools and editor extensions: **SRDebugger** and **Odin Inspector**
@@ -68,4 +69,6 @@ for libs' folders and project's submodules for sake of faster recompilation of s
 
 There is **Game State Machine** which controls main phases of game: Boot -> Load Config -> Meta -> Gameplay.
 It's provide more control and flexibility in game life-cycle.
-GSM enter in `BootstrapState` on `Initialize` method (GSM derives from `IInitializable`) which indicate **entry point** for entire project. 
+GSM enter in `BootstrapState` on `Initialize` method (GSM derives from `IInitializable`) which indicate **entry point** for entire project.
+
+Assets (sprites, models w/ animations and VFX (Particle Systems)) in the project designed and/or implemented by myself.
