@@ -42,7 +42,6 @@ namespace ECR.Infrastructure.States
             await _heroFactory.WarmUp();
             await _stageFactory.WarmUp();
 
-            Debug.Log(typeof(LoadLevelState) + $" for {stageStaticData.StageKey}");
             var sceneInstance = await _sceneLoader.Load(SceneName.Core, OnLoaded);
         }
 

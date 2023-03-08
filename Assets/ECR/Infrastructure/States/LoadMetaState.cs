@@ -2,7 +2,6 @@
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
-using UnityEngine;
 
 namespace ECR.Infrastructure.States
 {
@@ -26,7 +25,6 @@ namespace ECR.Infrastructure.States
              */
             await _uiFactory.WarmUp();
             
-            Debug.Log(typeof(LoadMetaState));
             var sceneInstance = await _sceneLoader.Load(SceneName.Meta, OnLoaded);
         }
 

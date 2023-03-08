@@ -1,6 +1,5 @@
 ﻿using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.States.Interfaces;
-using UnityEngine;
 
 namespace ECR.Infrastructure.States
 {
@@ -19,9 +18,7 @@ namespace ECR.Infrastructure.States
 
         public void Enter()
         {
-            // TODO: nothing?
             
-            Debug.Log(typeof(GameLoopState));
         }
 
         public void Exit()

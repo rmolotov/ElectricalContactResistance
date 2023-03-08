@@ -1,6 +1,5 @@
 ﻿using ECR.Infrastructure.States.Interfaces;
 using ECR.Services.StaticData;
-using UnityEngine;
 
 namespace ECR.Infrastructure.States
 {
@@ -17,13 +16,6 @@ namespace ECR.Infrastructure.States
 
         public void Enter()
         {
-            /*TODO:
-             create factories
-             load persistent data
-             */
-            
-            Debug.Log(typeof(BootstrapState));
-
             _staticDataService.Initialized += () => 
                 _stateMachine.Enter<LoadProgressState>();
         }
