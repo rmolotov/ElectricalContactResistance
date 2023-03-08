@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using ECR.Data;
 using ECR.Infrastructure.States.Interfaces;
+using ECR.Services.Economy;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
+using UniRx;
 using UnityEngine;
 
 namespace ECR.Infrastructure.States
@@ -12,23 +14,25 @@ namespace ECR.Infrastructure.States
         private readonly GameStateMachine _stateMachine;
         private readonly IPersistentDataService _progressService;
         private readonly ISaveLoadService _saveLoadProgressService;
+        private readonly IEconomyService _economyService;
 
         public LoadProgressState(
             GameStateMachine gameStateMachine, 
             IPersistentDataService progressService,
-            ISaveLoadService saveLoadProgressService)
+            ISaveLoadService saveLoadProgressService,
+            IEconomyService economyService)
         {
             _stateMachine = gameStateMachine;
             _progressService = progressService;
             _saveLoadProgressService = saveLoadProgressService;
+            _economyService = economyService;
         }
 
         public void Enter()
         {
-            Debug.Log(typeof(LoadProgressState));
-            
             LoadProgressOrInitNew();
-            
+            InitEconomyByProgress();
+
             _stateMachine.Enter<LoadMetaState>();
         }
 
@@ -36,7 +40,7 @@ namespace ECR.Infrastructure.States
         {
             
         }
-        
+
         private async void LoadProgressOrInitNew()
         {
             _progressService.Settings = 
@@ -50,6 +54,17 @@ namespace ECR.Infrastructure.States
             _progressService.Economy = 
                 await _saveLoadProgressService.LoadEconomy() 
                 ?? NewEconomy();
+        }
+
+        private void InitEconomyByProgress()
+        {
+            _economyService.PlayerCurrency.Value = _progressService.Economy.PlayerCurrency;
+            _economyService.PlayerCurrency
+                .Subscribe(_ =>
+                {
+                    _progressService.Economy.PlayerCurrency = _economyService.PlayerCurrency.Value;
+                    _saveLoadProgressService.SaveEconomy();
+                });
         }
 
         private PlayerEconomyData NewEconomy() =>

@@ -4,6 +4,8 @@ using ECR.UI.Windows;
 using RSG;
 using Sirenix.OdinInspector;
 using TMPro;
+using UniRx;
+using UniRx.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -20,46 +22,42 @@ namespace ECR.Meta.Shop
         [SerializeField] private float currencyTweensDuration;
         
         public RectTransform itemsCardsContainer;
+        
+        private readonly CompositeDisposable _disposables = new();
 
         [Inject]
-        private void Construct(IEconomyService economyService)
-        {
+        private void Construct(IEconomyService economyService) => 
             _economyService = economyService;
-        }
 
         public override Promise<bool> InitAndShow<T>(T data, string titleText = "")
         {
-            _economyService.OnCurrencyChanged += ChangeCurrencyText;
-            _economyService.OnCompletedBuying += BlinkCurrencyText;
+            Observable
+                .FromEvent<bool>(
+                    x => _economyService.OnCompletedBuying += x,
+                    x => _economyService.OnCompletedBuying -= x)
+                .Where(success => success == false)
+                .Subscribe(_ => currencyFill
+                    .DOFade(1, currencyTweensDuration / 4)
+                    .SetLoops(4, LoopType.Yoyo))
+                .AddTo(_disposables);
 
-            currencyText.text = _economyService.PlayerCurrency.ToString();
-            
+            _economyService.PlayerCurrency
+                .CombineWithPrevious((prev, next) => (prev, next))
+                .Subscribe(tuple => currencyText
+                    .DOCounter(tuple.prev, tuple.next, currencyTweensDuration, false)
+                    .SetEase(Ease.OutQuad));
+
             return base.InitAndShow(data, titleText);
         }
 
         protected override void Close()
         {
-            _economyService.OnCurrencyChanged -= ChangeCurrencyText;
-            _economyService.OnCompletedBuying -= BlinkCurrencyText;
+            _disposables.Clear();
+
+            currencyFill.DOComplete();
+            currencyText.DOComplete();
             
             base.Close();
-        }
-
-        private void BlinkCurrencyText(bool success)
-        {
-            if (!success)
-                currencyFill
-                    .DOFade(1, currencyTweensDuration / 4)
-                    .SetLoops(4, LoopType.Yoyo);
-        }
-
-        private void ChangeCurrencyText(int value)
-        {
-            // refactor for <int, int> Rx/Promise
-            var current = int.Parse(currencyText.text);
-            currencyText
-                .DOCounter(current, value, currencyTweensDuration, false)
-                .SetEase(Ease.OutQuad);
         }
     }
 }

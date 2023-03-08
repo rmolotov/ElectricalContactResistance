@@ -17,6 +17,7 @@ namespace ECR.Meta.Settings
         [SerializeField] private Toggle debugMonitorToggle;
 
         private PlayerSettingsData _userSettings;
+        private bool _initialized;
 
         [Inject]
         private void Construct()
@@ -38,15 +39,19 @@ namespace ECR.Meta.Settings
 
         private void SetupControls()
         {
+            musicSlider.value       = _userSettings.MusicVolume;
+            sfxSlider.value         = _userSettings.SfxVolume;
+            hapticToggle.isOn       = _userSettings.HapticEnabled;
+            debugMonitorToggle.isOn = _userSettings.DebugEnabled;
+            
+            if (_initialized) return;
+            
             musicSlider.onValueChanged.AddListener(SetMusicVolume);
             sfxSlider.onValueChanged.AddListener(SetSfxVolume);
             hapticToggle.onValueChanged.AddListener(EnableHaptic);
             debugMonitorToggle.onValueChanged.AddListener(EnableDebugMonitor);
 
-            musicSlider.value       = _userSettings.MusicVolume;
-            sfxSlider.value         = _userSettings.SfxVolume;
-            hapticToggle.isOn       = _userSettings.HapticEnabled;
-            debugMonitorToggle.isOn = _userSettings.DebugEnabled;
+            _initialized = true;
         }
 
         private void EnableDebugMonitor(bool value)

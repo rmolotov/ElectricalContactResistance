@@ -30,8 +30,8 @@ namespace ECR.Infrastructure.Installers
             Container.Bind<IInputService>().To<InputService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle(); // remote, initializable
             Container.BindInterfacesAndSelfTo<PersistentDataService>().AsSingle(); // possible remote, initializable
-            Container.Bind<ISaveLoadService>().To<SaveLoadLocalService>().AsSingle().NonLazy(); // possible remote, initializable
-            Container.Bind<IEconomyService>().To<EconomyLocalService>().AsSingle().NonLazy(); // possible remote, initializable
+            Container.BindInterfacesAndSelfTo<SaveLoadLocalService>().AsSingle().NonLazy(); // possible remote, initializable
+            Container.BindInterfacesAndSelfTo<EconomyLocalService>().AsSingle().NonLazy(); // possible remote, initializable
         }
 
         private void BindFactories()

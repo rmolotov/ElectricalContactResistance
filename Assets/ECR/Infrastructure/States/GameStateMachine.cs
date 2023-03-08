@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
+using ECR.Services.Economy;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.Services.StaticData;
@@ -20,6 +21,7 @@ namespace ECR.Infrastructure.States
             IStaticDataService staticDataService,
             IPersistentDataService persistentDataService,
             ISaveLoadService saveLoadService,
+            IEconomyService economyService,
             IUIFactory uiFactory,
             IHeroFactory heroFactory,
             IStageFactory stageFactory,
@@ -29,7 +31,7 @@ namespace ECR.Infrastructure.States
             _states = new Dictionary<Type, IExitableState>
             {
                 [typeof(BootstrapState)]    = new BootstrapState(this, staticDataService),
-                [typeof(LoadProgressState)] = new LoadProgressState(this, persistentDataService, saveLoadService),
+                [typeof(LoadProgressState)] = new LoadProgressState(this, persistentDataService, saveLoadService, economyService),
                 [typeof(LoadMetaState)]     = new LoadMetaState(this, uiFactory, sceneLoader),
                 [typeof(LoadLevelState)]    = new LoadLevelState(this, sceneLoader, uiFactory, heroFactory, stageFactory),
                 [typeof(GameLoopState)]     = new GameLoopState(this, heroFactory, enemyFactory),

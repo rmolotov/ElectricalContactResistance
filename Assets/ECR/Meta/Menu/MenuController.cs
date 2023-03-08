@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.States;
 using ECR.Meta.Shop;
@@ -7,8 +8,8 @@ using ECR.Services.SaveLoad;
 using ECR.StaticData;
 using ECR.UI.CustomComponents;
 using ECR.UI.Windows;
-using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -17,8 +18,10 @@ namespace ECR.Meta.Menu
 {
     public class MenuController : MonoBehaviour
     {
+        public readonly ReactiveProperty<StageStaticData> SelectedStage = new();
         public ToggleGroup stagesTogglesContainer;
         [SerializeField] private Button startStageButton;
+
 
         [BoxGroup("Windows")]
         [HorizontalGroup("Windows/Horizontal", 0.5f, LabelWidth = 120)]
@@ -32,13 +35,11 @@ namespace ECR.Meta.Menu
         [VerticalGroup("Windows/Horizontal/Left")] 
         [LabelText("Shop")] [SerializeField] private ButtonForPromised shopButton;
 
-
         private GameStateMachine _stateMachine;
         private IUIFactory _uiFactory;
         private IPersistentDataService _persistentDataService;
         private ISaveLoadService _saveLoadService;
 
-        [CanBeNull] private StageStaticData _selectedStage;
         private ShopWindow _shopWindow;
 
         [Inject]
@@ -60,23 +61,18 @@ namespace ECR.Meta.Menu
             SetupButtons();
         }
 
-        public void SelectStage([CanBeNull] StageStaticData staticData)
-        {
-            // start button blinks when selected stage changed to another one
-            // is it bug or feature? mb implement reaction by Rx w throttle?
-            _selectedStage = staticData;
-            startStageButton.interactable = _selectedStage != null;
-        }
-
-
         private async Task CreateShop() => 
             _shopWindow = await _uiFactory.CreateShop();
 
         private void SetupButtons()
         {
+            SelectedStage
+                .Throttle(TimeSpan.FromTicks(1))
+                .Subscribe(st => startStageButton.interactable = st != null);
+            
             startStageButton.onClick.AddListener(() =>
             {
-                _stateMachine.Enter<LoadLevelState, StageStaticData>(_selectedStage);
+                _stateMachine.Enter<LoadLevelState, StageStaticData>(SelectedStage.Value);
             });
 
             settingsButton.onClick.AddListener(() =>

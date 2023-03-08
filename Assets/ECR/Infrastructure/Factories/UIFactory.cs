@@ -108,8 +108,8 @@ namespace ECR.Infrastructure.Factories
             var prefab = await _assetProvider.Load<GameObject>(key: StageCardPrefabId);
             var sprite = await _assetProvider.Load<Sprite>(key: stageStaticData.StageKey);
             var card = Object.Instantiate(prefab, menu.stagesTogglesContainer.transform).GetComponent<StageCard>();
-           
-            card.OnSelect += menu.SelectStage;
+
+            card.OnSelect += st => menu.SelectedStage.Value = st;
             card.Initialize(stageStaticData, sprite, menu.stagesTogglesContainer);
 
             return card;

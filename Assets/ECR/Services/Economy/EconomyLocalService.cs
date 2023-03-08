@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.Services.StaticData;
+using UniRx;
 
 namespace ECR.Services.Economy
 {
@@ -18,21 +19,8 @@ namespace ECR.Services.Economy
 
         // TODO: refactor to bool/string Promise w/ confirmation window
         public event Action<bool> OnCompletedBuying;
-        
-        // TODO: refactor with Rx
-        public event Action<int> OnCurrencyChanged;
+        public IntReactiveProperty PlayerCurrency { get; set; } = new();
 
-        public int PlayerCurrency
-        {
-            get => _persistentDataService.Economy.PlayerCurrency;
-            set
-            {
-                _persistentDataService.Economy.PlayerCurrency = value;
-                OnCurrencyChanged?.Invoke(value);
-                _saveLoadService.SaveEconomy();
-            }
-        }
-        
 
         public EconomyLocalService(
             IStaticDataService staticDataService,
@@ -43,8 +31,14 @@ namespace ECR.Services.Economy
             _staticDataService = staticDataService;
             _persistentDataService = persistentDataService;
             _saveLoadService = saveLoadService;
+            
         }
-        
+
+        public void Initialize()
+        {
+            
+        }
+
 
         public Dictionary<string, int> GetInventoryItems =>
             _persistentDataService.Economy.InventoryItems;
@@ -61,7 +55,7 @@ namespace ECR.Services.Economy
         public Task BuyItem(string itemKey)
         {
             var itemPrice = _staticDataService.ForInventoryItem(itemKey).Price;
-            if (itemPrice > PlayerCurrency)
+            if (itemPrice > PlayerCurrency.Value)
             {
                 // reject purchase
                 OnCompletedBuying?.Invoke(false);
@@ -72,7 +66,7 @@ namespace ECR.Services.Economy
                 _persistentDataService.Economy.InventoryItems.TryGetValue(itemKey, out var currentCount);
                 _persistentDataService.Economy.InventoryItems[itemKey] = currentCount + 1;
 
-                PlayerCurrency -= itemPrice;
+                PlayerCurrency.Value -= itemPrice;
                 OnCompletedBuying?.Invoke(true);
                 
                 _saveLoadService.SaveEconomy();
