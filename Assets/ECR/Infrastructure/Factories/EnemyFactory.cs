@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ECR.Gameplay.Enemy;
+using ECR.Gameplay.UI;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Services.StaticData;
@@ -52,6 +53,9 @@ namespace ECR.Infrastructure.Factories
             var health = enemy.GetComponent<EnemyHealth>();
             health.MaxHP = config.Capacity;
             health.CurrentHP.Value = health.MaxHP;
+
+            var actorUi = enemy.GetComponentInChildren<ActorUI>();
+            actorUi?.Initialize(health);
 
             var attack = enemy.GetComponent<EnemyAttack>();
             attack.AttackDamage.Value = config.Current;

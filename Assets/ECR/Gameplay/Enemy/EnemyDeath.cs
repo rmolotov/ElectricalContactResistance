@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using ECR.Gameplay.Logic;
+using UniRx;
 using UnityEngine;
 
 namespace ECR.Gameplay.Enemy
@@ -19,9 +20,13 @@ namespace ECR.Gameplay.Enemy
 
         private void Die()
         {
+            Observable
+                .FromEvent<AnimatorState>(x => animator.StateExited += x, x => animator.StateExited -= x)
+                .Where(state => state == AnimatorState.Death)
+                .Subscribe(_ => Destroy(gameObject));
+            
             animator.PlayDie();
             Instantiate(deathVFX, transform.position, Quaternion.identity);
-            Destroy(gameObject);
         }
     }
 }

@@ -68,8 +68,8 @@ namespace ECR.Infrastructure.States
         {
             await SetupBoardTiles();
 
-            GameObject hero = await InitHero();
-            SetupCamera(hero);
+            await InitHero();
+            SetupCamera(_heroFactory.Hero);
 
             await SetupEnemySpawners();
             // TODO: bake runtime navmesh?
@@ -88,7 +88,9 @@ namespace ECR.Infrastructure.States
         {
             await _uiFactory
                 .CreateHud()
-                .ContinueWith(m => m.Result.Initialize(), TaskScheduler.FromCurrentSynchronizationContext());
+                .ContinueWith(
+                    m => m.Result.Initialize(_heroFactory.Hero),
+                    TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void SetupCamera(GameObject hero)

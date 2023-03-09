@@ -17,6 +17,7 @@ namespace ECR.Gameplay.Hero
         private readonly int _idleStateHash = Animator.StringToHash("Idle");
         private readonly int _attackStateHash = Animator.StringToHash("Attack");
         private readonly int _walkingStateHash = Animator.StringToHash("Walk");
+        private readonly int _hitStateHash = Animator.StringToHash("Hit");
         private readonly int _deathStateHash = Animator.StringToHash("Die");
 
         [SerializeField] private Animator animator;
@@ -60,6 +61,7 @@ namespace ECR.Gameplay.Hero
             if      (stateHash == _idleStateHash)    state = AnimatorState.Idle;
             else if (stateHash == _attackStateHash)  state = AnimatorState.Attack;
             else if (stateHash == _walkingStateHash) state = AnimatorState.Walking;
+            else if (stateHash == _hitStateHash)     state = AnimatorState.Hit;
             else if (stateHash == _deathStateHash)   state = AnimatorState.Death;
             else                                     state = AnimatorState.Unknown;
 

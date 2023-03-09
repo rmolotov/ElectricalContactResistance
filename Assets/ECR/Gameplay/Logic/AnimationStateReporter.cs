@@ -2,6 +2,7 @@
 
 namespace ECR.Gameplay.Logic
 {
+    [DisallowMultipleComponent]
     public class AnimationStateReporter : StateMachineBehaviour
     {
         private IAnimationStateReader _reader;
