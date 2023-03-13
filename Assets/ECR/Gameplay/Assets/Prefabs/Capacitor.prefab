@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5968049561680755423, guid: af40993239b154042b4ddc55ed34759a, type: 3}
       propertyPath: m_Name
-      value: EnemyBasePrefab
+      value: Capacitor
       objectReference: {fileID: 0}
     - target: {fileID: 6456215559734845541, guid: af40993239b154042b4ddc55ed34759a, type: 3}
       propertyPath: m_RootOrder

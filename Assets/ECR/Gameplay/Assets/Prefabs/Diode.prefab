@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5968049561680755423, guid: af40993239b154042b4ddc55ed34759a, type: 3}
       propertyPath: m_Name
-      value: EnemyBasePrefab
+      value: Diode
       objectReference: {fileID: 0}
     - target: {fileID: 6456215559734845541, guid: af40993239b154042b4ddc55ed34759a, type: 3}
       propertyPath: m_RootOrder
@@ -17,15 +17,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6456215559734845541, guid: af40993239b154042b4ddc55ed34759a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.22102523
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6456215559734845541, guid: af40993239b154042b4ddc55ed34759a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.004999876
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6456215559734845541, guid: af40993239b154042b4ddc55ed34759a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.16319108
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6456215559734845541, guid: af40993239b154042b4ddc55ed34759a, type: 3}
       propertyPath: m_LocalRotation.w

@@ -24,6 +24,6 @@ namespace ECR.Gameplay.Logic
         }
 
         private IAnimationStateReader FindReader(Animator animator) =>
-            _reader ??= animator.gameObject.GetComponent<IAnimationStateReader>();
+            _reader ??= animator.transform.parent.GetComponent<IAnimationStateReader>();
     }
 }

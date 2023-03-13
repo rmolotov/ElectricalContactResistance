@@ -20,6 +20,8 @@ namespace ECR.Gameplay.Enemy
         private readonly int _hitStateHash = Animator.StringToHash("Hit");
         private readonly int _deathStateHash = Animator.StringToHash("Die");
 
+        [InfoBox("Select Model transform which is a CHILD of this transform\n This also required for working of AnimationStateReporter", 
+            InfoMessageType.Warning, "@animator==null")]
         [SerializeField] private Animator animator;
         
         

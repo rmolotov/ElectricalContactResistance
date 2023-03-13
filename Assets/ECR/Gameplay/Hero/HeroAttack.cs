@@ -1,9 +1,12 @@
-﻿using ECR.Gameplay.Logic;
+﻿using System;
+using ECR.Gameplay.Enemy;
+using ECR.Gameplay.Logic;
 using ECR.Services.Input;
 using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 using Zenject;
+using static ECR.Gameplay.Enemy.AttackType;
 
 namespace ECR.Gameplay.Hero
 {
@@ -11,6 +14,7 @@ namespace ECR.Gameplay.Hero
     {
         private const float DamageRadius = 1.0f;
         private static int _layerMask;
+        private const AttackType AttackType = Direct;
         private readonly Collider[] _hits = new Collider[3];
 
         private IInputService _inputService;
@@ -29,12 +33,12 @@ namespace ECR.Gameplay.Hero
 
         private void Start()
         {
-            _inputService.AttackPressed += OnAttack;
             _layerMask = 1 << LayerMask.NameToLayer("Hittable");
 
+            _inputService.AttackPressed += OnAttack;
+            
             AttackDamage.Subscribe(_ =>
             {
-                print($"attack set to {AttackDamage.Value}");
                 var emission = attackVFX.emission;
                 emission.rateOverTimeMultiplier = AttackDamage.Value;
             });
@@ -51,13 +55,18 @@ namespace ECR.Gameplay.Hero
             animator.PlayAttack();
             attackVFX.Play();
 
-            for (var i = 0; i < Hit(); ++i)
+            for (var i = 0; i < Hit(from: attackVFX.transform); ++i)
                 _hits[i].transform
                     .GetComponentInParent<IHealth>()
                     .TakeDamage(AttackDamage.Value);
         }
 
-        private int Hit() => 
-            Physics.OverlapSphereNonAlloc(attackVFX.transform.position + transform.forward, DamageRadius, _hits, _layerMask);
+        private int Hit(Transform from) =>
+            AttackType switch
+            {
+                Direct => Physics.OverlapCapsuleNonAlloc(from.position, from.position + from.forward, DamageRadius, _hits, _layerMask),
+                AOE => Physics.OverlapSphereNonAlloc(from.position, DamageRadius, _hits, _layerMask),
+                _ => throw new ArgumentOutOfRangeException()
+            };
     }
 }

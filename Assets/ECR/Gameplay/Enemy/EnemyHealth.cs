@@ -1,4 +1,5 @@
 ﻿using ECR.Gameplay.Logic;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
@@ -7,15 +8,15 @@ namespace ECR.Gameplay.Enemy
 {
     public class EnemyHealth : MonoBehaviour, IHealth
     {
-        [SerializeField] private EnemyAnimator animator;
+        [SerializeField] [CanBeNull] private EnemyAnimator animator;
 
 
-        [BoxGroup("Health")]
+        [FoldoutGroup("Health")]
         [ShowInInspector][InlineProperty][ReadOnly]
         public IntReactiveProperty CurrentHP { get; set; } = new();
         public int MaxHP { get; set; }
 
-        [BoxGroup("Health")]
+        [FoldoutGroup("Health")]
         [Button ("Take damage", ButtonStyle.CompactBox, Expanded = true), GUIColor(1f, 0.6f, 0.4f)]
         public void TakeDamage(int damage)
         {
@@ -23,7 +24,7 @@ namespace ECR.Gameplay.Enemy
                 return;
             
             CurrentHP.Value -= damage;
-            animator.PlayHit();
+            animator?.PlayHit();
             
             if (CurrentHP.Value < 0)
                 CurrentHP.Value = 0;

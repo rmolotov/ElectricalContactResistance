@@ -57,9 +57,14 @@ namespace ECR.Infrastructure.Factories
             var actorUi = enemy.GetComponentInChildren<ActorUI>();
             actorUi?.Initialize(health);
 
+            var follow = enemy.GetComponent<Follow>();
+            follow?.Initialize(_heroFactory.Hero.transform);
+            
             var attack = enemy.GetComponent<EnemyAttack>();
-            attack.AttackDamage.Value = config.Current;
+            attack.AttackType = config.AttackType;
+            attack.AttackDamage = config.Current;
             attack.Shield = config.Resistance;
+            attack.Cooldown = config.Voltage;
             
             return enemy;
         }
