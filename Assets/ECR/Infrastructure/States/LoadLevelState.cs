@@ -66,22 +66,12 @@ namespace ECR.Infrastructure.States
 
         private async Task InitGameWold()
         {
-            await SetupBoardTiles();
+            await SetupBoard();
 
             await InitHero();
             SetupCamera(_heroFactory.Hero);
 
             await SetupEnemySpawners();
-            // TODO: bake runtime navmesh?
-        }
-
-        private async Task SetupBoardTiles() => 
-            await _stageFactory.CreateBoard(_pendingStageStaticData.BoardTiles);
-
-        private async Task SetupEnemySpawners()
-        {
-            foreach (var spawnerStaticData in _pendingStageStaticData.EnemySpawners)
-                await _stageFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
         }
 
         private async Task InitUI()
@@ -91,6 +81,15 @@ namespace ECR.Infrastructure.States
                 .ContinueWith(
                     m => m.Result.Initialize(_heroFactory.Hero),
                     TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private async Task SetupBoard() => 
+            await _stageFactory.CreateBoard(_pendingStageStaticData.BoardTiles);
+
+        private async Task SetupEnemySpawners()
+        {
+            foreach (var spawnerStaticData in _pendingStageStaticData.EnemySpawners)
+                await _stageFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
         }
 
         private void SetupCamera(GameObject hero)

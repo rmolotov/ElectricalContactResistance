@@ -46,7 +46,7 @@ namespace ECR.Infrastructure.Factories
             
             _container.Inject(board);
             
-            board.Initialize(tilesData);
+            board.InitializeAndBake(tilesData);
             
             return board;
         }

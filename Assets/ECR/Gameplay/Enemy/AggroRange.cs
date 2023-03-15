@@ -1,4 +1,5 @@
-﻿using ECR.Gameplay.Logic;
+﻿using System.Collections.Generic;
+using ECR.Gameplay.Logic;
 using UnityEngine;
 
 namespace ECR.Gameplay.Enemy
@@ -6,7 +7,7 @@ namespace ECR.Gameplay.Enemy
     public class AggroRange : MonoBehaviour
     {
         [SerializeField] private TriggerObserver aggroTrigger;
-        [SerializeField] private Follow followComponent;
+        [SerializeField] private List<EnemyFollowBase> enemyFollowComponents;
 
         private void Start()
         {
@@ -20,10 +21,14 @@ namespace ECR.Gameplay.Enemy
             aggroTrigger.TriggerExit -= TriggerExit;
         }
 
-        private void TriggerEnter(Collider other) => 
-            followComponent.FollowTo();
+        private void TriggerEnter(Collider other) =>
+            enemyFollowComponents
+                .ForEach(fc => fc
+                    .FollowTo());
 
         private void TriggerExit(Collider other) => 
-            followComponent.Stop();
+            enemyFollowComponents
+                .ForEach(fc => fc
+                    .Stop());
     }
 }
