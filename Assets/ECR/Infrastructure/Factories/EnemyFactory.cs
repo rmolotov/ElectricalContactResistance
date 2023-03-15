@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ECR.Gameplay.Enemy;
 using ECR.Gameplay.UI;
@@ -55,10 +56,11 @@ namespace ECR.Infrastructure.Factories
             health.CurrentHP.Value = health.MaxHP;
 
             var actorUi = enemy.GetComponentInChildren<ActorUI>();
-            actorUi?.Initialize(health);
+            actorUi.Initialize(health);
 
-            var follow = enemy.GetComponent<Follow>();
-            follow?.Initialize(_heroFactory.Hero.transform);
+            enemy.GetComponents<EnemyFollowBase>().ToList()
+                .ForEach(fc => fc
+                    .Initialize(_heroFactory.Hero.transform));
             
             var attack = enemy.GetComponent<EnemyAttack>();
             attack.AttackType = config.AttackType;

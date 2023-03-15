@@ -26,7 +26,7 @@ namespace ECR.Meta.Hud
         private void SetupHeroUI(GameObject hero)
         {
             var heroHealth = hero.GetComponent<IHealth>();
-            heroUI?.Initialize(heroHealth);
+            heroUI.Initialize(heroHealth, false);
         }
 
         private void SetupButtons()

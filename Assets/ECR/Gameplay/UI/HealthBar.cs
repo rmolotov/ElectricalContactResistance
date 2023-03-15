@@ -13,6 +13,7 @@ namespace ECR.Gameplay.UI
             "Please set appropriate transition duration to \"Death\" state in animator based on \"Hit\" animation clip"
             )]
         [SerializeField] private float damageTweensDuration;
+        [SerializeField] private bool alwaysVisible;
         [SerializeField] private Image barImage;
 
         private Sequence _sequence;
@@ -33,7 +34,7 @@ namespace ECR.Gameplay.UI
                 .Join(barImage.rectTransform
                     .DOLocalRotate(SelectRotation(normalizedHp, barImage), damageTweensDuration))
                 .AppendCallback(() => gameObject
-                    .SetActive(false))
+                    .SetActive(alwaysVisible == true))
                 .Play();
         }
 
