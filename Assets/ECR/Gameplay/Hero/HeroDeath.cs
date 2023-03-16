@@ -15,18 +15,23 @@ namespace ECR.Gameplay.Hero
         {
             health.CurrentHP
                 .Where(h => h <= 0)
-                .Subscribe(_ => Die());
+                .Subscribe(_ => WaitForDie());
         }
 
-        private void Die()
+        private void WaitForDie()
         {
             Observable
                 .FromEvent<AnimatorState>(x => animator.StateExited += x, x => animator.StateExited -= x)
                 .Where(state => state == AnimatorState.Death)
-                .Subscribe(_ => { /* show game over popup */ });
+                .Subscribe(_ => Die());
             
             animator.PlayDie();
+        }
+        
+        private void Die()
+        {
             Instantiate(deathVFX, transform.position, Quaternion.identity);
+            Destroy(gameObject);
         }
     }
 }

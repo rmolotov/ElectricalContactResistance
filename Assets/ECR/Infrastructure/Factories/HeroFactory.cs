@@ -6,6 +6,7 @@ using ECR.Services.StaticData;
 using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
+using Object = UnityEngine.Object;
 
 namespace ECR.Infrastructure.Factories
 {

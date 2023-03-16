@@ -1,4 +1,5 @@
-﻿using ECR.Gameplay.Logic;
+﻿using System;
+using ECR.Gameplay.Logic;
 using JetBrains.Annotations;
 using UniRx;
 using UnityEngine;
@@ -12,33 +13,28 @@ namespace ECR.Gameplay.Enemy
         [SerializeField] [CanBeNull] private EnemyAnimator animator;
         [SerializeField] private EnemyHealth health;
 
-        private void Start()
-        {
+        public event Action EnemyDied;
+
+        private void Start() =>
             health.CurrentHP
                 .Where(h => h <= 0)
-                .Subscribe(_ => WaitForDie());
-        }
+                .Subscribe(_ =>
+                {
+                    if (animator) WaitForAnimator();
+                    else Die();
+                });
 
-        private void WaitForDie()
-        {
-            if (animator)
-            {
-                Observable
-                    .FromEvent<AnimatorState>(x => animator.StateExited += x, x => animator.StateExited -= x)
-                    .Where(state => state == AnimatorState.Death)
-                    .Subscribe(_ => Die());
-
-                animator.PlayDie();
-            }
-            else
-            {
-                Die();
-            }
-        }
+        private void WaitForAnimator() =>
+            Observable
+                .FromEvent<AnimatorState>(x => animator.StateExited += x, x => animator.StateExited -= x)
+                .Where(state => state == AnimatorState.Death)
+                .DoOnSubscribe(() => animator.PlayDie())
+                .Subscribe(_ => Die());
 
         private void Die()
         {
             Instantiate(deathVFX, transform.position, Quaternion.identity);
+            EnemyDied?.Invoke();
             Destroy(gameObject);
         }
     }

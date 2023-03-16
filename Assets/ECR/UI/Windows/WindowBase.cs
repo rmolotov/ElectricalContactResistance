@@ -42,25 +42,20 @@ namespace ECR.UI.Windows
             if (windowTitle && !string.IsNullOrEmpty(titleText))
                 windowTitle.text = titleText;
 
+            var text = data as string;
+            if (windowText && !string.IsNullOrEmpty(text))
+                windowText.text = text;
+
             SetVisible(true);
             
             return Promise = new Promise<bool>();
         }
 
-        private void SetInitialAppearance()
-        {
-            canvasGroup.blocksRaycasts = false;
-            canvasGroup.alpha = 0;
-            if (windowPanel) 
-                windowPanel.localScale = Vector3.one * openingInitialScale;
-        }
+        protected virtual void Close() =>
+            SetVisible(false)
+                .Then(() => 
+                    Promise.ResolveIfPending(UserAccepted));
 
-        protected virtual void Close()
-        {
-            SetVisible(false);
-            if (Promise.IsPending())
-                Promise.Resolve(UserAccepted);
-        }
 
         protected void PlaySoundEffect()
         {
@@ -72,16 +67,33 @@ namespace ECR.UI.Windows
             // _hapticService.Play(clickEffectKey)
         }
 
-        private void SetVisible(bool value)
+        private void SetInitialAppearance()
         {
-            canvasGroup.blocksRaycasts = value;
-            canvasGroup
-                .DOFade(value ? 1 : 0, openingDuration)
-                .SetEase(Ease.OutQuad);
+            if (canvasGroup) 
+                (canvasGroup.blocksRaycasts, canvasGroup.alpha) = (false, 0);
+            if (windowPanel) 
+                windowPanel.localScale = Vector3.one * openingInitialScale;
+        }
 
-            if (windowPanel) windowPanel
-                .DOScale(Vector3.one * (value ? 1 : 0.5f), openingDuration)
-                .SetEase(value ? Ease.OutBounce : Ease.OutQuad);
+        private Promise SetVisible(bool value)
+        {
+            if (canvasGroup)
+                canvasGroup.blocksRaycasts = value;
+            
+            var animationPromise = new Promise();
+            
+            DOTween.Sequence()
+                .Append(canvasGroup?
+                    .DOFade(value ? 1 : 0, openingDuration)
+                    .SetEase(Ease.OutQuad))
+                .Join(windowPanel?
+                    .DOScale(Vector3.one * (value ? 1 : 0.5f), openingDuration)
+                    .SetEase(value ? Ease.OutBounce : Ease.OutQuad))
+                .Play()
+                .onComplete += () => 
+                    animationPromise.ResolveIfPending();
+
+            return animationPromise;
         }
     }
 }

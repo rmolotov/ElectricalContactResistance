@@ -60,9 +60,10 @@ namespace ECR.Infrastructure.Factories
 
             enemy.GetComponents<EnemyFollowBase>().ToList()
                 .ForEach(fc => fc
-                    .Initialize(_heroFactory.Hero.transform));
+                    .Initialize(_heroFactory.Hero));
             
             var attack = enemy.GetComponent<EnemyAttack>();
+            attack.Initialize(_heroFactory.Hero);
             attack.AttackType = config.AttackType;
             attack.AttackDamage = config.Current;
             attack.Shield = config.Resistance;

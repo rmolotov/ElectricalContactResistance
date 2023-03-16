@@ -92,6 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageTweensDuration: 0.667
+  alwaysVisible: 0
   barImage: {fileID: 4774276519441123202}
 --- !u!114 &188114955437019512
 MonoBehaviour:
@@ -427,7 +428,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4357425232352022116
 MonoBehaviour:

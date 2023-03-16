@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UniRx.Triggers;
+using UnityEngine;
 
 namespace ECR.Gameplay.Enemy
 {
@@ -6,9 +8,14 @@ namespace ECR.Gameplay.Enemy
     {
         protected Transform HeroTransform;
         protected bool Enabled;
-        
-        public virtual void Initialize(Transform hero) =>
-            HeroTransform = hero;
+
+        public virtual void Initialize(GameObject hero)
+        {
+            HeroTransform = hero.transform;
+            hero
+                .OnDestroyAsObservable()
+                .Subscribe(_ => Stop());
+        }
 
         public virtual void FollowTo(Transform hero = null) => 
             (Enabled, HeroTransform) = (true, hero ? hero : HeroTransform);

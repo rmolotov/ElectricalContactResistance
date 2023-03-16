@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ECR.Data;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
@@ -16,6 +17,7 @@ namespace ECR.Infrastructure.States
         private readonly IStageFactory _stageFactory;
 
         private StageStaticData _pendingStageStaticData;
+        private StageProgressData _stageProgressData;
 
         public LoadLevelState(GameStateMachine gameStateMachine,
             SceneLoader sceneLoader,
@@ -33,6 +35,7 @@ namespace ECR.Infrastructure.States
         public async void Enter(StageStaticData stageStaticData)
         {
             _pendingStageStaticData = stageStaticData;
+            _stageProgressData = new StageProgressData();
             
             /* TODO:
              show curtain
@@ -68,8 +71,8 @@ namespace ECR.Infrastructure.States
         {
             await SetupBoard();
 
-            await InitHero();
-            SetupCamera(_heroFactory.Hero);
+            _stageProgressData.Hero = await InitHero();
+            SetupCamera(_stageProgressData.Hero);
 
             await SetupEnemySpawners();
         }
@@ -79,7 +82,7 @@ namespace ECR.Infrastructure.States
             await _uiFactory
                 .CreateHud()
                 .ContinueWith(
-                    m => m.Result.Initialize(_heroFactory.Hero),
+                    m => m.Result.Initialize(_pendingStageStaticData, _stageProgressData),
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
 
@@ -89,7 +92,10 @@ namespace ECR.Infrastructure.States
         private async Task SetupEnemySpawners()
         {
             foreach (var spawnerStaticData in _pendingStageStaticData.EnemySpawners)
-                await _stageFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
+            {
+                var spawner = await _stageFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
+                _stageProgressData.EnemySpawners.Add(spawner);
+            }
         }
 
         private void SetupCamera(GameObject hero)

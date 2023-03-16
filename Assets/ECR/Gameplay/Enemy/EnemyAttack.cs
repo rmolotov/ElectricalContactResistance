@@ -3,6 +3,7 @@ using ECR.Gameplay.Logic;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using static ECR.Gameplay.Enemy.AttackType;
 
@@ -13,10 +14,12 @@ namespace ECR.Gameplay.Enemy
         private const float DamageRadius = 1.0f;
         private static int _layerMask;
         private readonly Collider[] _hits = new Collider[1];
-        private readonly BoolReactiveProperty _enabled = new();
+        
+        private bool _enabled;
 
         [SerializeField] [CanBeNull] private EnemyAnimator animator;
         [SerializeField] private ParticleSystem attackVFX;
+
 
         // TODO: redactor fields and logic
         public AttackType AttackType;
@@ -31,17 +34,22 @@ namespace ECR.Gameplay.Enemy
 
             Observable
                 .Interval(TimeSpan.FromSeconds(Cooldown))
-                .Where(_ => _enabled.Value)
-                .TakeWhile(_ => _enabled.Value != false)
+                .Where(_ => _enabled)
+                .TakeWhile(_ => _enabled != false)
                 .TakeUntilDestroy(this)
                 .Subscribe(_ => OnAttack());
         }
 
-        public void Activate() => 
-            _enabled.Value = true;
+        public void Initialize(GameObject hero) =>
+            hero
+                .OnDestroyAsObservable()
+                .Subscribe(_ => Deactivate());
 
-        public void Deactivate() => 
-            _enabled.Value = false;
+        public void Activate() =>
+            (_enabled) = (true);
+
+        public void Deactivate() =>
+            (_enabled) = (false);
 
         [Button("Attack"), GUIColor(0,0,1)]
         private void OnAttack()
