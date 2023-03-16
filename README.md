@@ -11,9 +11,9 @@ _Top-down action-shooter game with electricity puzzles on every level_
 
 [![Author's linked-in profile](https://img.shields.io/badge/LinkedIn-Roman%20Molotov-informational)](https://linkedin.com/in/roman-molotov)
 
-### Core pillars:
+## Core pillars:
 Use defeated enemies for assembly or fix electric circuit and tune it's parameters to solve the puzzle.
-There are lot of electric parts and modules which help you to build you own ~~hero~~ kill switch and beat them all.
+There are lot of electric parts and modules which help you to build you own ~~hero~~ kill switch and beat them up.
 Piles of enemies and many tangled circuits are waiting you!
 
 <details>
@@ -22,11 +22,11 @@ Piles of enemies and many tangled circuits are waiting you!
 <img src="https://bitbucket.org/electricalcontactresistance/electricalcontactresistance.bitbucket.io/raw/59d29a51660e1cc8241f06210699f619ad5efb80/Documentation/Images/MainMenu.png" alt="ECR" width="640" height="360px"/>
 <img src="https://bitbucket.org/electricalcontactresistance/electricalcontactresistance.bitbucket.io/raw/59d29a51660e1cc8241f06210699f619ad5efb80/Documentation/Images/SettingsWindow.png" alt="ECR" width="640" height="360px"/>
 <img src="https://bitbucket.org/electricalcontactresistance/electricalcontactresistance.bitbucket.io/raw/59d29a51660e1cc8241f06210699f619ad5efb80/Documentation/Images/ShopWindow.png" alt="ECR" width="640" height="360px"/>
-<img src="https://bitbucket.org/electricalcontactresistance/electricalcontactresistance.bitbucket.io/raw/59d29a51660e1cc8241f06210699f619ad5efb80/Documentation/Images/Gameplay.png" alt="ECR" width="640" height="360px"/>
+<img src="https://bitbucket.org/electricalcontactresistance/electricalcontactresistance.bitbucket.io/raw/a0788b5a58cf97e3182bd50e47a36e3c5bc267f8/Documentation/Images/Gameplay.png" alt="ECR" width="640" height="360px"/>
 
 </details>
 
-### Tech details:
+## Tech details:
 
 Project structure contains three sections:
 * **Infrastructure** (providers and services),
