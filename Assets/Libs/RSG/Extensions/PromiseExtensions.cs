@@ -87,6 +87,12 @@ namespace RSG.Extensions
                 promise.Resolve();
         }
         
+        public static void ResolveIfPending<T>(this IPendingPromise<T> promise, T value)
+        {
+            if(promise.IsPending())
+                promise.Resolve(value);
+        }
+        
 
         private static void AssureInit()
         {
