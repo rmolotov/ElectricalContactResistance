@@ -20,7 +20,6 @@ namespace ECR.Infrastructure.Factories
         private readonly IAssetProvider _assetProvider;
         private readonly IStaticDataService _staticDataService;
 
-
         public StageFactory(DiContainer container, IAssetProvider assetProvider, IStaticDataService staticDataService)
         {
             _container = container;

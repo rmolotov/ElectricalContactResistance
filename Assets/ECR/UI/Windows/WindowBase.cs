@@ -39,10 +39,11 @@ namespace ECR.UI.Windows
 
         public virtual Promise<bool> InitAndShow<T>(T data, string titleText = "")
         {
+            var text = data as string;
+            
             if (windowTitle && !string.IsNullOrEmpty(titleText))
                 windowTitle.text = titleText;
 
-            var text = data as string;
             if (windowText && !string.IsNullOrEmpty(text))
                 windowText.text = text;
 
@@ -69,16 +70,13 @@ namespace ECR.UI.Windows
 
         private void SetInitialAppearance()
         {
-            if (canvasGroup) 
-                (canvasGroup.blocksRaycasts, canvasGroup.alpha) = (false, 0);
-            if (windowPanel) 
-                windowPanel.localScale = Vector3.one * openingInitialScale;
+            if (canvasGroup) (canvasGroup.blocksRaycasts, canvasGroup.alpha) = (false, 0);
+            if (windowPanel) windowPanel.localScale = Vector3.one * openingInitialScale;
         }
 
         private Promise SetVisible(bool value)
         {
-            if (canvasGroup)
-                canvasGroup.blocksRaycasts = value;
+            if (canvasGroup) canvasGroup.blocksRaycasts = value;
             
             var animationPromise = new Promise();
             

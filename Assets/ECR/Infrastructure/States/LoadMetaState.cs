@@ -20,9 +20,7 @@ namespace ECR.Infrastructure.States
 
         public async void Enter()
         {
-            /* TODO:
-             show curtain
-             */
+            // TODO: show curtain
             await _uiFactory.WarmUp();
             
             var sceneInstance = await _sceneLoader.Load(SceneName.Meta, OnLoaded);
@@ -39,16 +37,12 @@ namespace ECR.Infrastructure.States
             await InitMainMenu();
         }
 
-        private async Task InitUIRoot()
-        {
+        private async Task InitUIRoot() => 
             await _uiFactory.CreateUIRoot();
-        }
 
-        private async Task InitMainMenu()
-        {
+        private async Task InitMainMenu() =>
             await _uiFactory
                 .CreateMainMenu()
                 .ContinueWith(m => m.Result.Initialize(), TaskScheduler.FromCurrentSynchronizationContext());
-        }
     }
 }

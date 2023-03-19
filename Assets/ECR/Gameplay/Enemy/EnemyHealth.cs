@@ -10,7 +10,6 @@ namespace ECR.Gameplay.Enemy
     {
         [SerializeField] [CanBeNull] private EnemyAnimator animator;
 
-
         [FoldoutGroup("Health")]
         [ShowInInspector][InlineProperty][ReadOnly]
         public IntReactiveProperty CurrentHP { get; set; } = new();

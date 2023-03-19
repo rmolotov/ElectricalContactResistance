@@ -37,14 +37,13 @@ namespace ECR.Meta.Shop
             // TODO: disable buyButton when timer (limited deal) expired
 
             buyButton.onClick.AddListener(() =>
-            {
-                OnBuyClick?.Invoke(staticData.ItemId);
-            });
+                OnBuyClick?.Invoke(staticData.ItemId));
         }
 
         public void UpdateObtainedCount(int obtainedCount)
         {
             var available = _staticData.MaxCount - obtainedCount;
+            
             obtainedCountText.text = obtainedCount.ToString();
             availableCountText.text = available.ToString();
             buyButton.interactable = available > 0;

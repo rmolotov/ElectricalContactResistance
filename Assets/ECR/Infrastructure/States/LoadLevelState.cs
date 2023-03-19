@@ -71,7 +71,7 @@ namespace ECR.Infrastructure.States
         {
             await SetupBoard();
 
-            _stageProgressData.Hero = await InitHero();
+            _stageProgressData.Hero = await SetupHero();
             SetupCamera(_stageProgressData.Hero);
 
             await SetupEnemySpawners();
@@ -89,21 +89,21 @@ namespace ECR.Infrastructure.States
         private async Task SetupBoard() => 
             await _stageFactory.CreateBoard(_pendingStageStaticData.BoardTiles);
 
-        private async Task SetupEnemySpawners()
-        {
-            foreach (var spawnerStaticData in _pendingStageStaticData.EnemySpawners)
-            {
-                var spawner = await _stageFactory.CreateEnemySpawner(spawnerStaticData.EnemyType, spawnerStaticData.Position);
-                _stageProgressData.EnemySpawners.Add(spawner);
-            }
-        }
+        private async Task<GameObject> SetupHero() => 
+            await _heroFactory.Create(_pendingStageStaticData.PlayerSpawnPoint);
 
         private void SetupCamera(GameObject hero)
         {
             //set up camera follow
         }
 
-        private async Task<GameObject> InitHero() => 
-            await _heroFactory.Create(_pendingStageStaticData.PlayerSpawnPoint);
+        private async Task SetupEnemySpawners()
+        {
+            foreach (var spawnerData in _pendingStageStaticData.EnemySpawners)
+            {
+                var spawner = await _stageFactory.CreateEnemySpawner(spawnerData.EnemyType, spawnerData.Position);
+                _stageProgressData.EnemySpawners.Add(spawner);
+            }
+        }
     }
 }

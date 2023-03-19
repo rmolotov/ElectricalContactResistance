@@ -29,7 +29,6 @@ namespace ECR.Infrastructure.Factories
 
         private Canvas _uiRoot;
 
-
         public UIFactory(
             DiContainer container, 
             IAssetProvider assetProvider, 
@@ -80,11 +79,9 @@ namespace ECR.Infrastructure.Factories
             var prefab = await _assetProvider.Load<GameObject>(key: MenuPrefabId);
             var menu = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<MenuController>();
 
-            foreach (var stageData in _staticDataService.GetAllStages)
-            {
+            foreach (var stageData in _staticDataService.GetAllStages) 
                 await CreateStageCard(stageData, menu);
-            }
-            
+
             _container.Inject(menu);
             return menu;
         }
@@ -95,10 +92,8 @@ namespace ECR.Infrastructure.Factories
             var shop = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<ShopWindow>();
             
             foreach (var itemData in _staticDataService.GetAllItems)
-            {
                 await CreateShopItemCard(itemData, shop.itemsCardsContainer);
-            }
-            
+
             _container.Inject(shop);
             return shop;
         }
@@ -128,6 +123,7 @@ namespace ECR.Infrastructure.Factories
                 var updatedCount = _economyService.IsItemObtainedAndCount(arg).Item2;
                 card.UpdateObtainedCount(updatedCount);
             };
+            
             card.Initialize(shopItemStaticData, sprite, obtainedCount);
 
             return card;

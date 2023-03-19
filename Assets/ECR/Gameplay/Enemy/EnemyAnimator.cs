@@ -29,6 +29,8 @@ namespace ECR.Gameplay.Enemy
         public event Action<AnimatorState> StateExited;
         public AnimatorState State { get; private set; }
 
+        #region Play Methods
+
         [Button ("Move"), GUIColor(0.9f, 0.9f, 0.9f)]
         public void PlayMove(float velocity) =>
             animator.SetFloat(MoveHash, velocity);
@@ -44,6 +46,8 @@ namespace ECR.Gameplay.Enemy
         [Button ("Kill"), GUIColor(1f, 0f, 0)]
         public void PlayDie() =>
             animator.SetTrigger(DieHash);
+
+        #endregion
 
         public void OnEnter(int stateHash)
         {

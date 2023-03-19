@@ -18,7 +18,7 @@ namespace ECR.Infrastructure.Factories
         private readonly IAssetProvider _assetProvider;
         private readonly IStaticDataService _staticDataService;
         
-        [CanBeNull] public GameObject Hero { get; protected set; }
+        [CanBeNull] public GameObject Hero { get; private set; }
 
         public HeroFactory(DiContainer container, IAssetProvider assetProvider, IStaticDataService staticDataService)
         {

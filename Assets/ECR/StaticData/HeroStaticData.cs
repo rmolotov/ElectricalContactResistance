@@ -1,5 +1,8 @@
-﻿namespace ECR.StaticData
+﻿using System;
+
+namespace ECR.StaticData
 {
+    [Serializable]
     public record HeroStaticData
     {
         public int Current { get; set; }

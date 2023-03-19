@@ -21,10 +21,10 @@ namespace ECR.Gameplay.Board
             _boardTiles ??= tileAssets.ToDictionary(t => t.tileType, t => t);
 
             foreach (var boardTileStaticData in data)
-            {
-                var tile = _boardTiles[boardTileStaticData.Tile];
-                SetTile(tile, boardTileStaticData.Position, boardTileStaticData.TileRotation);
-            }
+                SetTile(
+                    _boardTiles[boardTileStaticData.Tile],
+                    boardTileStaticData.Position,
+                    boardTileStaticData.TileRotation);
 
             navigationSurface.BuildNavMesh();
         }

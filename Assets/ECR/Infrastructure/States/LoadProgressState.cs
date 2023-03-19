@@ -5,7 +5,6 @@ using ECR.Services.Economy;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using UniRx;
-using UnityEngine;
 
 namespace ECR.Infrastructure.States
 {
@@ -67,6 +66,8 @@ namespace ECR.Infrastructure.States
                 });
         }
 
+        #region Creation economy, progress and settings stubs
+
         private PlayerEconomyData NewEconomy() =>
             new()
             {
@@ -88,5 +89,7 @@ namespace ECR.Infrastructure.States
                 DebugEnabled = false,
                 HapticEnabled = true
             };
+
+        #endregion
     }
 }

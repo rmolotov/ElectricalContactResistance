@@ -39,18 +39,14 @@ namespace ECR.Services.Economy
             
         }
 
-
         public Dictionary<string, int> GetInventoryItems =>
             _persistentDataService.Economy.InventoryItems;
 
         public List<string> GetAvailableItems() => 
             _availableItems ??= _staticDataService.GetAllItems.Select(i => i.ItemId).ToList();
 
-        public (bool, int) IsItemObtainedAndCount(string itemKey)
-        {
-            var obtained = _persistentDataService.Economy.InventoryItems.TryGetValue(itemKey, out var count);
-            return (obtained, count);
-        }
+        public (bool, int) IsItemObtainedAndCount(string itemKey) => 
+            (_persistentDataService.Economy.InventoryItems.TryGetValue(itemKey, out var count), count);
 
         public Task BuyItem(string itemKey)
         {

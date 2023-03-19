@@ -60,19 +60,12 @@ namespace ECR.Meta.Hud
                 });
         }
 
-        private void SetupHeroUI(GameObject hero)
-        {
-            var heroHealth = hero.GetComponent<IHealth>();
-            heroUI.Initialize(heroHealth, false);
-        }
+        private void SetupButtons() =>
+            returnButton.onClick.AddListener(() => 
+                _stateMachine.Enter<LoadMetaState>());
 
-        private void SetupButtons()
-        {
-            returnButton.onClick.AddListener(() =>
-            {
-                _stateMachine.Enter<LoadMetaState>();
-            });
-        }
+        private void SetupHeroUI(GameObject hero) => 
+            heroUI.Initialize(hero.GetComponent<IHealth>(), false);
 
         private void SetupStageWindow(StageStaticData stageStaticData, string text) =>
             stagePopup

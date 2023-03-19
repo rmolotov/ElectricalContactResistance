@@ -39,17 +39,17 @@ namespace ECR.UI.CustomComponents
                 .DOFade(value ? 1 : 0, duration)
                 .SetEase(Ease.OutQuad);
 
-        private void TweenHandle(bool value)
-        {
-            handle.rectTransform
-                .DOAnchorMin(value ? OnMin : OffMin, duration)
-                .SetEase(value ? Ease.InQuad : Ease.OutQuad);
-            handle.rectTransform
-                .DOAnchorMax(value ? OnMax : OffMax, duration)
-                .SetEase(value ? Ease.OutQuad : Ease.InQuad);
-            handle
-                .DOFade(HandleFade, duration / 2)
-                .SetLoops(2, LoopType.Yoyo);
-        }
+        private void TweenHandle(bool value) =>
+            DOTween.Sequence()
+                .Append(handle.rectTransform
+                    .DOAnchorMin(value ? OnMin : OffMin, duration)
+                    .SetEase(value ? Ease.InQuad : Ease.OutQuad))
+                .Join(handle.rectTransform
+                    .DOAnchorMax(value ? OnMax : OffMax, duration)
+                    .SetEase(value ? Ease.OutQuad : Ease.InQuad))
+                .Join(handle
+                    .DOFade(HandleFade, duration / 2)
+                    .SetLoops(2, LoopType.Yoyo))
+                .Play();
     }
 }

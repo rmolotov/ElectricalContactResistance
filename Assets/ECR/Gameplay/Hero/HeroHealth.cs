@@ -9,7 +9,6 @@ namespace ECR.Gameplay.Hero
     {
         [SerializeField] private HeroAnimator animator;
 
-
         [BoxGroup("Health")]
         [ShowInInspector][InlineProperty][ReadOnly]
         public IntReactiveProperty CurrentHP { get; set; } = new();

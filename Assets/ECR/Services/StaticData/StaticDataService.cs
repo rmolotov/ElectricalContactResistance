@@ -42,7 +42,6 @@ namespace ECR.Services.StaticData
 
         public Action Initialized { get; set; }
 
-
         public async void Initialize()
         {
             var connection = Application.internetReachability;
@@ -79,10 +78,8 @@ namespace ECR.Services.StaticData
                 ? staticData
                 : null;
 
-        public void ForWindow()
-        {
+        public void ForWindow() => 
             throw new NotImplementedException();
-        }
 
 
         private void OnRemoteConfigLoaded(ConfigResponse configResponse)
@@ -128,23 +125,14 @@ namespace ECR.Services.StaticData
                 ) ?? new List<EnemyStaticData>())
                 .ToDictionary(e => e.EnemyType, e => e);
 
-        private static void LogConfigsResponseResult(ConfigResponse configResponse)
-        {
-            switch (configResponse.requestOrigin)
+        private static void LogConfigsResponseResult(ConfigResponse configResponse) =>
+            Debug.Log(configResponse.requestOrigin switch
             {
-                case ConfigOrigin.Default:
-                    Debug.Log("No configs loaded; using default config");
-                    break;
-                case ConfigOrigin.Cached:
-                    Debug.Log("No configs loaded; using cached config");
-                    break;
-                case ConfigOrigin.Remote:
-                    Debug.Log("New configs loaded; updating cached config...");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+                ConfigOrigin.Default => "No configs loaded; using default config",
+                ConfigOrigin.Cached  => "No configs loaded; using cached config",
+                ConfigOrigin.Remote  => "New configs loaded; updating cached config...",
+                _                    => throw new ArgumentOutOfRangeException()
+            });
 
         private static async Task InitializeRemoteConfigAsync()
         {

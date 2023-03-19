@@ -18,17 +18,16 @@ namespace ECR.Services.Input
         {
             _controls = new PlayerControls();
             _controls.Enable();
-            EnableControls(true);
+            SubscribeOnControls(true);
         }
 
         ~InputService()
         {
-            EnableControls(false);
+            SubscribeOnControls(false);
             _controls.Disable();
-            _controls.Dispose();
         }
 
-        private void EnableControls(bool value)
+        private void SubscribeOnControls(bool value)
         {
             if (value)
             {
@@ -46,8 +45,12 @@ namespace ECR.Services.Input
             }
         }
 
+        #region Adapter methods
+
         private void OnMove(CallbackContext ctx) => MoveAxis = ctx.ReadValue<Vector2>();
         private void OnLook(CallbackContext ctx) => AimAxis = ctx.ReadValue<Vector2>();
         private void OnAttack(CallbackContext ctx) => AttackPressed?.Invoke();
+
+        #endregion
     }
 }

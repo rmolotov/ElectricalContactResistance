@@ -9,13 +9,10 @@ namespace ECR.Gameplay.Enemy
         protected Transform HeroTransform;
         protected bool Enabled;
 
-        public virtual void Initialize(GameObject hero)
-        {
-            HeroTransform = hero.transform;
-            hero
+        public virtual void Initialize(GameObject hero) =>
+            (HeroTransform = hero.transform)
                 .OnDestroyAsObservable()
                 .Subscribe(_ => Stop());
-        }
 
         public virtual void FollowTo(Transform hero = null) => 
             (Enabled, HeroTransform) = (true, hero ? hero : HeroTransform);

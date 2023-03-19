@@ -14,7 +14,6 @@ namespace ECR.Services.SaveLoad
 
         private readonly IPersistentDataService _persistentDataService;
 
-
         public SaveLoadLocalService(IPersistentDataService persistentDataService)
         {
             _persistentDataService = persistentDataService;
