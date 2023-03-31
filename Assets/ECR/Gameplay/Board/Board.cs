@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using ECR.Services.Logging;
 using ECR.StaticData.Board;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Tilemaps;
+using Zenject;
 
 namespace ECR.Gameplay.Board
 {
@@ -15,6 +17,11 @@ namespace ECR.Gameplay.Board
         
         // TODO: get Tiles (BoardTile) from config and addressables?
         private Dictionary<BoardTileType, BoardTile> _boardTiles;
+        private ILoggingService _logger;
+
+        [Inject]
+        private void Construct(ILoggingService loggingService) =>
+            _logger = loggingService;
         
         public void InitializeAndBake(IEnumerable<BoardTileStaticData> data)
         {
@@ -27,6 +34,8 @@ namespace ECR.Gameplay.Board
                     boardTileStaticData.TileRotation);
 
             navigationSurface.BuildNavMesh();
+            
+            _logger.LogMessage($"initialized with {_boardTiles.Count} tiles and baked {navigationSurface.size} navmesh", this);
         }
 
         private void SetTile(TileBase tile, Vector2Int position, BoardTileRotation rotation)

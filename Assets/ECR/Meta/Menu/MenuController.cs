@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.States;
 using ECR.Meta.Shop;
+using ECR.Services.Logging;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.StaticData;
@@ -36,6 +37,7 @@ namespace ECR.Meta.Menu
         [LabelText("Shop")] [SerializeField] private ButtonForPromised shopButton;
 
         private GameStateMachine _stateMachine;
+        private ILoggingService _logger;
         private IUIFactory _uiFactory;
         private IPersistentDataService _persistentDataService;
         private ISaveLoadService _saveLoadService;
@@ -45,11 +47,13 @@ namespace ECR.Meta.Menu
         [Inject]
         private void Construct(
             GameStateMachine stateMachine,
+            ILoggingService loggingService,
             IUIFactory uiFactory,
             IPersistentDataService persistentDataService,
             ISaveLoadService saveLoadService)
         {
             _stateMachine = stateMachine;
+            _logger = loggingService;
             _uiFactory = uiFactory;
             _persistentDataService = persistentDataService;
             _saveLoadService = saveLoadService;
@@ -59,6 +63,8 @@ namespace ECR.Meta.Menu
         {
             await CreateShop();
             SetupButtons();
+            
+            _logger.LogMessage("initialized", this);
         }
 
         private async Task CreateShop() => 

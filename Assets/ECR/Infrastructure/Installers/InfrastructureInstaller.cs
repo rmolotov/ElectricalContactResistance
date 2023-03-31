@@ -5,6 +5,7 @@ using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States;
 using ECR.Services.Economy;
 using ECR.Services.Input;
+using ECR.Services.Logging;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.Services.StaticData;
@@ -27,6 +28,7 @@ namespace ECR.Infrastructure.Installers
 
         private void BindServices()
         {
+            Container.Bind<ILoggingService>().To<LoggingService>().AsSingle().NonLazy();
             Container.Bind<IInputService>().To<InputService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle(); // remote, initializable
             Container.BindInterfacesAndSelfTo<PersistentDataService>().AsSingle(); // possible remote, initializable

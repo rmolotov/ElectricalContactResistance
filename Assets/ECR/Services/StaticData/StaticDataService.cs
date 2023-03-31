@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ECR.Services.Logging;
 using ECR.StaticData;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -23,6 +24,8 @@ namespace ECR.Services.StaticData
         private const string EnemiesList   = "EnemiesList";
         private const string HeroConfigKey = "Hero";
         
+        private readonly ILoggingService _logger;
+
         private Dictionary<EnemyType, EnemyStaticData> _enemies;
         private Dictionary<string, StageStaticData> _stages;
         private Dictionary<string, InventoryItemStaticData> _items;
@@ -40,6 +43,9 @@ namespace ECR.Services.StaticData
 
         #endregion
 
+        public StaticDataService(ILoggingService loggingService) =>
+            _logger = loggingService;
+        
         public Action Initialized { get; set; }
 
         public async void Initialize()
@@ -125,14 +131,17 @@ namespace ECR.Services.StaticData
                 ) ?? new List<EnemyStaticData>())
                 .ToDictionary(e => e.EnemyType, e => e);
 
-        private static void LogConfigsResponseResult(ConfigResponse configResponse) =>
-            Debug.Log(configResponse.requestOrigin switch
+        private void LogConfigsResponseResult(ConfigResponse configResponse)
+        {
+            var message = configResponse.requestOrigin switch
             {
                 ConfigOrigin.Default => "No configs loaded; using default config",
                 ConfigOrigin.Cached  => "No configs loaded; using cached config",
                 ConfigOrigin.Remote  => "New configs loaded; updating cached config...",
                 _                    => throw new ArgumentOutOfRangeException()
-            });
+            };
+            _logger.LogMessage(message);
+        }
 
         private static async Task InitializeRemoteConfigAsync()
         {

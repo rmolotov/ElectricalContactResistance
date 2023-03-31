@@ -4,6 +4,7 @@ using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
 using ECR.Services.Economy;
+using ECR.Services.Logging;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.Services.StaticData;
@@ -13,11 +14,13 @@ namespace ECR.Infrastructure.States
 {
     public class GameStateMachine : IInitializable
     {
+        private readonly ILoggingService _logger;
         private readonly Dictionary<Type, IExitableState> _states;
         private IExitableState _currentState;
 
         public GameStateMachine(
             SceneLoader sceneLoader,
+            ILoggingService loggingService,
             IStaticDataService staticDataService,
             IPersistentDataService persistentDataService,
             ISaveLoadService saveLoadService,
@@ -28,6 +31,7 @@ namespace ECR.Infrastructure.States
             IEnemyFactory enemyFactory
         )
         {
+            _logger = loggingService;
             _states = new Dictionary<Type, IExitableState>
             {
                 [typeof(BootstrapState)]    = new BootstrapState(this, staticDataService),
@@ -59,6 +63,8 @@ namespace ECR.Infrastructure.States
 
             var state = GetState<TState>();
             _currentState = state;
+            
+            _logger.LogMessage($"state changed to {_currentState.GetType().Name}", this);
 
             return state;
         }
