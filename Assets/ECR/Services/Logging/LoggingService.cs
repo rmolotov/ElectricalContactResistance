@@ -6,6 +6,11 @@ namespace ECR.Services.Logging
 {
     public class LoggingService : ILoggingService
     {
+        private const string DefaultColor        = "#e3e3e3";
+        private const string InfrastructureColor = "#e38d46";
+        private const string MetaColor           = "#e346b4";
+        private const string GameplayColor       = "#4697e3";
+        
         public void LogMessage(string message, object sender = null) =>
             Debug.Log(GetString(message, sender ?? this));
 
@@ -21,10 +26,10 @@ namespace ECR.Services.Logging
         private static string GetHexColor(Type sender) =>
             sender.Namespace switch
             {
-                var x when Regex.IsMatch(x, @".*Infrastructure.*") => "#e38d46",
-                var x when Regex.IsMatch(x, @".*Meta.*")           => "#e346b4",
-                var x when Regex.IsMatch(x, @".*Gameplay.*")       => "#4697e3",
-                _                                                  => "#e3e3e3"
+                var x when Regex.IsMatch(x, @".*Infrastructure.*") => InfrastructureColor,
+                var x when Regex.IsMatch(x, @".*Meta.*")           => MetaColor,
+                var x when Regex.IsMatch(x, @".*Gameplay.*")       => GameplayColor,
+                _                                                  => DefaultColor
             };
     }
 }
