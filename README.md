@@ -41,7 +41,9 @@ and 3rd-party **libraries** and **plugins** such as:
 * **TextMeshPro**
 * Debug tools and editor extensions: **SRDebugger** and **Odin Inspector**
 * **UI soft mask** by [mob-sakai](https://github.com/mob-sakai/SoftMaskForUGUI)
-* **Nice Vibrations** by [More Mountains](https://assetstore.unity.com/publishers/10305) - TODO
+* **Nice Vibrations** by [More Mountains](https://assetstore.unity.com/publishers/10305) - WIP:
+  * for UI haptic FX - via my custom and proper `HapticSource` component based on standard component by MoreMountains,
+  * for gameplay-events FX - via `HapticService` - TODO.
 
 Project includes level editor based on custom EditorWindow and Odin Inspector. This window available via `Tools/ECR/Board Editor` menu. Requires `StageEditor` scene opening.
 <details>
