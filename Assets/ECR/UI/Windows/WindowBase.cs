@@ -23,14 +23,13 @@ namespace ECR.UI.Windows
         [Title("Text elements")]
         [SerializeField] protected TextMeshProUGUI windowTitle;
         [SerializeField] protected TextMeshProUGUI windowText;
-
+        
         protected bool UserAccepted;
         protected Promise<bool> Promise;
 
         [Inject]
         private void Construct()
         {
-            // haptic service
             // sound service
         }
 

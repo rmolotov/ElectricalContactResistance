@@ -1,14 +1,14 @@
-﻿using DG.Tweening;
-using ECR.Services.Economy;
-using ECR.UI.Windows;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 using RSG;
 using Sirenix.OdinInspector;
 using TMPro;
 using UniRx;
 using UniRx.Extensions;
-using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
+using ECR.Services.Economy;
+using ECR.UI.Windows;
 
 namespace ECR.Meta.Shop
 {

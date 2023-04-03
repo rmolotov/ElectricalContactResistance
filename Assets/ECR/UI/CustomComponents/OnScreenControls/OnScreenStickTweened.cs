@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.OnScreen;
 using static UnityEngine.RectTransformUtility;
@@ -17,14 +16,8 @@ namespace ECR.UI.CustomComponents.OnScreenControls
         private Vector3 _startPos;
         private Vector2 _pointerDownPos;
 
-        private void Start()
-        {
-            // uncomment for set real gamepad to receive haptic fx (using Lofelt.NiceVibrations)
-            // GamepadRumbler.SetCurrentGamepad(0);
-            InputSystem.ResumeHaptics();
-            
+        private void Start() => 
             _startPos = ((RectTransform) transform).anchoredPosition;
-        }
 
         public void OnPointerDown(PointerEventData eventData)
         {

@@ -1,4 +1,5 @@
 ﻿using ECR.Data;
+using ECR.Infrastructure.Haptic;
 using ECR.UI.Windows;
 using RSG;
 using Sirenix.OdinInspector;
@@ -16,14 +17,16 @@ namespace ECR.Meta.Settings
         [SerializeField] private Toggle hapticToggle;
         [SerializeField] private Toggle debugMonitorToggle;
 
+        private HapticProvider _hapticProvider;
         private PlayerSettingsData _userSettings;
         private bool _initialized;
 
         [Inject]
-        private void Construct()
+        private void Construct(HapticProvider hapticProvider)
         {
+            _hapticProvider = hapticProvider;
             // TODO:
-            // {_soundService, _hapticService} = from windowBase
+            // {_soundService} = from windowBase
             // _graphyManager
         }
 
@@ -43,15 +46,24 @@ namespace ECR.Meta.Settings
             sfxSlider.value         = _userSettings.SfxVolume;
             hapticToggle.isOn       = _userSettings.HapticEnabled;
             debugMonitorToggle.isOn = _userSettings.DebugEnabled;
-            
-            if (_initialized) return;
-            
+
+            if (_initialized == false)
+            {
+                SubscribeAndInvokeControls();
+                _initialized = true;
+            }
+        }
+
+        private void SubscribeAndInvokeControls()
+        {
             musicSlider.onValueChanged.AddListener(SetMusicVolume);
             sfxSlider.onValueChanged.AddListener(SetSfxVolume);
             hapticToggle.onValueChanged.AddListener(EnableHaptic);
             debugMonitorToggle.onValueChanged.AddListener(EnableDebugMonitor);
 
-            _initialized = true;
+            SetMusicVolume(musicSlider.value);
+            SetSfxVolume(sfxSlider.value);
+            EnableDebugMonitor(debugMonitorToggle.isOn);
         }
 
         private void EnableDebugMonitor(bool value)
@@ -63,7 +75,7 @@ namespace ECR.Meta.Settings
         private void EnableHaptic(bool value)
         {
             _userSettings.HapticEnabled = value;
-            // _hapticService.enabled = value
+            _hapticProvider.HapticsEnabled = value;
         }
 
         private void SetMusicVolume(float value)

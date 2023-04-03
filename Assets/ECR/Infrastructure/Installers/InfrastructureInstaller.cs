@@ -1,23 +1,30 @@
-﻿using ECR.Infrastructure.AssetManagement;
-using ECR.Infrastructure.Factories;
-using ECR.Infrastructure.Factories.Interfaces;
-using ECR.Infrastructure.SceneManagement;
+﻿using Zenject;
 using ECR.Infrastructure.States;
+using ECR.Infrastructure.AssetManagement;
+using ECR.Infrastructure.SceneManagement;
+using ECR.Infrastructure.Haptic;
+using ECR.Infrastructure.Factories.Interfaces;
+using ECR.Infrastructure.Factories;
 using ECR.Services.Economy;
 using ECR.Services.Input;
 using ECR.Services.Logging;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.Services.StaticData;
-using Zenject;
+using Lofelt.NiceVibrations;
+using UnityEngine;
 
 namespace ECR.Infrastructure.Installers
 {
     public class InfrastructureInstaller : MonoInstaller
     {
+        [SerializeField] private HapticReceiver hapticReceiver;
+        
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<AddressableProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<HapticProvider>().AsSingle()
+                .WithArguments(hapticReceiver);
             Container.Bind<SceneLoader>().AsSingle();
             
             BindServices();
@@ -30,8 +37,8 @@ namespace ECR.Infrastructure.Installers
         {
             Container.Bind<ILoggingService>().To<LoggingService>().AsSingle().NonLazy();
             Container.Bind<IInputService>().To<InputService>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle(); // remote, initializable
-            Container.BindInterfacesAndSelfTo<PersistentDataService>().AsSingle(); // possible remote, initializable
+            Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle().NonLazy(); // remote, initializable
+            Container.BindInterfacesAndSelfTo<PersistentDataService>().AsSingle().NonLazy(); // possible remote, initializable
             Container.BindInterfacesAndSelfTo<SaveLoadLocalService>().AsSingle().NonLazy(); // possible remote, initializable
             Container.BindInterfacesAndSelfTo<EconomyLocalService>().AsSingle().NonLazy(); // possible remote, initializable
         }

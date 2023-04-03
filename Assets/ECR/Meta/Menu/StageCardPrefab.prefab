@@ -321,6 +321,7 @@ GameObject:
   - component: {fileID: 6821690191259584822}
   - component: {fileID: 6821690191259584823}
   - component: {fileID: 4220875673650575591}
+  - component: {fileID: 3819187632907834729}
   m_Layer: 5
   m_Name: SelectButton
   m_TagString: Untagged
@@ -434,8 +435,39 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3819187632907834729}
+        m_TargetAssemblyTypeName: Lofelt.NiceVibrations.HapticSource, Lofelt.NiceVibrations
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
+--- !u!114 &3819187632907834729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6821690191259584818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d20df93fb7de8457baa15a213a53ab19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceType: 1
+  _fallbackPreset: 0
+  _loop: 0
+  _level: 1
+  _frequencyShift: 0
+  clip: {fileID: 0}
+  priority: 128
 --- !u!1 &6821690191982404072
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
+using ECR.Infrastructure.Haptic;
 using ECR.Meta.Hud;
 using ECR.Meta.Menu;
 using ECR.Meta.Shop;
@@ -24,6 +25,7 @@ namespace ECR.Infrastructure.Factories
 
         private readonly DiContainer _container;
         private readonly IAssetProvider _assetProvider;
+        private readonly HapticProvider _hapticProvider;
         private readonly IStaticDataService _staticDataService;
         private readonly IEconomyService _economyService;
 
@@ -31,13 +33,15 @@ namespace ECR.Infrastructure.Factories
 
         public UIFactory(
             DiContainer container, 
-            IAssetProvider assetProvider, 
+            IAssetProvider assetProvider,
+            HapticProvider hapticProvider,
             IStaticDataService staticDataService, 
             IEconomyService economyService
         )
         {
             _container = container;
             _assetProvider = assetProvider;
+            _hapticProvider = hapticProvider;
             _staticDataService = staticDataService;
             _economyService = economyService;
         }
@@ -68,7 +72,11 @@ namespace ECR.Infrastructure.Factories
         public async Task<HudController> CreateHud()
         {
             var prefab = await _assetProvider.Load<GameObject>(key: HudPrefabId);
-            var hud = Object.Instantiate(prefab, _uiRoot.transform).GetComponent<HudController>();
+            var hud = Object
+                .Instantiate(prefab, _uiRoot.transform)
+                .GetComponent<HudController>();
+            
+            _hapticProvider.ResetHapticForRealGamepad();
 
             _container.Inject(hud);
             return hud;
@@ -82,7 +90,7 @@ namespace ECR.Infrastructure.Factories
             foreach (var stageData in _staticDataService.GetAllStages) 
                 await CreateStageCard(stageData, menu);
 
-            _container.Inject(menu);
+            _container.InjectGameObject(menu.gameObject);
             return menu;
         }
 

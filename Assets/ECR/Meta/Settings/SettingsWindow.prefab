@@ -2865,6 +2865,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7157822340608235635, guid: 6af7d96bca2295e46a07820d1e654706, type: 3}
+      propertyPath: _fallbackPreset
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7534695979792223639, guid: 6af7d96bca2295e46a07820d1e654706, type: 3}
       propertyPath: m_Name
       value: OkButton
