@@ -1,4 +1,6 @@
 ﻿using ECR.Gameplay.Logic;
+using JetBrains.Annotations;
+using Lofelt.NiceVibrations;
 using UniRx;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ namespace ECR.Gameplay.Hero
     public class HeroDeath : MonoBehaviour
     {
         [SerializeField] private GameObject deathVFX;
+        [SerializeField] [CanBeNull] private HapticSource deathHFX;
         
         [SerializeField] private HeroAnimator animator;
         [SerializeField] private HeroHealth health;
@@ -24,7 +27,8 @@ namespace ECR.Gameplay.Hero
                 .FromEvent<AnimatorState>(x => animator.StateExited += x, x => animator.StateExited -= x)
                 .Where(state => state == AnimatorState.Death)
                 .Subscribe(_ => Die());
-            
+
+            deathHFX?.Play();
             animator.PlayDie();
         }
         

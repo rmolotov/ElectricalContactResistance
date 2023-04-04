@@ -2,6 +2,7 @@
 using ECR.Gameplay.Enemy;
 using ECR.Gameplay.Logic;
 using ECR.Services.Input;
+using Lofelt.NiceVibrations;
 using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace ECR.Gameplay.Hero
 
         [SerializeField] private HeroAnimator animator;
         [SerializeField] private ParticleSystem attackVFX;
+        [SerializeField] private HapticSource attackHFX;
 
 
         // TODO: redactor fields and logic
@@ -54,6 +56,7 @@ namespace ECR.Gameplay.Hero
         {
             animator.PlayAttack();
             attackVFX.Play();
+            attackHFX.Play();
 
             for (var i = 0; i < Hit(from: attackVFX.transform); ++i)
                 _hits[i].transform

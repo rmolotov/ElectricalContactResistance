@@ -1,4 +1,6 @@
 ﻿using ECR.Gameplay.Logic;
+using JetBrains.Annotations;
+using Lofelt.NiceVibrations;
 using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
@@ -8,6 +10,7 @@ namespace ECR.Gameplay.Hero
     public class HeroHealth : MonoBehaviour, IHealth
     {
         [SerializeField] private HeroAnimator animator;
+        [SerializeField] [CanBeNull] private HapticSource hitHFX;
 
         [BoxGroup("Health")]
         [ShowInInspector][InlineProperty][ReadOnly]
@@ -22,7 +25,9 @@ namespace ECR.Gameplay.Hero
                 return;
             
             CurrentHP.Value -= damage;
+            
             animator.PlayHit();
+            hitHFX?.Play();
             
             if (CurrentHP.Value < 0)
                 CurrentHP.Value = 0;

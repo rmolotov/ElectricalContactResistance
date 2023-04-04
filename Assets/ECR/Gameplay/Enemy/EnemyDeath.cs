@@ -1,6 +1,7 @@
 ﻿using System;
 using ECR.Gameplay.Logic;
 using JetBrains.Annotations;
+using Lofelt.NiceVibrations;
 using UniRx;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ namespace ECR.Gameplay.Enemy
     public class EnemyDeath : MonoBehaviour
     {
         [SerializeField] private GameObject deathVFX;
-        
+        [SerializeField] [CanBeNull] private HapticSource deathHFX;
+
         [SerializeField] [CanBeNull] private EnemyAnimator animator;
         [SerializeField] private EnemyHealth health;
 
@@ -20,6 +22,7 @@ namespace ECR.Gameplay.Enemy
                 .Where(h => h <= 0)
                 .Subscribe(_ =>
                 {
+                    deathHFX?.Play();
                     if (animator) WaitForAnimator();
                     else Die();
                 });
@@ -33,6 +36,7 @@ namespace ECR.Gameplay.Enemy
 
         private void Die()
         {
+            deathHFX?.Stop();
             Instantiate(deathVFX, transform.position, Quaternion.identity);
             EnemyDied?.Invoke();
             Destroy(gameObject);
