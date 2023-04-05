@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
-using ECR.Infrastructure.Haptic;
 using ECR.Meta.Hud;
 using ECR.Meta.Menu;
 using ECR.Meta.Shop;
@@ -25,7 +24,6 @@ namespace ECR.Infrastructure.Factories
 
         private readonly DiContainer _container;
         private readonly IAssetProvider _assetProvider;
-        private readonly HapticProvider _hapticProvider;
         private readonly IStaticDataService _staticDataService;
         private readonly IEconomyService _economyService;
 
@@ -34,14 +32,12 @@ namespace ECR.Infrastructure.Factories
         public UIFactory(
             DiContainer container, 
             IAssetProvider assetProvider,
-            HapticProvider hapticProvider,
             IStaticDataService staticDataService, 
             IEconomyService economyService
         )
         {
             _container = container;
             _assetProvider = assetProvider;
-            _hapticProvider = hapticProvider;
             _staticDataService = staticDataService;
             _economyService = economyService;
         }
@@ -75,8 +71,6 @@ namespace ECR.Infrastructure.Factories
             var hud = Object
                 .Instantiate(prefab, _uiRoot.transform)
                 .GetComponent<HudController>();
-            
-            _hapticProvider.ResetHapticForRealGamepad();
 
             _container.Inject(hud);
             return hud;

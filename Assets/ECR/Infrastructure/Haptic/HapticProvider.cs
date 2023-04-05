@@ -1,5 +1,4 @@
 ﻿using Lofelt.NiceVibrations;
-using UnityEngine.InputSystem;
 
 namespace ECR.Infrastructure.Haptic
 {
@@ -17,13 +16,7 @@ namespace ECR.Infrastructure.Haptic
             get => HapticController.hapticsEnabled;
             set => HapticController.hapticsEnabled = _hapticReceiver.hapticsEnabled = value;
         }
-        
-        public void ResetHapticForRealGamepad()
-        {
-            GamepadRumbler.SetCurrentGamepad(0);
-            InputSystem.ResumeHaptics();
-        }
-        
+
         public void PlayPreset(HapticPatterns.PresetType type) => 
             HapticPatterns.PlayPreset(type);
 
