@@ -1,5 +1,5 @@
-﻿using ECR.Infrastructure.States;
-using Zenject;
+﻿using Zenject;
+using ECR.Infrastructure.States;
 
 namespace ECR.Infrastructure.Installers
 {
@@ -7,11 +7,13 @@ namespace ECR.Infrastructure.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<BootstrapState>().AsSingle();
-            Container.Bind<LoadProgressState>().AsSingle();
-            Container.Bind<LoadMetaState>().AsSingle();
-            Container.Bind<LoadLevelState>().AsSingle();
-            Container.Bind<GameLoopState>().AsSingle();
+            Container.Bind<BootstrapState>().AsSingle().NonLazy();
+            Container.Bind<LoadProgressState>().AsSingle().NonLazy();
+            Container.Bind<LoadMetaState>().AsSingle().NonLazy();
+            Container.Bind<LoadLevelState>().AsSingle().NonLazy();
+            Container.Bind<GameLoopState>().AsSingle().NonLazy();
+            
+            Container.BindInterfacesAndSelfTo<GameStateMachine>().AsSingle(); //GameStateMachine entry point is Initialize()
         }
     }
 }

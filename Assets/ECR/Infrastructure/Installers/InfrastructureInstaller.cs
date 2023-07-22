@@ -1,5 +1,6 @@
-﻿using Zenject;
-using ECR.Infrastructure.States;
+﻿using UnityEngine;
+using Zenject;
+using Lofelt.NiceVibrations;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.Haptic;
@@ -11,8 +12,6 @@ using ECR.Services.Logging;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
 using ECR.Services.StaticData;
-using Lofelt.NiceVibrations;
-using UnityEngine;
 
 namespace ECR.Infrastructure.Installers
 {
@@ -29,8 +28,6 @@ namespace ECR.Infrastructure.Installers
             
             BindServices();
             BindFactories();
-            
-            Container.BindInterfacesAndSelfTo<GameStateMachine>().AsSingle(); //GameStateMachine entry point is Initialize()
         }
 
         private void BindServices()
@@ -45,6 +42,7 @@ namespace ECR.Infrastructure.Installers
 
         private void BindFactories()
         {
+            Container.BindInterfacesAndSelfTo<StateFactory>().AsSingle();
             Container.Bind<IHeroFactory>().To<HeroFactory>().AsSingle();
             Container.Bind<IStageFactory>().To<StageFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();

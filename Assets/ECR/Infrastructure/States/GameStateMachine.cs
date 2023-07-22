@@ -1,49 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using ECR.Infrastructure.Factories.Interfaces;
-using ECR.Infrastructure.SceneManagement;
-using ECR.Infrastructure.States.Interfaces;
-using ECR.Services.Economy;
-using ECR.Services.Logging;
-using ECR.Services.PersistentData;
-using ECR.Services.SaveLoad;
-using ECR.Services.StaticData;
 using Zenject;
+using ECR.Infrastructure.Factories;
+using ECR.Infrastructure.States.Interfaces;
+using ECR.Services.Logging;
 
 namespace ECR.Infrastructure.States
 {
     public class GameStateMachine : IInitializable
     {
+        private readonly StateFactory _stateFactory;
         private readonly ILoggingService _logger;
-        private readonly Dictionary<Type, IExitableState> _states;
+
+        private Dictionary<Type, IExitableState> _states;
         private IExitableState _currentState;
 
-        public GameStateMachine(
-            SceneLoader sceneLoader,
-            ILoggingService loggingService,
-            IStaticDataService staticDataService,
-            IPersistentDataService persistentDataService,
-            ISaveLoadService saveLoadService,
-            IEconomyService economyService,
-            IUIFactory uiFactory,
-            IHeroFactory heroFactory,
-            IStageFactory stageFactory,
-            IEnemyFactory enemyFactory
-        )
+        public GameStateMachine(StateFactory stateFactory, ILoggingService loggingService)
         {
+            _stateFactory = stateFactory;
             _logger = loggingService;
-            _states = new Dictionary<Type, IExitableState>
-            {
-                [typeof(BootstrapState)]    = new BootstrapState(this, staticDataService),
-                [typeof(LoadProgressState)] = new LoadProgressState(this, persistentDataService, saveLoadService, economyService),
-                [typeof(LoadMetaState)]     = new LoadMetaState(this, uiFactory, sceneLoader),
-                [typeof(LoadLevelState)]    = new LoadLevelState(this, sceneLoader, uiFactory, heroFactory, stageFactory),
-                [typeof(GameLoopState)]     = new GameLoopState(this, heroFactory, enemyFactory),
-            };
         }
 
-        public void Initialize() => 
+        public void Initialize()
+        {
+            _states = new Dictionary<Type, IExitableState>
+            {
+                [typeof(BootstrapState)]    = _stateFactory.CreateState<BootstrapState>(),
+                [typeof(LoadProgressState)] = _stateFactory.CreateState<LoadProgressState>(),
+                [typeof(LoadMetaState)]     = _stateFactory.CreateState<LoadMetaState>(),
+                [typeof(LoadLevelState)]    = _stateFactory.CreateState<LoadLevelState>(),
+                [typeof(GameLoopState)]     = _stateFactory.CreateState<GameLoopState>()
+            };
+            
             Enter<BootstrapState>();
+        }
 
         public void Enter<TState>() where TState : class, IState =>
             ChangeState<TState>()
