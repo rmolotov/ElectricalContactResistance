@@ -8,6 +8,7 @@ using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.Factories;
 using ECR.Services.Economy;
 using ECR.Services.Input;
+using ECR.Services.LevelProgress;
 using ECR.Services.Logging;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
@@ -38,6 +39,11 @@ namespace ECR.Infrastructure.Installers
             Container.BindInterfacesAndSelfTo<PersistentDataService>().AsSingle().NonLazy(); // possible remote, initializable
             Container.BindInterfacesAndSelfTo<SaveLoadLocalService>().AsSingle().NonLazy(); // possible remote, initializable
             Container.BindInterfacesAndSelfTo<EconomyLocalService>().AsSingle().NonLazy(); // possible remote, initializable
+            
+            Container.BindInterfacesAndSelfTo<LevelProgressServiceResolver>()
+                .AsSingle()
+                .CopyIntoDirectSubContainers();
+            Container.BindInterfacesAndSelfTo<LevelProgressService>().AsSingle().NonLazy();
         }
 
         private void BindFactories()
