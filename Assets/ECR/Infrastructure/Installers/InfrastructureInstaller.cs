@@ -18,7 +18,7 @@ namespace ECR.Infrastructure.Installers
     public class InfrastructureInstaller : MonoInstaller
     {
         [SerializeField] private HapticReceiver hapticReceiver;
-        
+
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<AddressableProvider>().AsSingle();

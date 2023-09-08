@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
-using ECR.Meta.Hud;
+using ECR.Meta.HUD;
 using ECR.Meta.Menu;
 using ECR.Meta.Shop;
 using ECR.Services.Economy;
@@ -65,12 +65,12 @@ namespace ECR.Infrastructure.Factories
             _uiRoot = Object.Instantiate(prefab).GetComponent<Canvas>();
         }
 
-        public async Task<HudController> CreateHud()
+        public async Task<HUDController> CreateHud()
         {
             var prefab = await _assetProvider.Load<GameObject>(key: HudPrefabId);
             var hud = Object
                 .Instantiate(prefab, _uiRoot.transform)
-                .GetComponent<HudController>();
+                .GetComponent<HUDController>();
 
             _container.Inject(hud);
             return hud;

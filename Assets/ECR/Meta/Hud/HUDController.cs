@@ -1,20 +1,20 @@
 ﻿using System.Linq;
-using ECR.Data;
-using ECR.Gameplay.Logic;
-using ECR.Gameplay.UI;
-using ECR.Infrastructure.States;
-using ECR.Services.Economy;
-using ECR.StaticData;
-using ECR.UI.Windows;
-using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+using UniRx;
+using UniRx.Triggers;
+using ECR.Data;
+using ECR.Infrastructure.States;
+using ECR.Services.Economy;
+using ECR.Gameplay.Logic;
+using ECR.Gameplay.UI;
+using ECR.StaticData;
+using ECR.UI.Windows;
 
-namespace ECR.Meta.Hud
+namespace ECR.Meta.HUD
 {
-    public class HudController : MonoBehaviour
+    public class HUDController : MonoBehaviour
     {
         private const string LoseText = "You've lost and should start stage again.";
         private const string WinText =  "You've won and got some bucks.";

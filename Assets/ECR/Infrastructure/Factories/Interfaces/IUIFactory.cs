@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using ECR.Meta.Hud;
+using ECR.Meta.HUD;
 using ECR.Meta.Menu;
 using ECR.Meta.Shop;
 
@@ -10,7 +10,7 @@ namespace ECR.Infrastructure.Factories.Interfaces
         Task WarmUp();
         void CleanUp();
         Task CreateUIRoot();
-        Task<HudController> CreateHud();
+        Task<HUDController> CreateHud();
         Task<MenuController> CreateMainMenu();
         Task<ShopWindow> CreateShop();
     }
