@@ -10,7 +10,10 @@ namespace ECR.UI.CustomComponents
         public override void OnPointerUp(PointerEventData eventData) => 
             _eventData = eventData;
 
-        public void OnPromisedResolve() => 
+        public void OnPromisedResolve()
+        {
+            _eventData.button = PointerEventData.InputButton.Left;
             base.OnPointerUp(_eventData);
+        }
     }
 }
