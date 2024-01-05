@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using UnityEngine;
+using Zenject;
 using ECR.Gameplay.Board;
 using ECR.Gameplay.Logic;
 using ECR.Infrastructure.AssetManagement;
@@ -6,8 +8,6 @@ using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Services.StaticData;
 using ECR.StaticData;
 using ECR.StaticData.Board;
-using UnityEngine;
-using Zenject;
 
 namespace ECR.Infrastructure.Factories
 {

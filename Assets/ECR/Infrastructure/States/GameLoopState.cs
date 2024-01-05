@@ -11,13 +11,15 @@ namespace ECR.Infrastructure.States
         private readonly IHeroFactory _heroFactory;
         private readonly ILevelProgressService _levelProgressService;
 
-        public GameLoopState(GameStateMachine gameStateMachine, IHeroFactory heroFactory, IEnemyFactory enemyFactory,
+        public GameLoopState(
+            GameStateMachine gameStateMachine,
+            IHeroFactory heroFactory, 
+            IEnemyFactory enemyFactory,
             ILevelProgressService levelProgressService)
         {
             _stateMachine = gameStateMachine;
             _heroFactory = heroFactory;
             _enemyFactory = enemyFactory;
-            _levelProgressService = levelProgressService;
             _levelProgressService = levelProgressService;
         }
 

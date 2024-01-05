@@ -1,9 +1,9 @@
 ﻿using System;
-using ECR.Gameplay.Logic;
+using UnityEngine;
 using JetBrains.Annotations;
 using Lofelt.NiceVibrations;
 using UniRx;
-using UnityEngine;
+using ECR.Gameplay.Logic;
 
 namespace ECR.Gameplay.Enemy
 {

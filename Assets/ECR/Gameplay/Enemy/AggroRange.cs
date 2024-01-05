@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using ECR.Gameplay.Logic;
 using UnityEngine;
+using ECR.Gameplay.Logic;
 
 namespace ECR.Gameplay.Enemy
 {

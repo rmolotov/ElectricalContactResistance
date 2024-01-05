@@ -1,8 +1,8 @@
 ﻿using System;
-using ECR.StaticData;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using ECR.StaticData;
 
 namespace ECR.Meta.Menu
 {
@@ -20,16 +20,16 @@ namespace ECR.Meta.Menu
             cardTitle.text = staticData.StageTitle;
             cardDescription.text = staticData.StageDescription;
             cardImage.sprite = previewSprite;
-            
+
+            selectToggle.group = toggleGroup;
             selectToggle.onValueChanged.AddListener(arg =>
                 {
                     OnSelect?.Invoke(arg
-                        ? staticData 
+                        ? staticData
                         : null
                     );
                 }
             );
-            selectToggle.group = toggleGroup;
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ECR.Infrastructure.AssetManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.ResourceManagement.ResourceProviders;
+using ECR.Infrastructure.AssetManagement;
 
 namespace ECR.Infrastructure.SceneManagement
 {
@@ -22,5 +24,11 @@ namespace ECR.Infrastructure.SceneManagement
             onLoaded?.Invoke(sceneName);
             return scene;
         }
+        
+        public void MoveGameObjectToScene(GameObject gameObject, SceneInstance targetScene) => 
+            SceneManager.MoveGameObjectToScene(gameObject, targetScene.Scene);
+        
+        public void MoveGameObjectToScene(GameObject gameObject, Scene targetScene) => 
+            SceneManager.MoveGameObjectToScene(gameObject, targetScene);
     }
 }

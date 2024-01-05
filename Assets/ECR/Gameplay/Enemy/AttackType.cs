@@ -2,7 +2,7 @@
 {
     public enum AttackType
     {
-        Direct,
-        AOE
+        Direct = 0,
+        AOE    = 1
     }
 }

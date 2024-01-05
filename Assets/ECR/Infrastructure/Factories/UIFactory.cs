@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using UnityEngine;
+using Zenject;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Meta.HUD;
@@ -7,8 +9,7 @@ using ECR.Meta.Shop;
 using ECR.Services.Economy;
 using ECR.Services.StaticData;
 using ECR.StaticData;
-using UnityEngine;
-using Zenject;
+
 using Object = UnityEngine.Object;
 
 namespace ECR.Infrastructure.Factories

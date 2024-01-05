@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.UI;
+using Zenject;
+using UniRx;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.States;
 using ECR.Meta.Shop;
@@ -10,10 +14,6 @@ using ECR.StaticData;
 using ECR.UI.CustomComponents;
 using ECR.UI.Windows;
 using Sirenix.OdinInspector;
-using UniRx;
-using UnityEngine;
-using UnityEngine.UI;
-using Zenject;
 
 namespace ECR.Meta.Menu
 {

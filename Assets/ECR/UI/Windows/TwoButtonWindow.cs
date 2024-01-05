@@ -1,6 +1,6 @@
-﻿using RSG;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using RSG;
 
 namespace ECR.UI.Windows
 {

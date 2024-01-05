@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine;
+using Zenject;
 using ECR.Gameplay.Enemy;
 using ECR.Gameplay.UI;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Services.StaticData;
 using ECR.StaticData;
-using UnityEngine;
-using Zenject;
+
 using Object = UnityEngine.Object;
 
 namespace ECR.Infrastructure.Factories
@@ -20,7 +21,10 @@ namespace ECR.Infrastructure.Factories
         private readonly IStaticDataService _staticDataService;
         private readonly IHeroFactory _heroFactory;
 
-        public EnemyFactory(DiContainer container, IAssetProvider assetProvider, IStaticDataService staticDataService,
+        public EnemyFactory(
+            DiContainer container, 
+            IAssetProvider assetProvider, 
+            IStaticDataService staticDataService,
             IHeroFactory heroFactory)
         {
             _container = container;
@@ -58,7 +62,9 @@ namespace ECR.Infrastructure.Factories
             var actorUi = enemy.GetComponentInChildren<ActorUI>();
             actorUi.Initialize(health);
 
-            enemy.GetComponents<EnemyFollowBase>().ToList()
+            enemy
+                .GetComponents<EnemyFollowBase>()
+                .ToList()
                 .ForEach(fc => fc
                     .Initialize(_heroFactory.Hero));
             

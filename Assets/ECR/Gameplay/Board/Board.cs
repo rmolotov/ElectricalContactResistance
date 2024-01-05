@@ -1,41 +1,39 @@
 using System.Collections.Generic;
-using System.Linq;
-using ECR.Services.Logging;
-using ECR.StaticData.Board;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Tilemaps;
+using Sirenix.OdinInspector;
 using Zenject;
+using ECR.StaticData.Board;
+using ECR.Services.Logging;
 
 namespace ECR.Gameplay.Board
 {
-    public class Board : MonoBehaviour
+    public class Board : SerializedMonoBehaviour
     {
+        [DictionaryDrawerSettings(KeyLabel = "Type", ValueLabel = "Tile")]
+        [SerializeField] private readonly Dictionary<BoardTileType, BoardTile> tileAssets = new();
+        [PropertySpace]
         [SerializeField] private Tilemap tilemap;
-        [SerializeField] private BoardTile[] tileAssets;
         [SerializeField] private NavMeshSurface navigationSurface;
-        
-        // TODO: get Tiles (BoardTile) from config and addressables?
-        private Dictionary<BoardTileType, BoardTile> _boardTiles;
+
         private ILoggingService _logger;
 
         [Inject]
         private void Construct(ILoggingService loggingService) =>
             _logger = loggingService;
         
-        public void InitializeAndBake(IEnumerable<BoardTileStaticData> data)
+        public void InitializeAndBake(BoardTileStaticData[] data)
         {
-            _boardTiles ??= tileAssets.ToDictionary(t => t.tileType, t => t);
-
             foreach (var boardTileStaticData in data)
                 SetTile(
-                    _boardTiles[boardTileStaticData.Tile],
+                    tileAssets[boardTileStaticData.Tile],
                     boardTileStaticData.Position,
                     boardTileStaticData.TileRotation);
 
             navigationSurface.BuildNavMesh();
             
-            _logger.LogMessage($"initialized with {_boardTiles.Count} tiles and baked {navigationSurface.size} navmesh", this);
+            _logger.LogMessage($"initialized with {data.Length} tiles from {tileAssets.Count} assets and baked {navigationSurface.size} navmesh", this);
         }
 
         private void SetTile(TileBase tile, Vector2Int position, BoardTileRotation rotation)

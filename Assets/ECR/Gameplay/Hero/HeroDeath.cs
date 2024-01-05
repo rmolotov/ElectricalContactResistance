@@ -1,8 +1,8 @@
-﻿using ECR.Gameplay.Logic;
+﻿using UnityEngine;
 using JetBrains.Annotations;
 using Lofelt.NiceVibrations;
 using UniRx;
-using UnityEngine;
+using ECR.Gameplay.Logic;
 
 namespace ECR.Gameplay.Hero
 {
@@ -24,7 +24,9 @@ namespace ECR.Gameplay.Hero
         private void WaitForDie()
         {
             Observable
-                .FromEvent<AnimatorState>(x => animator.StateExited += x, x => animator.StateExited -= x)
+                .FromEvent<AnimatorState>(
+                    x => animator.StateExited += x, 
+                    x => animator.StateExited -= x)
                 .Where(state => state == AnimatorState.Death)
                 .Subscribe(_ => Die());
 

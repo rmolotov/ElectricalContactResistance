@@ -1,9 +1,9 @@
-﻿using ECR.Gameplay.Logic;
+﻿using UnityEngine;
 using JetBrains.Annotations;
 using Lofelt.NiceVibrations;
 using Sirenix.OdinInspector;
 using UniRx;
-using UnityEngine;
+using ECR.Gameplay.Logic;
 
 namespace ECR.Gameplay.Hero
 {
@@ -11,14 +11,12 @@ namespace ECR.Gameplay.Hero
     {
         [SerializeField] private HeroAnimator animator;
         [SerializeField] [CanBeNull] private HapticSource hitHFX;
+        
+        [field: BoxGroup("Health"), SerializeField, ReadOnly] public IntReactiveProperty CurrentHP { get; set; } = new();
+        [field: BoxGroup("Health"), SerializeField] public int MaxHP { get; set; }
 
         [BoxGroup("Health")]
-        [ShowInInspector][InlineProperty][ReadOnly]
-        public IntReactiveProperty CurrentHP { get; set; } = new();
-        public int MaxHP { get; set; }
-
-        [BoxGroup("Health")]
-        [Button ("Take damage", ButtonStyle.CompactBox, Expanded = true), GUIColor(1f, 0.6f, 0.4f)]
+        [Button ("Hit", ButtonStyle.FoldoutButton), GUIColor(1f, 0.6f, 0.4f)]
         public void TakeDamage(int damage)
         {
             if (CurrentHP.Value <= 0)

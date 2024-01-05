@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ECR.StaticData;
-using ECR.StaticData.Board;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -10,6 +8,8 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
+using ECR.StaticData;
+using ECR.StaticData.Board;
 
 namespace ECR.Gameplay.Board.Editor
 {

@@ -7,6 +7,7 @@ namespace ECR.Services.Input
     {
         Vector2 MoveAxis { get; }
         Vector2 AimAxis { get; }
-        UnityAction AttackPressed { get; set; }
+        
+        event UnityAction AttackPressed;
     }
 }

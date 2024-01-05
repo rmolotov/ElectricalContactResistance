@@ -133,14 +133,120 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a4f1c147a3e7fa46af8faffbe27930f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 0a172640ee365464b8b04d82f4dfc7e6, type: 2}
+    - {fileID: 11400000, guid: 14871974c0e06c84eafce6bb7e382964, type: 2}
+    - {fileID: 11400000, guid: abcd9844434e30a419622882a17a54cc, type: 2}
+    - {fileID: 11400000, guid: 7867e4523645fcd42a9ac986f595c76c, type: 2}
+    - {fileID: 11400000, guid: 501f4fa1e936c284b9b5db957119ef64, type: 2}
+    - {fileID: 11400000, guid: dec6a701e4533bd4891c3a705170dbec, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: tileAssets
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[ECR.StaticData.Board.BoardTileType,
+        Assembly-CSharp],[ECR.Gameplay.Board.BoardTile, Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[ECR.StaticData.Board.BoardTileType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 6
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 5
+    - Name: $v
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   tilemap: {fileID: 6266609170788795440}
-  tileAssets:
-  - {fileID: 11400000, guid: 14871974c0e06c84eafce6bb7e382964, type: 2}
-  - {fileID: 11400000, guid: 7867e4523645fcd42a9ac986f595c76c, type: 2}
-  - {fileID: 11400000, guid: dec6a701e4533bd4891c3a705170dbec, type: 2}
-  - {fileID: 11400000, guid: 0a172640ee365464b8b04d82f4dfc7e6, type: 2}
-  - {fileID: 11400000, guid: 501f4fa1e936c284b9b5db957119ef64, type: 2}
-  - {fileID: 11400000, guid: abcd9844434e30a419622882a17a54cc, type: 2}
   navigationSurface: {fileID: 4497017864531887457}
 --- !u!1 &6266609170275577129
 GameObject:

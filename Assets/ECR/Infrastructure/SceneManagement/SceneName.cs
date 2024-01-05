@@ -5,8 +5,8 @@ namespace ECR.Infrastructure.SceneManagement
     [EnumPaging]
     public enum SceneName
     {
-        Bootstrap,
-        Meta,
-        Core
+        Bootstrap = 0,
+        Meta = 1,
+        Core = 2
     }
 }

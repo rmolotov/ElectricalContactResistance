@@ -1,12 +1,13 @@
 ﻿using System;
-using ECR.Gameplay.Enemy;
-using ECR.Gameplay.Logic;
-using ECR.Services.Input;
+using UnityEngine;
 using Lofelt.NiceVibrations;
 using Sirenix.OdinInspector;
 using UniRx;
-using UnityEngine;
 using Zenject;
+using ECR.Gameplay.Enemy;
+using ECR.Gameplay.Logic;
+using ECR.Services.Input;
+
 using static ECR.Gameplay.Enemy.AttackType;
 
 namespace ECR.Gameplay.Hero
@@ -23,11 +24,9 @@ namespace ECR.Gameplay.Hero
         [SerializeField] private HeroAnimator animator;
         [SerializeField] private ParticleSystem attackVFX;
         [SerializeField] private HapticSource attackHFX;
-
-
-        // TODO: redactor fields and logic
-        public int Shield;
-        [ShowInInspector] public IntReactiveProperty AttackDamage = new();
+        
+        [field: SerializeField] public int Shield { get; set; }
+        [field: SerializeField] public IntReactiveProperty AttackDamage { get; set; } = new();
 
         [Inject]
         private void Construct(IInputService inputService) 

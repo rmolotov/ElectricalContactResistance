@@ -1,10 +1,10 @@
-﻿using DG.Tweening;
+﻿using UnityEngine;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
+using DG.Tweening;
 using RSG;
 using RSG.Extensions;
-using Sirenix.OdinInspector;
 using TMPro;
-using UnityEngine;
 using Zenject;
 
 namespace ECR.UI.Windows

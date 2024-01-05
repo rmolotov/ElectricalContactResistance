@@ -1,8 +1,8 @@
 ﻿using System;
-using ECR.StaticData.Board;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using ECR.StaticData.Board;
 
 namespace ECR.Gameplay.Board
 {

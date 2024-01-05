@@ -1,8 +1,8 @@
 ﻿using System;
-using ECR.StaticData;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+using ECR.StaticData;
 
 namespace ECR.Gameplay.Board.Editor
 {

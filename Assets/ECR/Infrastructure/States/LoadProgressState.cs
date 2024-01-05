@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using UniRx;
 using ECR.Data;
 using ECR.Infrastructure.States.Interfaces;
 using ECR.Services.Economy;
 using ECR.Services.PersistentData;
 using ECR.Services.SaveLoad;
-using UniRx;
 
 namespace ECR.Infrastructure.States
 {

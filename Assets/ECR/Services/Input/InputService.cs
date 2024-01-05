@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+
 using static UnityEngine.InputSystem.InputAction;
 
 namespace ECR.Services.Input
@@ -12,7 +13,7 @@ namespace ECR.Services.Input
 
         public Vector2 AimAxis { get; private set; }
 
-        public UnityAction AttackPressed { get; set; }
+        public event UnityAction AttackPressed;
 
         public InputService()
         {

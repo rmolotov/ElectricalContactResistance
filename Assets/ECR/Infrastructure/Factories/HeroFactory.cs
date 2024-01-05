@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
+using JetBrains.Annotations;
+using UnityEngine;
+using Zenject;
 using ECR.Gameplay.Hero;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Services.StaticData;
-using JetBrains.Annotations;
-using UnityEngine;
-using Zenject;
+
 using Object = UnityEngine.Object;
 
 namespace ECR.Infrastructure.Factories

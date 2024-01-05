@@ -1,7 +1,7 @@
 ﻿using System;
-using ECR.Gameplay.Logic;
-using Sirenix.OdinInspector;
 using UnityEngine;
+using Sirenix.OdinInspector;
+using ECR.Gameplay.Logic;
 
 namespace ECR.Gameplay.Hero
 {
@@ -29,18 +29,22 @@ namespace ECR.Gameplay.Hero
 
         #region Play methods
 
-        [Button ("Move"), GUIColor(0.9f, 0.9f, 0.9f)]
+        [HorizontalGroup("Actions")]
+        [Button ("Move", ButtonStyle.FoldoutButton), GUIColor(0.9f, 0.9f, 0.9f)]
         public void PlayMove(float velocity) =>
             animator.SetFloat(MoveHash, velocity);
 
+        [HorizontalGroup("Actions")]
         [Button ("Attack"), GUIColor(0,0,1)]
         public void PlayAttack() =>
             animator.SetTrigger(AttackHash);
 
-        [Button ("Take damage"), GUIColor(0.5f, 0.5f, 0)]
+        [HorizontalGroup("Actions")]
+        [Button ("Hit"), GUIColor(0.5f, 0.5f, 0)]
         public void PlayHit() =>
             animator.SetTrigger(HitHash);
 
+        [HorizontalGroup("Actions")]
         [Button ("Kill"), GUIColor(1f, 0f, 0)]
         public void PlayDie() =>
             animator.SetTrigger(DieHash);

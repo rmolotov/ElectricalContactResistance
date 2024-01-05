@@ -1,5 +1,5 @@
-﻿using Sirenix.OdinInspector;
-using UnityEngine;
+﻿using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace ECR.Gameplay.Enemy
 {

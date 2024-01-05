@@ -1,11 +1,12 @@
 ﻿using System;
-using ECR.Gameplay.Logic;
+using UnityEngine;
 using JetBrains.Annotations;
 using Lofelt.NiceVibrations;
 using Sirenix.OdinInspector;
 using UniRx;
 using UniRx.Triggers;
-using UnityEngine;
+using ECR.Gameplay.Logic;
+
 using static ECR.Gameplay.Enemy.AttackType;
 
 namespace ECR.Gameplay.Enemy
@@ -18,17 +19,14 @@ namespace ECR.Gameplay.Enemy
         
         private bool _enabled;
 
-        [SerializeField] [CanBeNull] private EnemyAnimator animator;
-        [SerializeField] private ParticleSystem attackVFX;
-        [SerializeField] private HapticSource attackHFX;
-
-
-        // TODO: redactor fields and logic
-        public AttackType AttackType;
-        public int Shield;
-        public int AttackDamage;
-        public float Cooldown;
-
+        [SerializeField, BoxGroup("Components"), CanBeNull] private EnemyAnimator animator;
+        [SerializeField, BoxGroup("Components")] private ParticleSystem attackVFX;
+        [SerializeField, BoxGroup("Components")] private HapticSource attackHFX;
+        
+        [field: SerializeField, BoxGroup("Params")] public AttackType AttackType { get; set; }
+        [field: SerializeField, BoxGroup("Params")] public int Shield { get; set; }
+        [field: SerializeField, BoxGroup("Params")] public int AttackDamage { get; set; }
+        [field: SerializeField, BoxGroup("Params")] public float Cooldown { get; set; }
 
         private void Start()
         {

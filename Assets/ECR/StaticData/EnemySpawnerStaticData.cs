@@ -1,7 +1,7 @@
 using System;
-using ECR.StaticData.Converters;
 using Newtonsoft.Json;
 using UnityEngine;
+using ECR.StaticData.Converters;
 
 namespace ECR.StaticData
 {

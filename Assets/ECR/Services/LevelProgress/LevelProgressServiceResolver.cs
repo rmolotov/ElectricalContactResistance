@@ -1,6 +1,6 @@
 using System;
-using ECR.Gameplay.Logic;
 using Zenject;
+using ECR.Gameplay.Logic;
 
 namespace ECR.Services.LevelProgress
 {

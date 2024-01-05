@@ -1,11 +1,11 @@
-﻿using ECR.Data;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using Sirenix.OdinInspector;
+using Zenject;
+using RSG;
+using ECR.Data;
 using ECR.Infrastructure.Haptic;
 using ECR.UI.Windows;
-using RSG;
-using Sirenix.OdinInspector;
-using UnityEngine;
-using UnityEngine.UI;
-using Zenject;
 
 namespace ECR.Meta.Settings
 {

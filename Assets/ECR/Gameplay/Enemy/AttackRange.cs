@@ -1,5 +1,5 @@
-﻿using ECR.Gameplay.Logic;
-using UnityEngine;
+﻿using UnityEngine;
+using ECR.Gameplay.Logic;
 
 namespace ECR.Gameplay.Enemy
 {

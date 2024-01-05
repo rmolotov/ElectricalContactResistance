@@ -1,7 +1,7 @@
-﻿using RSG;
-using Sirenix.OdinInspector;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using RSG;
+using Sirenix.OdinInspector;
 
 namespace ECR.UI.Windows
 {

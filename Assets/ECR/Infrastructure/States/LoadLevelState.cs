@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
+using UnityEngine;
 using ECR.Data;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
 using ECR.StaticData;
-using UnityEngine;
 
 namespace ECR.Infrastructure.States
 {
@@ -59,6 +59,7 @@ namespace ECR.Infrastructure.States
             await InitUIRoot();
             await InitGameWold();
             await InitUI();
+            
             _stateMachine.Enter<GameLoopState>();
         }
         

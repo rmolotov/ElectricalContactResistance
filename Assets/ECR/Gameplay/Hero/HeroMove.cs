@@ -1,6 +1,6 @@
-﻿using ECR.Services.Input;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
+using ECR.Services.Input;
 
 namespace ECR.Gameplay.Hero
 {

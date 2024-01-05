@@ -1,8 +1,8 @@
 ﻿using System;
-using ECR.StaticData;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using ECR.StaticData;
 
 namespace ECR.Meta.Shop
 {

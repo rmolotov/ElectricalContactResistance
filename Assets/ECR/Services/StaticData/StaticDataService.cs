@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ECR.Services.Logging;
-using ECR.StaticData;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
+using ECR.StaticData;
+using ECR.Services.Logging;
 
 using static Newtonsoft.Json.JsonConvert;
 
@@ -45,8 +45,8 @@ namespace ECR.Services.StaticData
 
         public StaticDataService(ILoggingService loggingService) =>
             _logger = loggingService;
-        
-        public Action Initialized { get; set; }
+
+        public event Action Initialized;
 
         public async void Initialize()
         {

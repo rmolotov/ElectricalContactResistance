@@ -1,9 +1,9 @@
-﻿using ECR.Gameplay.Logic;
+﻿using UnityEngine;
 using JetBrains.Annotations;
 using Lofelt.NiceVibrations;
 using Sirenix.OdinInspector;
 using UniRx;
-using UnityEngine;
+using ECR.Gameplay.Logic;
 
 namespace ECR.Gameplay.Enemy
 {
@@ -12,13 +12,11 @@ namespace ECR.Gameplay.Enemy
         [SerializeField] [CanBeNull] private EnemyAnimator animator;
         [SerializeField] [CanBeNull] private HapticSource hitHFX;
 
-        [FoldoutGroup("Health")]
-        [ShowInInspector][InlineProperty][ReadOnly]
-        public IntReactiveProperty CurrentHP { get; set; } = new();
-        public int MaxHP { get; set; }
+        [field: BoxGroup("Health"), SerializeField, ReadOnly] public IntReactiveProperty CurrentHP { get; set; } = new();
+        [field: BoxGroup("Health"), SerializeField] public int MaxHP { get; set; }
 
-        [FoldoutGroup("Health")]
-        [Button ("Take damage", ButtonStyle.CompactBox, Expanded = true), GUIColor(1f, 0.6f, 0.4f)]
+        [BoxGroup("Health")]
+        [Button ("Hit", ButtonStyle.FoldoutButton), GUIColor(1f, 0.6f, 0.4f)]
         public void TakeDamage(int damage)
         {
             if (CurrentHP.Value <= 0)

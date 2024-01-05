@@ -1,9 +1,9 @@
-﻿using ECR.Gameplay.Enemy;
+﻿using UnityEngine;
+using UniRx;
+using Zenject;
+using ECR.Gameplay.Enemy;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.StaticData;
-using UniRx;
-using UnityEngine;
-using Zenject;
 
 namespace ECR.Gameplay.Logic
 {

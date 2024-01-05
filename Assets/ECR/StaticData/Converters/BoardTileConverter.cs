@@ -1,8 +1,8 @@
 ﻿using System;
-using ECR.StaticData.Board;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using ECR.StaticData.Board;
 
 namespace ECR.StaticData.Converters
 {
