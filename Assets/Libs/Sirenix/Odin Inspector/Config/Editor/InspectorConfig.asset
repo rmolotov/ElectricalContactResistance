@@ -16,6 +16,4 @@ MonoBehaviour:
   defaultEditorBehaviour: 11
   processMouseMoveInInspector: 1
   drawingConfig:
-    configs:
-    - DrawnTypeName: Infrastructure.Navigation.NavigationMap, Assembly-CSharp
-      EditorTypeName: 
+    configs: []
