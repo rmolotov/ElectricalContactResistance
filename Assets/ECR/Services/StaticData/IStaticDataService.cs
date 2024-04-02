@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Zenject;
+﻿using System.Collections.Generic;
+using ECR.Services.Interfaces;
 using ECR.StaticData;
 
 namespace ECR.Services.StaticData
 {
-    public interface IStaticDataService : IInitializable
+    public interface IStaticDataService : IInitializableAsync
     {
-        public event Action Initialized;
-        
         StageStaticData ForStage(string stageKey);
         List<StageStaticData> GetAllStages { get; }
         

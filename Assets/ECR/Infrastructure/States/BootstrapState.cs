@@ -1,23 +1,26 @@
-﻿using ECR.Infrastructure.States.Interfaces;
-using ECR.Services.StaticData;
+﻿using System.Collections.Generic;
+using ECR.Infrastructure.States.Interfaces;
+using ECR.Services.Interfaces;
 
 namespace ECR.Infrastructure.States
 {
     public class BootstrapState : IState
     {
         private readonly GameStateMachine _stateMachine;
-        private readonly IStaticDataService _staticDataService;
+        private readonly List<IInitializableAsync> _initializableServices;
 
-        public BootstrapState(GameStateMachine gameStateMachine, IStaticDataService staticDataService)
+        public BootstrapState(GameStateMachine gameStateMachine, List<IInitializableAsync> initializableServices)
         {
             _stateMachine = gameStateMachine;
-            _staticDataService = staticDataService;
+            _initializableServices = initializableServices;
         }
 
-        public void Enter()
+        public async void Enter()
         {
-            _staticDataService.Initialized += () => 
-                _stateMachine.Enter<LoadProgressState>();
+            foreach (var service in _initializableServices) 
+                await service.InitializeAsync();
+            
+            _stateMachine.Enter<LoadProgressState>();
         }
 
         public void Exit()

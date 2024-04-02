@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -30,6 +31,7 @@ namespace ECR.Services.StaticData
         private Dictionary<string, StageStaticData> _stages;
         private Dictionary<string, InventoryItemStaticData> _items;
         private HeroStaticData _heroStaticData;
+        private TaskCompletionSource<ConfigResponse> _fetchCompletionSource;
 
         #region Attributes structs
 
@@ -45,11 +47,12 @@ namespace ECR.Services.StaticData
 
         public StaticDataService(ILoggingService loggingService) =>
             _logger = loggingService;
+        
 
-        public event Action Initialized;
-
-        public async void Initialize()
+        public async Task InitializeAsync(CancellationToken cancellationToken = default)
         {
+            _fetchCompletionSource = new TaskCompletionSource<ConfigResponse>();
+            
             var connection = Application.internetReachability;
             if (connection != NetworkReachability.NotReachable)
                 await InitializeRemoteConfigAsync();
@@ -58,6 +61,7 @@ namespace ECR.Services.StaticData
             RemoteConfigService.Instance.SetEnvironmentID(ConfigEnvironmentId);
             
             await RemoteConfigService.Instance.FetchConfigsAsync(new UserAttributes(), new AppAttributes());
+            await _fetchCompletionSource.Task;
         }
 
         public StageStaticData ForStage(string stageKey) =>
@@ -97,7 +101,8 @@ namespace ECR.Services.StaticData
             
             LogConfigsResponseResult(configResponse);
             
-            Initialized?.Invoke();
+            RemoteConfigService.Instance.FetchCompleted -= OnRemoteConfigLoaded;
+            _fetchCompletionSource.SetResult(configResponse);
         }
 
         /* TODO:
