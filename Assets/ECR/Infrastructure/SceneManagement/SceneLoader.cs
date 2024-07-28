@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,9 +17,11 @@ namespace ECR.Infrastructure.SceneManagement
             _assetProvider = assetProvider;
         }
         
-        public async Task<SceneInstance> Load(SceneName sceneName, Action<SceneName> onLoaded = null)
+        public async Task<SceneInstance> Load(SceneName sceneName, Action<SceneName> onLoaded = null, CancellationToken cancellationToken = default)
         {
-            var scene = await _assetProvider.LoadScene(sceneName);
+            var scene = await _assetProvider.LoadScene(sceneName, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            
             scene.ActivateAsync();
             
             onLoaded?.Invoke(sceneName);
