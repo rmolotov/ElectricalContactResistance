@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using CustomExtensions.Tasks;
 using UniRx;
 using ECR.Data;
 using ECR.Infrastructure.States.Interfaces;
@@ -29,10 +31,7 @@ namespace ECR.Infrastructure.States
 
         public void Enter()
         {
-            LoadProgressOrInitNew();
-            InitEconomyByProgress();
-
-            _stateMachine.Enter<LoadMetaState>();
+            _ = LoadProgress().ProcessErrors();
         }
 
         public void Exit()
@@ -40,7 +39,15 @@ namespace ECR.Infrastructure.States
             
         }
 
-        private async void LoadProgressOrInitNew()
+        private async Task LoadProgress()
+        {
+            await LoadProgressOrInitNew();
+            InitEconomyByProgress();
+
+            _stateMachine.Enter<LoadMetaState>();
+        }
+
+        private async Task LoadProgressOrInitNew()
         {
             _progressService.Settings = 
                 await _saveLoadProgressService.LoadSettings() 

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
+using CustomExtensions.Tasks;
 using ECR.Data;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
@@ -32,20 +33,12 @@ namespace ECR.Infrastructure.States
             _stageFactory = stageFactory;
         }
 
-        public async void Enter(StageStaticData stageStaticData)
+        public void Enter(StageStaticData stageStaticData)
         {
             _pendingStageStaticData = stageStaticData;
             _stageProgressData = new StageProgressData();
-            
-            /* TODO:
-             show curtain
-             warm-up enemyFactory?
-             */
-            
-            await _heroFactory.WarmUp();
-            await _stageFactory.WarmUp();
 
-            var sceneInstance = await _sceneLoader.Load(SceneName.Core, OnLoaded);
+            _ = WarmUpAndLoad().ProcessErrors();
         }
 
         public void Exit()
@@ -54,8 +47,17 @@ namespace ECR.Infrastructure.States
             _pendingStageStaticData = null;
         }
 
-        private async void OnLoaded(SceneName sceneName)
+        private async Task WarmUpAndLoad()
         {
+            /* TODO:
+             show curtain
+             warm-up enemyFactory?
+             */
+            
+            await _heroFactory.WarmUp();
+            await _stageFactory.WarmUp();
+
+            var sceneInstance = await _sceneLoader.Load(SceneName.Core);
             await InitUIRoot();
             await InitGameWold();
             await InitUI();

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using CustomExtensions.Tasks;
+using UnityEngine;
 using UniRx;
 using Zenject;
 using ECR.Gameplay.Enemy;
@@ -22,11 +24,11 @@ namespace ECR.Gameplay.Logic
         {
             enemiesRemainder.Value = enemiesCount;
             _enemyStaticData = enemyStaticData;
-            Spawn();
+            _ = Spawn().ProcessErrors();
         }
 
 
-        private async void Spawn()
+        private async Task Spawn()
         {
             //todo: use config arg instead of enemy type
             var enemy = await _enemyFactory.Create(_enemyStaticData.EnemyType, transform);
@@ -36,7 +38,7 @@ namespace ECR.Gameplay.Logic
         private void Slain()
         {
             if (--enemiesRemainder.Value > 0)
-                Spawn();
+                _ = Spawn().ProcessErrors();
         }
     }
 }

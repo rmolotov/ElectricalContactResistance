@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using CustomExtensions.Functional;
 using UnityEngine;
 using Zenject;
 using ECR.Gameplay.Board;
@@ -41,26 +42,22 @@ namespace ECR.Infrastructure.Factories
         public async Task<Board> CreateBoard(BoardTileStaticData[] tilesData)
         {
             var prefab = await _assetProvider.Load<GameObject>(key: BoardPrefabId);
-            var board = Object.Instantiate(prefab).GetComponent<Board>();
             
-            _container.Inject(board);
-            
-            board.InitializeAndBake(tilesData);
-            
-            return board;
+            return Object.Instantiate(prefab)
+                .GetComponent<Board>()
+                .With(board => _container.Inject(board))
+                .With(board => board.InitializeAndBake(tilesData));
         }
 
         public async Task<EnemySpawner> CreateEnemySpawner(EnemyType enemyType, Vector3 at)
         {
             var config = _staticDataService.ForEnemy(enemyType);
             var prefab = await _assetProvider.Load<GameObject>(key: EnemySpawnerPrefabId);
-            var spawner = Object.Instantiate(prefab, at, Quaternion.identity).GetComponent<EnemySpawner>();
             
-            _container.Inject(spawner);
-            
-            spawner.Initialize(config);
-            
-            return spawner;
+            return Object.Instantiate(prefab, at, Quaternion.identity)
+                .GetComponent<EnemySpawner>()
+                .With(spawner => _container.Inject(spawner))
+                .With(spawner => spawner.Initialize(config));
         }     
     }
 }

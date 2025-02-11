@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CustomExtensions.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -59,9 +60,10 @@ namespace ECR.Meta.Menu
             _saveLoadService = saveLoadService;
         }
 
-        public async void Initialize()
+        public async Task Initialize()
         {
             await CreateShop();
+            await UnityTaskExtensions.UnitySynchronizationContext;
             SetupButtons();
             
             _logger.LogMessage("initialized", this);

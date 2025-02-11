@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using CustomExtensions.Tasks;
 using ECR.Infrastructure.States.Interfaces;
 using ECR.Services.Interfaces;
 
@@ -15,17 +17,22 @@ namespace ECR.Infrastructure.States
             _initializableServices = initializableServices;
         }
 
-        public async void Enter()
+        public void Enter()
         {
-            foreach (var service in _initializableServices) 
-                await service.InitializeAsync();
-            
-            _stateMachine.Enter<LoadProgressState>();
+            _ = InitializeServices().ProcessErrors();
         }
 
         public void Exit()
         {
             
+        }
+
+        private async Task InitializeServices()
+        {
+            foreach (var service in _initializableServices) 
+                await service.InitializeAsync();
+            
+            _stateMachine.Enter<LoadProgressState>();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using CustomExtensions.Tasks;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
@@ -18,21 +19,22 @@ namespace ECR.Infrastructure.States
             _sceneLoader = sceneLoader;
         }
 
-        public async void Enter()
+        public void Enter()
         {
-            // TODO: show curtain
-            await _uiFactory.WarmUp();
-            
-            var sceneInstance = await _sceneLoader.Load(SceneName.Meta, OnLoaded);
+            _ = WarmUpAndLoad().ProcessErrors();
         }
 
         public void Exit()
         {
             _uiFactory.CleanUp();
         }
-
-        private async void OnLoaded(SceneName sceneName)
+        
+        private async Task WarmUpAndLoad()
         {
+            // TODO: show curtain
+            await _uiFactory.WarmUp();
+            
+            var sceneInstance = await _sceneLoader.Load(SceneName.Meta);
             await InitUIRoot();
             await InitMainMenu();
         }
@@ -40,9 +42,10 @@ namespace ECR.Infrastructure.States
         private async Task InitUIRoot() => 
             await _uiFactory.CreateUIRoot();
 
-        private async Task InitMainMenu() =>
-            await _uiFactory
-                .CreateMainMenu()
-                .ContinueWith(m => m.Result.Initialize(), TaskScheduler.FromCurrentSynchronizationContext());
+        private async Task InitMainMenu()
+        {
+            var controller = await _uiFactory.CreateMainMenu();
+            await controller.Initialize();
+        }
     }
 }
