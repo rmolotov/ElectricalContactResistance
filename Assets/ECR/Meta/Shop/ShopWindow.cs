@@ -5,8 +5,8 @@ using RSG;
 using Sirenix.OdinInspector;
 using TMPro;
 using UniRx;
-using UniRx.Extensions;
 using Zenject;
+using CustomExtensions.Rx;
 using ECR.Services.Economy;
 using ECR.UI.Windows;
 

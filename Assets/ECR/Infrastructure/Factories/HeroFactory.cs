@@ -2,12 +2,11 @@
 using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
+using CustomExtensions.Functional;
 using ECR.Gameplay.Hero;
 using ECR.Infrastructure.AssetManagement;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Services.StaticData;
-
-using Object = UnityEngine.Object;
 
 namespace ECR.Infrastructure.Factories
 {
@@ -43,17 +42,14 @@ namespace ECR.Infrastructure.Factories
         {
             var config = _staticDataService.ForHero();
             var prefab = await _assetProvider.Load<GameObject>(key: HeroPrefabId);
-            var hero = Object.Instantiate(prefab, at, Quaternion.identity);
-            
-            _container.InjectGameObject(hero);
+            var hero = _container.InstantiatePrefab(prefab, at, Quaternion.identity, null);
 
-            var health = hero.GetComponent<HeroHealth>();
-            health.MaxHP = config.Voltage;
-            health.CurrentHP.Value = health.MaxHP;
-
-            var attack = hero.GetComponent<HeroAttack>();
-            attack.AttackDamage.Value = config.Current;
-            attack.Shield = config.Resistance;
+            hero.GetComponent<HeroHealth>()
+                .With(health => health.MaxHP = config.Voltage)
+                .With(health => health.CurrentHP.Value = health.MaxHP);
+            hero.GetComponent<HeroAttack>()
+                .With(attack => attack.AttackDamage.Value = config.Current)
+                .With(attack => attack.Shield = config.Resistance);
 
             return Hero = hero;
         }
