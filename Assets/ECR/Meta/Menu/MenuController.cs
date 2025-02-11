@@ -64,6 +64,7 @@ namespace ECR.Meta.Menu
         {
             await CreateShop();
             await UnityTaskExtensions.UnitySynchronizationContext;
+            
             SetupButtons();
             
             _logger.LogMessage("initialized", this);

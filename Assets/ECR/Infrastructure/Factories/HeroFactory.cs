@@ -42,16 +42,17 @@ namespace ECR.Infrastructure.Factories
         {
             var config = _staticDataService.ForHero();
             var prefab = await _assetProvider.Load<GameObject>(key: HeroPrefabId);
-            var hero = _container.InstantiatePrefab(prefab, at, Quaternion.identity, null);
-
-            hero.GetComponent<HeroHealth>()
-                .With(health => health.MaxHP = config.Voltage)
-                .With(health => health.CurrentHP.Value = health.MaxHP);
-            hero.GetComponent<HeroAttack>()
-                .With(attack => attack.AttackDamage.Value = config.Current)
-                .With(attack => attack.Shield = config.Resistance);
-
-            return Hero = hero;
+            
+            return Hero = Object.Instantiate(prefab, at, Quaternion.identity)
+                .With(hero => _container.InjectGameObject(hero))
+                .With(hero => hero.GetComponent<HeroHealth>()
+                    .With(health => health.MaxHP = config.Voltage)
+                    .With(health => health.CurrentHP.Value = health.MaxHP)
+                )
+                .With(hero => hero.GetComponent<HeroAttack>()
+                    .With(attack => attack.AttackDamage.Value = config.Current)
+                    .With(attack => attack.Shield = config.Resistance)
+                );
         }
     }
 }

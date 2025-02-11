@@ -6,6 +6,7 @@ using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.SceneManagement;
 using ECR.Infrastructure.States.Interfaces;
 using ECR.StaticData;
+using TaskExtensions = CustomExtensions.Tasks.TaskExtensions;
 
 namespace ECR.Infrastructure.States
 {
@@ -82,11 +83,10 @@ namespace ECR.Infrastructure.States
 
         private async Task InitUI()
         {
-            await _uiFactory
-                .CreateHud()
-                .ContinueWith(
-                    m => m.Result.Initialize(_pendingStageStaticData, _stageProgressData),
-                    TaskScheduler.FromCurrentSynchronizationContext());
+            var hudController = await _uiFactory.CreateHud();
+            await UnityTaskExtensions.UnitySynchronizationContext;
+            
+            hudController.Initialize(_pendingStageStaticData, _stageProgressData);
         }
 
         private async Task SetupBoard() => 
