@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using UnityEngine;
+
+using static System.Text.RegularExpressions.Regex;
+using static ECR.Constants.Logging;
 
 namespace ECR.Services.Logging
 {
     public class LoggingService : ILoggingService
     {
-        private const string DefaultColor        = "#e3e3e3";
-        private const string InfrastructureColor = "#e38d46";
-        private const string MetaColor           = "#e346b4";
-        private const string GameplayColor       = "#4697e3";
-        
         public void LogMessage(string message, object sender = null) =>
             Debug.Log(GetString(message, sender ?? this));
 
@@ -21,15 +18,20 @@ namespace ECR.Services.Logging
             Debug.LogError(GetString(message, sender ?? this));
 
         private static string GetString(string message, object sender) =>
-            $"<b><i><color={GetHexColor(sender.GetType())}>{sender.GetType().Name}: </color></i></b> {message}";
+            string.Format(
+                MESSAGE_TEMPLATE,
+                GetHexColor(sender.GetType()),
+                sender.GetType().Name,
+                message
+            );
 
         private static string GetHexColor(Type sender) =>
             sender.Namespace switch
             {
-                var x when Regex.IsMatch(x, @".*Infrastructure.*") => InfrastructureColor,
-                var x when Regex.IsMatch(x, @".*Meta.*")           => MetaColor,
-                var x when Regex.IsMatch(x, @".*Gameplay.*")       => GameplayColor,
-                _                                                  => DefaultColor
+                var x when IsMatch(x, INFRASTRUCTURE_REGEX) => INFRASTRUCTURE_COLOR,
+                var x when IsMatch(x, META_REGEX)           => META_COLOR,
+                var x when IsMatch(x, GAMEPLAY_REGEX)       => GAMEPLAY_COLOR,
+                _                                                             => DEFAULT_COLOR
             };
     }
 }
