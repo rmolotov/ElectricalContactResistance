@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "b870d64b5704a764fd03aaccb11f2dbe652b1756"
     },
+    "com.neuecc.unirx": {
+      "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "6baeccf6c544c155497164327cca72f28163a578"
+    },
     "com.rm.buildtools": {
       "version": "https://github.com/rmolotov/BuildTools.git?path=/Packages/BuildTools",
       "depth": 0,
@@ -15,11 +22,13 @@
       "hash": "91f2396da53e9ef69bb881c0138c7f7795f36d2f"
     },
     "com.rm.customextensions": {
-      "version": "https://github.com/rmolotov/CustomExtensions.git",
+      "version": "https://github.com/rmolotov/CustomExtensions.git?path=/Packages/CustomExtensions",
       "depth": 0,
       "source": "git",
-      "dependencies": {},
-      "hash": "c5c5b70ffc4e36f6c3246988051ea6da24d99260"
+      "dependencies": {
+        "com.neuecc.unirx": "7.1.0"
+      },
+      "hash": "9b649fd0bd8bc29803e2b07a1c54fe284e35b5a0"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
