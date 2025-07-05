@@ -1,39 +1,53 @@
 using System.Linq;
+using FluentAssertions;
 using NUnit.Framework;
 using UnityEditor;
-
-using static Tools.TestsExtensions.Editor.EditorTestsExtensions;
-using static Tools.TestsExtensions.Common.CommonTestsExtensions;
+using UnityEditor.SceneManagement;
+using Tools.TestsExtensions.Common;
+using Tools.TestsExtensions.Editor;
 
 namespace Tests.EditMode
 {
     public class ValidationTests
     {
-        private const string MissingComponentReportTemplate = "[{0}] on [{1}] scene has missing component(s)";
-        private const string MissingPrefabComponentTemplate = "[{0}] on [{1}] scene is instance of missing prefab";
-
-        [Test]
-        public void FindMissingComponents()
+        [TestCaseSource(
+            typeof(EditorTestsExtensions),
+            nameof(EditorTestsExtensions.GetAllScenesPaths)
+        )]
+        public void NoMissingComponents(string scenePath)
         {
-            var errors =
-                from scene in GetAndOpenAllScenes()
-                from gameObject in GetAllGameObjects(scene)
-                where gameObject.HasMissingComponents()
-                select string.Format(MissingComponentReportTemplate, gameObject.name, gameObject.scene.name);
-            
-            Assert.That(errors, Is.Empty);
+            var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
+
+            var gameObjectsWithMissingComponents = CommonTestsExtensions.GetAllGameObjects(scene)
+                .Where(gameObject => gameObject.HasMissingComponents())
+                .Select(gameObject => gameObject.name)
+                .ToList();
+
+            EditorSceneManager.CloseScene(scene, true);
+
+            gameObjectsWithMissingComponents
+                .Should()
+                .BeEmpty();
         }
 
-        [Test]
-        public void FindMissingPrefabsInstances()
+        [TestCaseSource(
+            typeof(EditorTestsExtensions),
+            nameof(EditorTestsExtensions.GetAllScenesPaths)
+        )]
+        public void NoMissingPrefabsInstances(string scenePath)
         {
-            var errors =
-                from scene in GetAndOpenAllScenes()
-                from gameObject in GetAllGameObjects(scene)
-                where PrefabUtility.IsPrefabAssetMissing(gameObject)
-                select string.Format(MissingPrefabComponentTemplate, gameObject.name, gameObject.scene.name);
-            
-            Assert.That(errors, Is.Empty);
+            var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
+
+            var instancesOfMissingPrefabs = CommonTestsExtensions.GetAllGameObjects(scene)
+                .Where(PrefabUtility.IsPrefabAssetMissing)
+                .Select(gameObject => gameObject.name)
+                .ToList();
+
+            EditorSceneManager.CloseScene(scene, true);
+
+            instancesOfMissingPrefabs
+                .Should()
+                .BeEmpty();
         }
     }
 }

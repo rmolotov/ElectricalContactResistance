@@ -159,7 +159,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.HammerheadHorse.ECR
-    Standalone: com.Hammerhead-Horse.ECR
+    Standalone: com.HammerheadHorse.ECR
     iPhone: com.Hammerhead-Horse.ECR
   buildNumber:
     Standalone: 0

@@ -4,7 +4,6 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Tools",
         "TestsExtensions.Common",
         "TestsExtensions.Editor"
     ],
@@ -15,7 +14,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "FluentAssertions.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
