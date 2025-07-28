@@ -16,5 +16,39 @@ MonoBehaviour:
   deleteDllAfterBuilds: 1
   AutomateForAllAOTPlatforms: 1
   automateForPlatforms: 0900000014000000
-  lastScan: 0
-  supportSerializedTypes: []
+  lastScan: 638881713252758555
+  supportSerializedTypes:
+  - TypeName: SPK.UI.Core.UISystem.AppearanceUIType, UI.Core
+    IsCustom: 0
+    Emit: 1
+  - TypeName: UnityEngine.AddressableAssets.AssetReferenceGameObject, Unity.Addressables
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Boolean, mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Collections.Generic.Dictionary`2[[System.Type, mscorlib],[System.Type,
+      mscorlib]], mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Collections.Generic.Dictionary`2[[System.Type, mscorlib],[SPK.UI.Core.StaticData.WindowUIStaticData,
+      UI.Core]], mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Collections.Generic.IEqualityComparer`1[[System.Type, mscorlib]],
+      mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Collections.Generic.ObjectEqualityComparer`1[[System.Type, mscorlib]],
+      mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.String, mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Type, mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: SPK.UI.Core.StaticData.WindowUIStaticData, UI.Core
+    IsCustom: 0
+    Emit: 1
