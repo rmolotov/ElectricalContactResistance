@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Zenject;
 using UniRx;
 using UniRx.Triggers;
+using CustomExtensions.Tasks;
 using ECR.Data;
 using ECR.Infrastructure.States;
 using ECR.Services.Economy;
@@ -65,15 +66,16 @@ namespace ECR.Meta.HUD
                 _stateMachine.Enter<LoadMetaState>());
 
         private void SetupHeroUI(GameObject hero) => 
-            heroUI.Initialize(hero.GetComponent<IHealth>(), false);
-
+            heroUI.Initialize(hero.GetComponent<IHealth>(), skipInitAnim: false);
+        
         private void SetupStageWindow(StageStaticData stageStaticData, string text) =>
             stagePopup
-                .InitAndShow(text, stageStaticData.StageTitle)
-                .Then(toMenu =>
+                .InitAndShow(text, stageStaticData.StageTitle).Task
+                .ContinueWith(task =>
                 {
-                    if (toMenu) _stateMachine.Enter<LoadMetaState>();
+                    if (task.Result) _stateMachine.Enter<LoadMetaState>();
                     else _stateMachine.Enter<LoadLevelState, StageStaticData>(stageStaticData);
-                });
+                })
+                .ProcessErrors();
     }
 }

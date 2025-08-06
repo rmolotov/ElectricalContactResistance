@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using Zenject;
-using RSG;
 using ECR.Data;
 using ECR.Infrastructure.Haptic;
 using ECR.UI.Windows;
@@ -30,7 +30,7 @@ namespace ECR.Meta.Settings
             // _graphyManager
         }
 
-        public override Promise<bool> InitAndShow<T>(T data, string titleText = "")
+        public override TaskCompletionSource<bool> InitAndShow<T>(T data, string titleText = "")
         {
             _userSettings = data as PlayerSettingsData;
             

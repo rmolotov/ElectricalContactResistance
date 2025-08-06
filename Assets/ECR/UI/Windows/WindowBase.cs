@@ -1,9 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using DG.Tweening;
-using RSG;
-using RSG.Extensions;
 using TMPro;
 using Zenject;
 
@@ -25,7 +24,7 @@ namespace ECR.UI.Windows
         [SerializeField] protected TextMeshProUGUI windowText;
         
         protected bool UserAccepted;
-        protected Promise<bool> Promise;
+        protected TaskCompletionSource<bool> Promise;
 
         [Inject]
         private void Construct()
@@ -36,7 +35,7 @@ namespace ECR.UI.Windows
         private void Awake() => 
             SetInitialAppearance();
 
-        public virtual Promise<bool> InitAndShow<T>(T data, string titleText = "")
+        public virtual TaskCompletionSource<bool> InitAndShow<T>(T data, string titleText = "")
         {
             var text = data as string;
             
@@ -48,13 +47,12 @@ namespace ECR.UI.Windows
 
             SetVisible(true);
             
-            return Promise = new Promise<bool>();
+            return Promise = new TaskCompletionSource<bool>();
         }
 
         protected virtual void Close() =>
-            SetVisible(false)
-                .Then(() => 
-                    Promise.ResolveIfPending(UserAccepted));
+            SetVisible(false).onComplete += () =>
+                Promise.SetResult(UserAccepted);
 
 
         protected void PlaySoundEffect()
@@ -73,24 +71,18 @@ namespace ECR.UI.Windows
             if (windowPanel) windowPanel.localScale = Vector3.one * openingInitialScale;
         }
 
-        private Promise SetVisible(bool value)
-        {
-            if (canvasGroup) canvasGroup.blocksRaycasts = value;
-            
-            var animationPromise = new Promise();
-            
+        private Sequence SetVisible(bool value) =>
             DOTween.Sequence()
+                .AppendCallback(() =>
+                {
+                    if (canvasGroup) canvasGroup.blocksRaycasts = value;
+                })
                 .Append(canvasGroup?
                     .DOFade(value ? 1 : 0, openingDuration)
                     .SetEase(Ease.OutQuad))
                 .Join(windowPanel?
                     .DOScale(Vector3.one * (value ? 1 : 0.5f), openingDuration)
                     .SetEase(value ? Ease.OutBounce : Ease.OutQuad))
-                .Play()
-                .onComplete += () => 
-                    animationPromise.ResolveIfPending();
-
-            return animationPromise;
-        }
+                .Play();
     }
 }
