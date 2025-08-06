@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
-using RSG;
 
 namespace ECR.UI.Windows
 {
@@ -8,7 +8,7 @@ namespace ECR.UI.Windows
     {
         [SerializeField] private Button cancelButton;
 
-        public override Promise<bool> InitAndShow<T>(T data, string titleText = "")
+        public override TaskCompletionSource<bool> InitAndShow<T>(T data, string titleText = "")
         {
             cancelButton.onClick.AddListener(Deny);
             cancelButton.onClick.AddListener(PlaySoundEffect);

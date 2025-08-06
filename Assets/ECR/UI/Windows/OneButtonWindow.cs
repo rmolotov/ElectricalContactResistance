@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
-using RSG;
 using Sirenix.OdinInspector;
 
 namespace ECR.UI.Windows
@@ -10,7 +10,7 @@ namespace ECR.UI.Windows
         [Title("Buttons")]
         [SerializeField] private Button okButton;
 
-        public override Promise<bool> InitAndShow<T>(T data, string titleText = "")
+        public override TaskCompletionSource<bool> InitAndShow<T>(T data, string titleText = "")
         {
             okButton.onClick.AddListener(Accept);
             okButton.onClick.AddListener(PlaySoundEffect);

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CustomExtensions.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using UniRx;
+using CustomExtensions.Tasks;
 using ECR.Infrastructure.Factories.Interfaces;
 using ECR.Infrastructure.States;
 using ECR.Meta.Shop;
@@ -83,21 +83,28 @@ namespace ECR.Meta.Menu
             {
                 _stateMachine.Enter<LoadLevelState, StageStaticData>(SelectedStage.Value);
             });
-
+            
             settingsButton.onClick.AddListener(() =>
                 settingsWindow
-                    .InitAndShow(_persistentDataService.Settings)
-                    .Then(ok =>
-                    {
-                        settingsButton.OnPromisedResolve();
-                        if (ok) _saveLoadService.SaveSettings(); // TODO: else -> _sls.RestoreSavedSettings?
-                    })
+                    .InitAndShow(_persistentDataService.Settings).Task
+                    .ContinueWith(
+                        task =>
+                        {
+                            settingsButton.OnPromisedResolve();
+                            if (task.Result)
+                                _saveLoadService.SaveSettings(); // TODO: else -> _sls.RestoreSavedSettings?
+                        },
+                        TaskScheduler.FromCurrentSynchronizationContext())
+                    .ProcessErrors()
             );
-
+            
             shopButton.onClick.AddListener(() =>
                 _shopWindow
-                    .InitAndShow("shop items data")
-                    .Then(_ => shopButton.OnPromisedResolve())
+                    .InitAndShow("shop items data").Task
+                    .ContinueWith(
+                        _ => shopButton.OnPromisedResolve(),
+                        TaskScheduler.FromCurrentSynchronizationContext())
+                    .ProcessErrors()
             );
         }
     }

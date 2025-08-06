@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using RSG;
 using Sirenix.OdinInspector;
 using TMPro;
 using UniRx;
@@ -29,7 +29,7 @@ namespace ECR.Meta.Shop
         private void Construct(IEconomyService economyService) => 
             _economyService = economyService;
 
-        public override Promise<bool> InitAndShow<T>(T data, string titleText = "")
+        public override TaskCompletionSource<bool> InitAndShow<T>(T data, string titleText = "")
         {
             Observable
                 .FromEvent<bool>(
