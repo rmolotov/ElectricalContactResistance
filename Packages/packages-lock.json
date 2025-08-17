@@ -25,10 +25,8 @@
       "version": "https://github.com/rmolotov/CustomExtensions.git?path=/Packages/CustomExtensions",
       "depth": 0,
       "source": "git",
-      "dependencies": {
-        "com.neuecc.unirx": "7.1.0"
-      },
-      "hash": "9b649fd0bd8bc29803e2b07a1c54fe284e35b5a0"
+      "dependencies": {},
+      "hash": "a16464b4efdb61a6eaac03ae3448f126fa5e0035"
     },
     "com.svermeulen.extenject": {
       "version": "https://github.com/Mathijs-Bakker/Extenject.git?path=UnityProject/Assets/Plugins/Zenject/Source",
