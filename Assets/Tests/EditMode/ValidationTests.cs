@@ -1,10 +1,10 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
+using Tests.Common;
+using Tests.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using Tools.TestsExtensions.Common;
-using Tools.TestsExtensions.Editor;
 
 namespace Tests.EditMode
 {

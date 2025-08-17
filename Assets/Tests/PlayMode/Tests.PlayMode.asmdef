@@ -11,7 +11,13 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll",
-        "FluentAssertions.dll"
+        "FluentAssertions.dll",
+        "Moq.dll",
+        "NSubstitute.dll",
+        "Castle.Core.dll",
+        "System.Diagnostics.EventLog.dll",
+        "System.Runtime.CompilerServices.Unsafe.dll",
+        "System.Security.Principal.Windows.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
