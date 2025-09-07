@@ -1,0 +1,30 @@
+{
+    "name": "ECR",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Addressables",
+        "Unity.InputSystem",
+        "Unity.ResourceManager",
+        "Unity.Services.Core",
+        "Unity.Services.RemoteConfig",
+        "Unity.Services.Authentication",
+        "Unity.TextMeshPro",
+        "NavMeshComponents",
+        "DOTween.Modules",
+        "DOTweenPro.Scripts",
+        "Lofelt.NiceVibrations",
+        "UniRx",
+        "Zenject",
+        "CustomExtensions",
+        "UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

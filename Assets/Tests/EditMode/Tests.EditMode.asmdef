@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "TestsExtensions.Common",
-        "TestsExtensions.Editor"
+        "TestsExtensions.Editor",
+        "ECR"
     ],
     "includePlatforms": [
         "Editor"
