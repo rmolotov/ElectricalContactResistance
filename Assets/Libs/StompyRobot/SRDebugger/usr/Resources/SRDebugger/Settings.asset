@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   _isEnabled: 1
+  _disableWelcomePopup: 0
   _uiInputMode: 0
-  _defaultTab: 2
+  _defaultTab: 1
   _triggerEnableMode: 0
   _triggerBehaviour: 0
-  _errorNotification: 1
+  _errorNotification: 0
   _enableKeyboardShortcuts: 1
   _keyboardShortcuts: []
   _newKeyboardShortcuts:
@@ -46,13 +47,14 @@ MonoBehaviour:
   _keyboardModifierShift: 1
   _keyboardEscapeClose: 1
   _enableBackgroundTransparency: 1
+  _backgroundTransparency: 0.764
   _collapseDuplicateLogEntries: 1
   _richTextInConsole: 1
   _requireEntryCode: 0
   _requireEntryCodeEveryTime: 0
-  _entryCode: 00000000000000000000000000000000
+  _entryCode: 01000000020000000300000004000000
   _useDebugCamera: 0
-  _debugLayer: 5
+  _debugLayer: 9
   _debugCameraDepth: 100
   _apiKey: 
   _enableBugReporter: 0
