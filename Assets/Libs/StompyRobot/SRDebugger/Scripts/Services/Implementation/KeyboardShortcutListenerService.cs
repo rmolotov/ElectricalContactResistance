@@ -31,7 +31,7 @@ namespace SRDebugger.Services.Implementation
             {
                 // Cache the actual keycode so we don't have to use strings each time we want to use it.
                 string keyName = s.Key.ToString();
-                KeyControl keyControl = Keyboard.current?[keyName] as KeyControl;
+                KeyControl keyControl = Keyboard.current[keyName] as KeyControl;
 
                 if (keyControl == null)
                 {
