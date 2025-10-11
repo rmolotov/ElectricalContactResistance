@@ -71,7 +71,7 @@ namespace ECR.Meta.HUD
         private void SetupStageWindow(StageStaticData stageStaticData, string text) =>
             stagePopup
                 .InitAndShow(text, stageStaticData.StageTitle).Task
-                .ContinueWith(task =>
+                .ContinueWithUnitySynchronizationContext(task =>
                 {
                     if (task.Result) _stateMachine.Enter<LoadMetaState>();
                     else _stateMachine.Enter<LoadLevelState, StageStaticData>(stageStaticData);
