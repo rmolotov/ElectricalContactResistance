@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+// Copyright (c) Meta Platforms, Inc. and affiliates. 
+
+using UnityEngine;
 using System;
 using System.Timers;
 
@@ -32,7 +34,8 @@ namespace Lofelt.NiceVibrations
     /// will have no effect on gamepads.
     ///
     /// None of the methods here are thread-safe and should only be called from
-    /// the main (Unity) thread.
+    /// the main (Unity) thread. Calling these methods from a secondary thread can
+    /// cause undefined behaviour and memory leaks.
     public static class HapticController
     {
         static bool lofeltHapticsInitalized = false;
@@ -121,12 +124,8 @@ namespace Lofelt.NiceVibrations
             {
                 _outputLevel = value;
 
-                if (Init())
-                {
-                    LofeltHaptics.SetAmplitudeMultiplication(_outputLevel * _clipLevel);
-                }
-                GamepadRumbler.lowFrequencyMotorSpeedMultiplication = _outputLevel * _clipLevel;
-                GamepadRumbler.highFrequencyMotorSpeedMultiplication = _outputLevel * _clipLevel;
+                ApplyLevelsToLofeltHaptics();
+                ApplyLevelsToGamepadRumbler();
             }
         }
 
@@ -170,12 +169,8 @@ namespace Lofelt.NiceVibrations
             {
                 _clipLevel = value;
 
-                if (Init())
-                {
-                    LofeltHaptics.SetAmplitudeMultiplication(_outputLevel * _clipLevel);
-                }
-                GamepadRumbler.lowFrequencyMotorSpeedMultiplication = _outputLevel * _clipLevel;
-                GamepadRumbler.highFrequencyMotorSpeedMultiplication = _outputLevel * _clipLevel;
+                ApplyLevelsToLofeltHaptics();
+                ApplyLevelsToGamepadRumbler();
             }
         }
 
@@ -195,6 +190,26 @@ namespace Lofelt.NiceVibrations
         /// This can be invoked spuriously, even if no haptics are currently playing, for example
         /// if Stop() is called multiple times in a row.
         public static Action PlaybackStopped;
+
+        // Applies the current clip level and output level as the amplitude multiplication to
+        // LofeltHaptics
+        private static void ApplyLevelsToLofeltHaptics()
+        {
+            if (Init())
+            {
+                LofeltHaptics.SetAmplitudeMultiplication(_outputLevel * _clipLevel);
+            }
+        }
+
+        // Applies the current clip level and output level as the motor speed multiplication to
+        // GamepadRumbler
+        private static void ApplyLevelsToGamepadRumbler()
+        {
+            #if ((!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR) && NICE_VIBRATIONS_INPUTSYSTEM_INSTALLED && ENABLE_INPUT_SYSTEM && !NICE_VIBRATIONS_DISABLE_GAMEPAD_SUPPORT
+                            GamepadRumbler.lowFrequencyMotorSpeedMultiplication = _outputLevel * _clipLevel;
+                            GamepadRumbler.highFrequencyMotorSpeedMultiplication = _outputLevel * _clipLevel;
+            #endif
+        }
 
         /// <summary>
         /// Initializes HapticController.
@@ -298,7 +313,11 @@ namespace Lofelt.NiceVibrations
         public static void Load(byte[] json, GamepadRumble rumble)
         {
             Load(json);
+
             GamepadRumbler.Load(rumble);
+            // GamepadRumbler.Load() resets the motor speed multiplication to 1.0, so the levels
+            // need to be applied here again
+            ApplyLevelsToGamepadRumbler();
 
             // Load() only sets the correct clip duration on iOS and Android, and sets it to 0.0
             // on other platforms. For the other platforms, set a clip duration based on the
@@ -391,13 +410,19 @@ namespace Lofelt.NiceVibrations
         }
 
         /// <summary>
-        /// Stops playback of the haptic clip that was previously started with Play().
+        /// Stops haptic playback
+        ///
         /// </summary>
         public static void Stop()
         {
+
             if (Init())
             {
                 LofeltHaptics.Stop();
+            }
+            else
+            {
+                LofeltHaptics.StopPattern();
             }
             GamepadRumbler.Stop();
             HandleFinishedPlayback();

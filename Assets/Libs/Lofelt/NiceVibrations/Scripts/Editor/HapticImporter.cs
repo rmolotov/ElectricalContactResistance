@@ -1,3 +1,5 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates. 
+
 using System.IO;
 using System.Runtime.InteropServices;
 using System;

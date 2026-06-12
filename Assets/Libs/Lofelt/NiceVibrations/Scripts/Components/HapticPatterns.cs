@@ -1,3 +1,5 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates. 
+
 using System;
 using UnityEngine;
 using System.Globalization;
@@ -8,17 +10,22 @@ namespace Lofelt.NiceVibrations
     /// A collection of methods to play simple haptic patterns.
     /// </summary>
     ///
-    /// Each of the methods here load and play a simple haptic clip. After playback
-    /// has finished, the clip will remain loaded in HapticController.
+    /// Each of the methods here load and play a simple haptic clip or a
+    /// haptic pattern, depending on the device capabilities.
     ///
-    /// The only method that will not call HapticController to load a haptic clip is
-    /// PlayPreset(), when called on iOS.
+    /// None of the methods here are thread-safe and should only be called from
+    /// the main (Unity) thread. Calling these methods from a secondary thread can
+    /// cause undefined behaviour and memory leaks.
+    ///
+    /// After playback has finished, the loaded clips in this class will remain
+    /// loaded in HapticController.
+
     public static class HapticPatterns
     {
         static String emphasisTemplate;
         static String constantTemplate;
-        static String patternTemplate;
         static NumberFormatInfo numberFormat;
+        static private float[] constantPatternTime = new float[] { 0.0f, 0.0f };
 
         /// <summary>
         /// Enum that represents all the types of haptic presets available
@@ -41,86 +48,212 @@ namespace Lofelt.NiceVibrations
         /// Structure that represents a haptic pattern with amplitude variations.
         /// </summary>
         ///
-        /// Different amplitude values in time are automatically interpolated by the device.
-        ///
-        /// \ref time values have be incremental to be played using PlayPattern().
+        /// \ref time values have be incremental to be compatible with Preset.
         struct Pattern
         {
-            internal float[] time;
-            internal float[] amplitude;
-            internal String clip;
-            internal Pattern(float[] time, float[] amplitude)
+            public float[] time;
+            public float[] amplitude;
+
+            static String clipJsonTemplate;
+
+            static Pattern()
+            {
+                clipJsonTemplate = (Resources.Load("nv-pattern-template") as TextAsset).text;
+            }
+
+            public Pattern(float[] time, float[] amplitude)
             {
                 this.time = time;
                 this.amplitude = amplitude;
-                this.clip = "";
+            }
+
+            // Converts a Pattern to a GamepadRumble
+            //
+            // Each pair of adjacent entries in the Pattern create one entry in the GamepadRumble.
+            public GamepadRumble ToRumble()
+            {
+                GamepadRumble result = new GamepadRumble();
+                if (time.Length <= 1)
+                {
+                    return result;
+                }
+
+                Debug.Assert(time.Length == amplitude.Length);
+
+                // The first pattern entry needs to have a time of 0.0 for the algorithm below to work
+                Debug.Assert(time[0] == 0.0f);
+
+                int rumbleCount = time.Length - 1;
+                result.durationsMs = new int[rumbleCount];
+                result.lowFrequencyMotorSpeeds = new float[rumbleCount];
+                result.highFrequencyMotorSpeeds = new float[rumbleCount];
+                result.totalDurationMs = 0;
+                for (int rumbleIndex = 0; rumbleIndex < rumbleCount; rumbleIndex++)
+                {
+                    int patternDurationMs = (int)((time[rumbleIndex + 1] - time[rumbleIndex]) * 1000.0f);
+                    result.durationsMs[rumbleIndex] = patternDurationMs;
+                    result.lowFrequencyMotorSpeeds[rumbleIndex] = amplitude[rumbleIndex];
+                    result.highFrequencyMotorSpeeds[rumbleIndex] = amplitude[rumbleIndex];
+                    result.totalDurationMs += result.durationsMs[rumbleIndex];
+                }
+                return result;
+            }
+
+            // Converts a Pattern to a haptic clip JSON string.
+            public String ToClip()
+            {
+                if (clipJsonTemplate == null)
+                {
+                    return "";
+                }
+
+                String amplitudeEnvelope = "";
+                for (int i = 0; i < time.Length; i++)
+                {
+                    float clampedAmplitude = Mathf.Clamp(amplitude[i], 0.0f, 1.0f);
+                    amplitudeEnvelope += "{ \"time\":" + time[i].ToString(numberFormat) + "," +
+                                           "\"amplitude\":" + clampedAmplitude.ToString(numberFormat) + "}";
+
+                    // Don't add a comma to the JSON data if we're at the end of the envelope
+                    if (i + 1 < time.Length)
+                    {
+                        amplitudeEnvelope += ",";
+                    }
+                }
+
+                return clipJsonTemplate.Replace("{amplitude-envelope}", amplitudeEnvelope);
             }
         }
 
+        // A haptic preset in its different representations
+        //
+        // A Preset has four different representations, as there are four different playback methods.
+        // Each representation is created at construction time, so that playing a
+        // Preset has no further conversion cost at playback time.
+        internal struct Preset
+        {
+            // For playback on iOS, using system haptics
+            public PresetType type;
+
+            // For playback on Android devices without amplitude control
+            public float[] maximumAmplitudePattern;
+
+            // For playback on Android devices with amplitude control
+            public byte[] jsonClip;
+
+            // For playback on gamepads
+#if ((!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR) && NICE_VIBRATIONS_INPUTSYSTEM_INSTALLED && ENABLE_INPUT_SYSTEM && !NICE_VIBRATIONS_DISABLE_GAMEPAD_SUPPORT
+            public GamepadRumble gamepadRumble;
+#endif
+
+            public Preset(PresetType type, float[] time, float[] amplitude)
+            {
+                Debug.Assert(type != PresetType.None);
+                Pattern pattern = new Pattern(time, amplitude);
+                this.type = type;
+                this.maximumAmplitudePattern = pattern.time;
+#if ((!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR) && NICE_VIBRATIONS_INPUTSYSTEM_INSTALLED && ENABLE_INPUT_SYSTEM && !NICE_VIBRATIONS_DISABLE_GAMEPAD_SUPPORT
+                this.gamepadRumble = pattern.ToRumble();
+#endif
+                this.jsonClip = System.Text.Encoding.UTF8.GetBytes(pattern.ToClip());
+            }
+
+            public float GetDuration()
+            {
+                if (maximumAmplitudePattern.Length > 0)
+                {
+                    return maximumAmplitudePattern[maximumAmplitudePattern.Length - 1];
+                }
+                else
+                {
+                    return 0f;
+                }
+            }
+        }
 
         /// <summary>
-        /// Predefined Pattern that represents a "Selection" haptic preset
+        /// Predefined Preset that represents a "Selection" haptic preset
         /// </summary>
-        static Pattern Selection =
-            new Pattern(new float[] { 0.0f, 0.01f },
-                                 new float[] { 0.471f, 0.471f });
+        internal static Preset Selection;
+
         /// <summary>
-        /// Predefined Pattern that represents a "Light" haptic preset
+        /// Predefined Preset that represents a "Light" haptic preset
         /// </summary>
-        static Pattern Light =
-            new Pattern(new float[] { 0.0f, 0.02f },
-                                 new float[] { 0.156f, 0.156f });
+        internal static Preset Light;
+
         /// <summary>
-        /// Predefined Pattern that represents a "Medium" haptic preset
+        /// Predefined Preset that represents a "Medium" haptic preset
         /// </summary>
-        static Pattern Medium =
-            new Pattern(new float[] { 0.0f, 0.04f },
-                                 new float[] { 0.471f, 0.471f });
+        internal static Preset Medium;
+
         /// <summary>
-        /// Predefined Pattern that represents a "Heavy" haptic preset
+        /// Predefined Preset that represents a "Heavy" haptic preset
         /// </summary>
-        static Pattern Heavy =
-            new Pattern(new float[] { 0.0f, 0.08f },
-                                 new float[] { 1.0f, 1.0f });
+        internal static Preset Heavy;
+
         /// <summary>
-        /// Predefined Pattern that represents a "Rigid" haptic preset
+        /// Predefined Preset that represents a "Rigid" haptic preset
         /// </summary>
-        static Pattern Rigid =
-            new Pattern(new float[] { 0.0f, 0.02f },
-                                 new float[] { 1.0f, 1.0f });
+        internal static Preset Rigid;
+
         /// <summary>
-        /// Predefined Pattern that represents a "Soft" haptic preset
+        /// Predefined Preset that represents a "Soft" haptic preset
         /// </summary>
-        static Pattern Soft =
-            new Pattern(new float[] { 0.0f, 0.08f },
-                                 new float[] { 0.156f, 0.156f });
+        internal static Preset Soft;
+
         /// <summary>
-        /// Predefined Pattern that represents a "Success" haptic preset
+        /// Predefined Preset that represents a "Success" haptic preset
         /// </summary>
-        static Pattern Success =
-            new Pattern(new float[] { 0.0f, 0.020f, 0.040f, 0.120f },
-                                 new float[] { 0.0f, 0.157f, 0.0f, 1.0f });
+        internal static Preset Success;
+
         /// <summary>
-        /// Predefined Pattern that represents a "Failure" haptic preset
+        /// Predefined Preset that represents a "Failure" haptic preset
         /// </summary>
-        static Pattern Failure =
-            new Pattern(new float[] { 0.0f, 0.040f, 0.060f, 0.100f, 0.120f, 0.200f, 0.220f, 0.240f },
-                                 new float[] { 0.0f, 0.47f, 0.0f, 0.47f, 0.0f, 1.0f, 0.0f, 0.157f });
+        internal static Preset Failure;
+
         /// <summary>
-        /// Predefined Pattern that represents a "Warning" haptic preset
+        /// Predefined Preset that represents a "Warning" haptic preset
         /// </summary>
-        static Pattern Warning =
-            new Pattern(new float[] { 0.0f, 0.060f, 0.120f, 0.140f },
-                                 new float[] { 0.0f, 1.0f, 0.0f, 0.47f });
+        internal static Preset Warning;
 
         static HapticPatterns()
         {
             emphasisTemplate = (Resources.Load("nv-emphasis-template") as TextAsset).text;
             constantTemplate = (Resources.Load("nv-constant-template") as TextAsset).text;
-            patternTemplate = (Resources.Load("nv-pattern-template") as TextAsset).text;
 
             numberFormat = new NumberFormatInfo();
             numberFormat.NumberDecimalSeparator = ".";
+
+            // Initialize presets after setting the number format, so that the correct decimal
+            // separator is used when building the JSON representation.
+
+            Selection = new Preset(PresetType.Selection, new float[] { 0.0f, 0.04f },
+                                                         new float[] { 0.471f, 0.471f });
+
+            Light = new Preset(PresetType.LightImpact, new float[] { 0.000f, 0.040f },
+                                                       new float[] { 0.156f, 0.156f });
+
+            Medium = new Preset(PresetType.MediumImpact, new float[] { 0.000f, 0.080f },
+                                                         new float[] { 0.471f, 0.471f });
+
+            Heavy = new Preset(PresetType.HeavyImpact, new float[] { 0.0f, 0.16f },
+                                                       new float[] { 1.0f, 1.00f });
+
+            Rigid = new Preset(PresetType.RigidImpact, new float[] { 0.0f, 0.04f },
+                                                       new float[] { 1.0f, 1.00f });
+
+            Soft = new Preset(PresetType.SoftImpact, new float[] { 0.000f, 0.160f },
+                                                     new float[] { 0.156f, 0.156f });
+
+            Success = new Preset(PresetType.Success, new float[] { 0.0f, 0.040f, 0.080f, 0.240f },
+                                                     new float[] { 0.0f, 0.157f, 0.000f, 1.000f });
+
+            Failure = new Preset(PresetType.Failure,
+                                 new float[] { 0.0f, 0.080f, 0.120f, 0.200f, 0.240f, 0.400f, 0.440f, 0.480f },
+                                 new float[] { 0.0f, 0.470f, 0.000f, 0.470f, 0.000f, 1.000f, 0.000f, 0.157f });
+
+            Warning = new Preset(PresetType.Warning, new float[] { 0.0f, 0.120f, 0.240f, 0.280f },
+                                                     new float[] { 0.0f, 1.000f, 0.000f, 0.470f });
         }
 
         /// <summary>
@@ -135,29 +268,47 @@ namespace Lofelt.NiceVibrations
         /// <param name="frequency">The frequency of the emphasis, from 0.0 to 1.0</param>
         public static void PlayEmphasis(float amplitude, float frequency)
         {
-            if (emphasisTemplate == null)
+            if (emphasisTemplate == null || !HapticController.hapticsEnabled)
             {
                 return;
             }
 
-            float clampedAmplitude = Mathf.Clamp(amplitude, 0.0f, 1.0f);
-            float clampedFrequency = Mathf.Clamp(frequency, 0.0f, 1.0f);
-            const float duration = 0.1f;
+            // Use HapticController.Play() to play a .haptic clip on mobile devices
+            // that support it, or to play a gamepad rumble if a gamepad is connected.
+            if (HapticController.Init() || GamepadRumbler.IsConnected())
+            {
+                float clampedAmplitude = Mathf.Clamp(amplitude, 0.0f, 1.0f);
+                float clampedFrequency = Mathf.Clamp(frequency, 0.0f, 1.0f);
+                const float duration = 0.1f;
 
-            String json = emphasisTemplate
-                .Replace("{amplitude}", clampedAmplitude.ToString(numberFormat))
-                .Replace("{frequency}", clampedFrequency.ToString(numberFormat))
-                .Replace("{duration}", duration.ToString(numberFormat));
+                String json = emphasisTemplate
+                    .Replace("{amplitude}", clampedAmplitude.ToString(numberFormat))
+                    .Replace("{frequency}", clampedFrequency.ToString(numberFormat))
+                    .Replace("{duration}", duration.ToString(numberFormat));
 
-            GamepadRumble rumble = new GamepadRumble();
-            rumble.durationsMs = new int[] { (int)(duration * 1000) };
-            rumble.lowFrequencyMotorSpeeds = new float[] { clampedAmplitude };
-            rumble.highFrequencyMotorSpeeds = new float[] { clampedFrequency };
+                // This preprocessor section will only run for non-mobile platforms
+                GamepadRumble rumble = new GamepadRumble();
+#if ((!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR) && NICE_VIBRATIONS_INPUTSYSTEM_INSTALLED && ENABLE_INPUT_SYSTEM && !NICE_VIBRATIONS_DISABLE_GAMEPAD_SUPPORT
+                rumble.durationsMs = new int[] { (int)(duration * 1000) };
+                rumble.lowFrequencyMotorSpeeds = new float[] { clampedAmplitude };
+                rumble.highFrequencyMotorSpeeds = new float[] { clampedFrequency };
+#endif
 
-            HapticController.Load(System.Text.Encoding.UTF8.GetBytes(json), rumble);
-            HapticController.Loop(false);
-            SetEmphasisFallbackPresetsFromAmplitude(amplitude);
-            HapticController.Play();
+                HapticController.Load(System.Text.Encoding.UTF8.GetBytes(json), rumble);
+                HapticController.Loop(false);
+                HapticController.Play();
+            }
+
+            // As a fallback, play a short buzz on Android, or a preset on iOS.
+            else if (DeviceCapabilities.isVersionSupported)
+            {
+#if (UNITY_ANDROID && !UNITY_EDITOR)
+                LofeltHaptics.PlayMaximumAmplitudePattern(new float[]{ 0.0f, 0.05f });
+#elif (UNITY_IOS && !UNITY_EDITOR)
+                PresetType preset = presetTypeForEmphasis(amplitude);
+                LofeltHaptics.TriggerPresetHaptics((int)preset);
+#endif
+            }
         }
 
         /// <summary>
@@ -165,19 +316,19 @@ namespace Lofelt.NiceVibrations
         /// </summary>
         ///
         /// <param name="amplitude">The amplitude of the emphasis, from 0.0 to 1.0</param>
-        static void SetEmphasisFallbackPresetsFromAmplitude(float amplitude)
+        static PresetType presetTypeForEmphasis(float amplitude)
         {
             if (amplitude > 0.5f)
             {
-                HapticController.fallbackPreset = HapticPatterns.PresetType.HeavyImpact;
+                return HapticPatterns.PresetType.HeavyImpact;
             }
             else if (amplitude <= 0.5f && amplitude > 0.3)
             {
-                HapticController.fallbackPreset = HapticPatterns.PresetType.MediumImpact;
+                return HapticPatterns.PresetType.MediumImpact;
             }
-            else if (amplitude <= 0.3f)
+            else
             {
-                HapticController.fallbackPreset = HapticPatterns.PresetType.LightImpact;
+                return HapticPatterns.PresetType.LightImpact;
             }
         }
 
@@ -189,12 +340,21 @@ namespace Lofelt.NiceVibrations
         /// while it is playing. iOS additional supports modulating the frequency with
         /// HapticController::clipFrequencyShift.
         ///
+        /// When \ref DeviceCapabilities.meetsAdvancedRequirements returns false on mobile,
+        /// the behavior of this method is different for iOS and Android:
+        /// <ul>
+        ///     <li>On iOS, it will play the preset <c>HapticPatterns.PresetType.HeavyImpact</c>. </li>
+        ///
+        ///     <li>On Android, it will play a pattern with maximum amplitude for the set <c>duration</c>
+        ///      since there is no amplitude control.</li>
+        ///
+        /// </ul>
         /// <param name="amplitude">Amplitude, from 0.0 to 1.0</param>
         /// <param name="frequency">Frequency, from 0.0 to 1.0</param>
         /// <param name="duration">Play duration in seconds</param>
         public static void PlayConstant(float amplitude, float frequency, float duration)
         {
-            if (constantTemplate == null)
+            if (constantTemplate == null || !HapticController.hapticsEnabled)
             {
                 return;
             }
@@ -206,7 +366,9 @@ namespace Lofelt.NiceVibrations
             String json = constantTemplate
                 .Replace("{duration}", clampedDurationSecs.ToString(numberFormat));
 
+            // This preprocessor section will only run for non-mobile platforms
             GamepadRumble rumble = new GamepadRumble();
+#if ((!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR) && NICE_VIBRATIONS_INPUTSYSTEM_INSTALLED && ENABLE_INPUT_SYSTEM && !NICE_VIBRATIONS_DISABLE_GAMEPAD_SUPPORT
             int rumbleDurationMs = (int)(clampedDurationSecs * 1000);
             const int rumbleEntryDurationMs = 16; // One rumble entry per frame at 60 FPS, which is the limit of what GamepadRumbler can play
             int rumbleEntryCount = rumbleDurationMs / rumbleEntryDurationMs;
@@ -223,71 +385,32 @@ namespace Lofelt.NiceVibrations
                 rumble.lowFrequencyMotorSpeeds[i] = 1.0f;
                 rumble.highFrequencyMotorSpeeds[i] = 1.0f;
             }
+#endif
 
-            HapticController.Load(System.Text.Encoding.UTF8.GetBytes(json), rumble);
-            HapticController.Loop(false);
-            HapticController.clipLevel = clampedAmplitude;
-            HapticController.clipFrequencyShift = clampedFrequency;
-            HapticController.Play();
-        }
-
-        /// <summary>
-        /// Plays an amplitude pattern defined in a \ref Pattern structure
-        /// </summary>
-        ///
-        /// Won't play in case the amplitude and time arrays have different lengths.
-        ///
-        /// On Android, in case the device doesn't support minimum requirements, the pattern will be
-        /// played with the same amplitude by turning the motor off and on for the duration of
-        /// every 2 adjacent points in Pattern.time. On iOS, it won't do anything.
-        ///
-        /// <param name="pattern">\ref Pattern struct to be played</param>
-        private static void PlayPattern(Pattern pattern)
-        {
-            if (patternTemplate == null)
+            if (HapticController.Init() || GamepadRumbler.IsConnected())
             {
-                return;
-            }
-
-            if (pattern.time.Length == 0 ||
-                pattern.amplitude.Length != pattern.time.Length)
-            {
-                return;
-            }
-
-            if (HapticController.Init())
-            {
-                String amplitudeEnvelope = "";
-                for (int i = 0; i < pattern.time.Length; i++)
-                {
-                    float clampedAmplitude = Mathf.Clamp(pattern.amplitude[i], 0.0f, 1.0f);
-                    amplitudeEnvelope += "{ \"time\":" + pattern.time[i] + "," +
-                                            "\"amplitude\":" + clampedAmplitude + "}";
-
-                    // Don't add a comma to the JSON data if we're at the end of the envelope
-                    if (i + 1 < pattern.time.Length)
-                    {
-                        amplitudeEnvelope += ",";
-                    }
-                }
-
-                pattern.clip = patternTemplate
-                    .Replace("{amplitude-envelope}", amplitudeEnvelope);
-
-                HapticController.Load(System.Text.Encoding.UTF8.GetBytes(pattern.clip));
+                HapticController.Load(System.Text.Encoding.UTF8.GetBytes(json), rumble);
                 HapticController.Loop(false);
+                HapticController.clipLevel = clampedAmplitude;
+                HapticController.clipFrequencyShift = clampedFrequency;
                 HapticController.Play();
             }
             else if (DeviceCapabilities.isVersionSupported)
             {
-                LofeltHaptics.PlayMaximumAmplitudePattern(pattern.time);
+#if (UNITY_ANDROID && !UNITY_EDITOR)
+                constantPatternTime[1] = duration;
+                LofeltHaptics.PlayMaximumAmplitudePattern(constantPatternTime);
+#elif (UNITY_IOS && !UNITY_EDITOR)
+                HapticPatterns.PlayPreset(PresetType.HeavyImpact);
+#endif
             }
         }
 
-        // Returns the Pattern associated with the given preset
-        private static Pattern PatternForPreset(PresetType presetType)
+        static Preset GetPresetForType(PresetType type)
         {
-            switch (presetType)
+            Debug.Assert(type != PresetType.None);
+
+            switch (type)
             {
                 case PresetType.Selection:
                     return Selection;
@@ -313,111 +436,78 @@ namespace Lofelt.NiceVibrations
             return Medium;
         }
 
-        // Converts a Pattern to a GamepadRumble
-        //
-        // Each pair of adjacent entries in the Pattern create one entry in the GamepadRumble.
-        private static GamepadRumble PatternToRumble(Pattern pattern)
-        {
-            GamepadRumble result = new GamepadRumble();
-            if (pattern.time.Length <= 1)
-            {
-                return result;
-            }
-
-            Debug.Assert(pattern.time.Length == pattern.amplitude.Length);
-
-            // The first pattern entry needs to have a time of 0.0 for the algorithm below to work
-            Debug.Assert(pattern.time[0] == 0.0f);
-
-            int rumbleCount = pattern.time.Length - 1;
-            result.durationsMs = new int[rumbleCount];
-            result.lowFrequencyMotorSpeeds = new float[rumbleCount];
-            result.highFrequencyMotorSpeeds = new float[rumbleCount];
-            result.totalDurationMs = 0;
-            for (int rumbleIndex = 0; rumbleIndex < rumbleCount; rumbleIndex++)
-            {
-                int patternDurationMs = (int)((pattern.time[rumbleIndex + 1] - pattern.time[rumbleIndex]) * 1000.0f);
-
-                // Rumble for twice as long as the actual pattern duration. Otherwise rumble entries
-                // would be too short to be played back properly. Short entries cause problems for
-                // two reasons:
-                // 1. The timer resolution of GamepadRumbler is limited to once per frame, e.g.
-                //    32ms at 30 FPS. This causes short rumble entries to be skipped sometimes.
-                // 2. The haptic actuators in gamepads often have slow rise and fall times and are
-                //    not able to react quickly enough to changes in requested motor speeds.
-                result.durationsMs[rumbleIndex] = patternDurationMs * 2;
-
-                result.lowFrequencyMotorSpeeds[rumbleIndex] = pattern.amplitude[rumbleIndex];
-                result.highFrequencyMotorSpeeds[rumbleIndex] = pattern.amplitude[rumbleIndex];
-                result.totalDurationMs += result.durationsMs[rumbleIndex];
-            }
-            return result;
-        }
-
         /// <summary>
-        /// Plays a set of predefined haptic patterns
+        /// Plays a set of predefined haptic patterns.
         /// </summary>
         ///
         /// These predefined haptic patterns are played and represented in different ways for iOS,
         /// Android and gamepads.
         ///
-        /// On iOS, this function triggers system haptics that are native to iOS.
-        /// On Android and gamepads, this function plays a haptic preset represented with a
-        /// <c>Pattern</c> that has a similar experience to a system haptics of iOS.
+        /// - On iOS, this function triggers system haptics that are native to iOS. Calling
+        ///   \ref HapticController.Stop() won't stop haptics.
+        /// - On Android devices that can play <c>.haptic</c> clips (DeviceCapabilities.meetsAdvancedRequirements
+        ///   is <c>true</c>) and on gamepads, this function plays a haptic pattern that has a similar
+        ///   experience to the matching iOS system haptics.
+        /// - On Android devices that can not play <c>.haptic</c> clips (DeviceCapabilities.meetsAdvancedRequirements
+        ///   is <c>false</c>), this function plays a haptic pattern that has a similar experience to
+        ///   the matching iOS system haptics, by turning the motor off and on at maximum amplitude.
         ///
         /// This is a "fire-and-forget" method. Other functionalities like seeking, looping, and
-        /// runtime modulation,  won't work after calling this method.
+        /// runtime modulation won't work after calling this method.
+        ///
         /// <param name="presetType">Type of preset represented by a \ref PresetType enum</param>
         public static void PlayPreset(PresetType presetType)
         {
-            if (!HapticController.hapticsEnabled)
+            if (!HapticController.hapticsEnabled || presetType == PresetType.None)
             {
                 return;
             }
 
-            Pattern pattern = PatternForPreset(presetType);
-            if (GamepadRumbler.IsConnected())
+            Preset preset = GetPresetForType(presetType);
+
+#if (UNITY_IOS && !UNITY_EDITOR)
+            LofeltHaptics.TriggerPresetHaptics((int)presetType);
+            return;
+#else
+            if (HapticController.Init() || GamepadRumbler.IsConnected())
             {
-                GamepadRumble rumble = PatternToRumble(pattern);
-                GamepadRumbler.Load(rumble);
-                GamepadRumbler.Play();
+#if ((!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR) && NICE_VIBRATIONS_INPUTSYSTEM_INSTALLED && ENABLE_INPUT_SYSTEM && !NICE_VIBRATIONS_DISABLE_GAMEPAD_SUPPORT
+                HapticController.Load(preset.jsonClip, preset.gamepadRumble);
+#else
+                HapticController.Load(preset.jsonClip);
+#endif
+                HapticController.Loop(false);
+                HapticController.Play();
                 return;
             }
+
+            if (DeviceCapabilities.isVersionSupported)
+            {
 #if (UNITY_ANDROID && !UNITY_EDITOR)
-            PlayPattern(pattern);
-#elif (UNITY_IOS && !UNITY_EDITOR)
-            if(DeviceCapabilities.isVersionSupported) {
-                LofeltHaptics.TriggerPresetHaptics((int)presetType);
+                LofeltHaptics.PlayMaximumAmplitudePattern(preset.maximumAmplitudePattern);
+                return;
+#endif
             }
 #endif
         }
 
-        static float GetPatternDuration(Pattern pattern)
-        {
-            if (pattern.time.Length > 0)
-            {
-                return pattern.time[pattern.time.Length - 1];
-            }
-            else
-            {
-                return 0f;
-            }
-        }
-
         /// <summary>
-        /// Returns the haptic preset duration
+        /// Returns the haptic preset duration.
         /// </summary>
         ///
-        /// The haptic preset duration is based on the Pattern associated with a Preset.
-        /// Even though Pattern is only used to play presets for Android, we assume on iOS they have
-        /// a similar duration since we don't have any other way of knowing it.
+        /// While a preset is played back in different ways on iOS, Android and gamepads, the
+        /// duration is similar for each playback method.
         ///
         /// <param name="presetType"> Type of preset represented by a \ref PresetType enum </param>
         /// <returns>Returns a float with a the preset duration; if the selected preset is `None`, it returns 0</returns>
         public static float GetPresetDuration(PresetType presetType)
         {
-            Pattern pattern = PatternForPreset(presetType);
-            return GetPatternDuration(pattern);
+            if (presetType == PresetType.None)
+            {
+                return 0;
+            }
+
+            return GetPresetForType(presetType).GetDuration();
         }
     }
 

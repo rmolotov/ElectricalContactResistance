@@ -1,5 +1,9 @@
-﻿using UnityEditor;
+// Copyright (c) Meta Platforms, Inc. and affiliates. 
+
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using System.IO;
 
 namespace Lofelt.NiceVibrations
 {
@@ -14,7 +18,6 @@ namespace Lofelt.NiceVibrations
     {
         string hapticsDirectory;
 
-        SerializedProperty sourceType;
         SerializedProperty hapticClip;
         SerializedProperty priority;
         SerializedProperty level;
@@ -22,14 +25,12 @@ namespace Lofelt.NiceVibrations
         SerializedProperty loop;
         SerializedProperty fallbackPreset;
 
-        public static GUIContent sourceTypeLabel = EditorGUIUtility.TrTextContent("Source type", "HHaptic source should play haptic clip or preset?");
         public static GUIContent hapticClipLabel = EditorGUIUtility.TrTextContent("Haptic Clip", "The HapticClip asset played by the HapticSource.");
         public static GUIContent fallbackPresetLabel = EditorGUIUtility.TrTextContent("Haptic Preset fallback", "Set the haptic preset to play in case the device doesn't support playback of haptic clips");
         public static GUIContent loopLabel = EditorGUIUtility.TrTextContent("Loop", "Set the haptic source to loop playback of the haptic clip");
 
         void OnEnable()
         {
-            sourceType = serializedObject.FindProperty("sourceType");
             hapticClip = serializedObject.FindProperty("clip");
             priority = serializedObject.FindProperty("priority");
             level = serializedObject.FindProperty("_level");
@@ -43,31 +44,21 @@ namespace Lofelt.NiceVibrations
             serializedObject.Update();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(sourceType, sourceTypeLabel);
+            EditorGUILayout.PropertyField(hapticClip, hapticClipLabel);
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(fallbackPreset, fallbackPresetLabel);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(loop, loopLabel);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space();
 
-            if (sourceType.intValue == (int) HapticSourceType.Preset)
-            {
-                EditorGUILayout.Space();
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(fallbackPreset, fallbackPresetLabel);
-                EditorGUILayout.EndHorizontal();
-            }
-            else
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(hapticClip, hapticClipLabel);
-                EditorGUILayout.EndHorizontal();
-                EditorGUILayout.Space();
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(loop, loopLabel);
-                EditorGUILayout.EndHorizontal();
-                EditorGUILayout.Space();
-
-                CreatePrioritySlider();
-                CreateLevelSlider();
-                CreateFrequencyShiftSlider();   
-            }
+            CreatePrioritySlider();
+            CreateLevelSlider();
+            CreateFrequencyShiftSlider();
 
             serializedObject.ApplyModifiedProperties();
         }

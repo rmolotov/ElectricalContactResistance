@@ -1,5 +1,5 @@
 Nice Vibrations | Haptic Feedback for Mobile
-v4.0.1, using Lofelt Studio SDK v1.3.2
+v4.1.2, using Lofelt Studio SDK v1.3.4
 
 This Asset Package includes everything you need to begin adding advanced haptic feedback to your mobile applications created with Unity. It consists of a few important parts:
 
@@ -11,8 +11,6 @@ This Asset Package includes everything you need to begin adding advanced haptic 
 
 - Older Versions: Older versions of Nice Vibrations are included as well, for reference and as a porting aid. You can run the current version side-by-side with the older 3.9 version in case you haven't ported everything to the new API yet.
 
-Full documentation can be found at https://developer.lofelt.com, and API documentation at https://developer.lofelt.com/nice-vibrations-api-docs/index.html.
+Full documentation can be found at https://github.com/Lofelt/NiceVibrations/wiki.
 
-Information about the entire Lofelt Studio Ecosystem, including the haptic design tools, can be found at https://lofelt.com.
-
-And if you haven’t got it already, the free Studio mobile app for iOS and Android can be downloaded fro the Apple App Store and Google Play Store, respectively.
+Nice Vibrations includes the Lofelt Studio SDK, which uses third-party libraries. See 3RD-PARTY-LICENSES.md for a list of libraries and their licenses.
