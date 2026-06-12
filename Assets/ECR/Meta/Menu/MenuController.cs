@@ -87,24 +87,18 @@ namespace ECR.Meta.Menu
             settingsButton.onClick.AddListener(() =>
                 settingsWindow
                     .InitAndShow(_persistentDataService.Settings).Task
-                    .ContinueWith(
-                        task =>
-                        {
-                            settingsButton.OnPromisedResolve();
-                            if (task.Result)
-                                _saveLoadService.SaveSettings(); // TODO: else -> _sls.RestoreSavedSettings?
-                        },
-                        TaskScheduler.FromCurrentSynchronizationContext())
-                    .ProcessErrors()
+                    .ContinueWithUnitySynchronizationContext(task =>
+                    {
+                        settingsButton.OnPromisedResolve();
+                        if (task.Result)
+                            _saveLoadService.SaveSettings(); // TODO: else -> _sls.RestoreSavedSettings?
+                    })
             );
             
             shopButton.onClick.AddListener(() =>
                 _shopWindow
                     .InitAndShow("shop items data").Task
-                    .ContinueWith(
-                        _ => shopButton.OnPromisedResolve(),
-                        TaskScheduler.FromCurrentSynchronizationContext())
-                    .ProcessErrors()
+                    .ContinueWithUnitySynchronizationContext(_ => shopButton.OnPromisedResolve())
             );
         }
     }

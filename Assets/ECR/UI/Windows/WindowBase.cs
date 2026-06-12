@@ -51,8 +51,8 @@ namespace ECR.UI.Windows
         }
 
         protected virtual void Close() =>
-            SetVisible(false).onComplete += () =>
-                Promise.SetResult(UserAccepted);
+            SetVisible(false).OnComplete(() =>
+                Promise.SetResult(UserAccepted));
 
 
         protected void PlaySoundEffect()
