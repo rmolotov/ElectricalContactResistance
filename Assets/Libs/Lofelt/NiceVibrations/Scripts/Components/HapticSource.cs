@@ -177,34 +177,42 @@ namespace Lofelt.NiceVibrations
         /// It will loop playback in case \ref loop is <c>true</c>.
         public void Play()
         {
-            if (CanPlay())
+            if (!CanPlay())
+                return;
+
+            if (clip is null)
             {
-                //
-                // Load
-                //
-                HapticController.Load(clip);
-                loadedHapticSource = this;
-
-                //
-                // Apply properties like loop, modulation and seek position
-                //
-                HapticController.Loop(loop);
-
-                HapticController.clipLevel = level;
-                HapticController.clipFrequencyShift = frequencyShift;
-
-                if (seekTime != 0.0f && !loop)
-                {
-                    HapticController.Seek(seekTime);
-                }
-
-                //
-                // Play
-                //
-                HapticController.fallbackPreset = fallbackPreset;
-                HapticController.Play();
+                HapticPatterns.PlayPreset(fallbackPreset);
                 lastPlayedHapticSource = this;
+                return;
             }
+
+            //
+            // Load
+            //
+            HapticController.Load(clip);
+            loadedHapticSource = this;
+
+            //
+            // Apply properties like loop, modulation and seek position
+            //
+            HapticController.Loop(loop);
+
+            HapticController.clipLevel = level;
+            HapticController.clipFrequencyShift = frequencyShift;
+
+            if (seekTime != 0.0f && !loop)
+            {
+                HapticController.Seek(seekTime);
+            }
+
+            //
+            // Play
+            //
+            HapticController.fallbackPreset = fallbackPreset;
+            HapticController.Play();
+            
+            lastPlayedHapticSource = this;
         }
 
         private bool CanPlay()
