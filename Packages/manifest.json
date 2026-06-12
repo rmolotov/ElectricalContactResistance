@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git",
+    "com.lofelt.nicevibrations": "https://github.com/rmolotov/NiceVibrations.git?path=/interfaces/unity/NiceVibrations/Assets/NiceVibrations",
     "com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
     "com.rm.buildtools": "https://github.com/rmolotov/BuildTools.git?path=/Packages/BuildTools",
     "com.rm.customextensions": "https://github.com/rmolotov/CustomExtensions.git?path=/Packages/CustomExtensions",

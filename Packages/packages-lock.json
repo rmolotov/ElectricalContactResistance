@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "b870d64b5704a764fd03aaccb11f2dbe652b1756"
     },
+    "com.lofelt.nicevibrations": {
+      "version": "https://github.com/rmolotov/NiceVibrations.git?path=/interfaces/unity/NiceVibrations/Assets/NiceVibrations",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f91b832d9fb29fd40c1e575570d3da76d2efead2"
+    },
     "com.neuecc.unirx": {
       "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
       "depth": 0,
